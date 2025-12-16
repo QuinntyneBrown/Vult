@@ -13,6 +13,8 @@ public class VultContext : DbContext, IVultContext
 
     public DbSet<CatalogItem> CatalogItems { get; set; } = null!;
     public DbSet<CatalogItemImage> CatalogItemImages { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Role> Roles { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,5 +22,7 @@ public class VultContext : DbContext, IVultContext
 
         modelBuilder.ApplyConfiguration(new CatalogItemConfiguration());
         modelBuilder.ApplyConfiguration(new CatalogItemImageConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
     }
 }
