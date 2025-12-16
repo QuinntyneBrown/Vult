@@ -1,8 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using Vult.Core.Interfaces;
+using Vult.Infrastructure.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// Configure Database
+builder.Services.AddDbContext<VultContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly("Vult.Api")));
+
+// Register IVultContext
+builder.Services.AddScoped<IVultContext>(provider => provider.GetRequiredService<VultContext>());
 
 var app = builder.Build();
 

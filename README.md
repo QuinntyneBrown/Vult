@@ -22,6 +22,7 @@ Vult/
 ## 📋 Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) or later
+- [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (LocalDB or full instance)
 - IDE of your choice:
   - [Visual Studio 2022](https://visualstudio.microsoft.com/) (v17.12 or later)
   - [Visual Studio Code](https://code.visualstudio.com/) with C# extension
@@ -41,6 +42,49 @@ cd Vult
 ```bash
 dotnet build
 ```
+
+### Database Setup
+
+The application uses Entity Framework Core with SQL Server Express for data persistence.
+
+#### 1. Configure Connection String
+
+The default connection string in `src/Vult.Api/appsettings.json` is configured for SQL Server Express:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=VultDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true"
+}
+```
+
+**Adjust the connection string** based on your SQL Server installation:
+- For **SQL Server Express**: `Server=localhost\\SQLEXPRESS;...`
+- For **LocalDB**: `Server=(localdb)\\mssqllocaldb;...`
+- For **full SQL Server**: `Server=localhost;...`
+
+#### 2. Apply Database Migrations
+
+Navigate to the API project and run migrations to create the database:
+
+```bash
+cd src/Vult.Api
+dotnet ef database update
+```
+
+This will:
+- Create the `VultDb` database
+- Create the `CatalogItems` and `CatalogItemImages` tables
+- Apply all pending migrations
+
+#### 3. Verify Database Creation
+
+You can verify the database was created successfully using:
+
+```bash
+dotnet ef database update --verbose
+```
+
+Or connect to SQL Server using SQL Server Management Studio (SSMS) or Azure Data Studio to inspect the database structure.
 
 ### Run Tests
 
@@ -73,11 +117,17 @@ The web application will be available at `https://localhost:5002` (or the port s
 The Core layer contains the domain model and business logic. It defines:
 
 - **Domain Entities**: Core business objects and value types
+  - `CatalogItem`: Represents catalog items with properties like MSRP, resale value, brand, size, etc.
+  - `CatalogItemImage`: Represents images associated with catalog items
+- **Enums**: Domain enumerations
+  - `Gender`: Mens, Womens, Unisex
+  - `ClothingType`: Shoe, Pants, Jacket, Shirt, Shorts, Dress, Skirt, Sweater, Hoodie, Coat
 - **Interfaces**: Contracts for repositories, services, and external dependencies
+  - `IVultContext`: Database context interface for data access
 - **Business Logic**: Domain services and business rules
 - **Exceptions**: Custom domain exceptions
 
-**Dependencies**: None (this layer has no external dependencies)
+**Dependencies**: Microsoft.EntityFrameworkCore (for IVultContext interface only)
 
 **Design Principles**:
 - Domain-Driven Design (DDD)
@@ -89,11 +139,23 @@ The Core layer contains the domain model and business logic. It defines:
 The Infrastructure layer implements the interfaces defined in the Core layer:
 
 - **Data Access**: Entity Framework Core, repository implementations
+  - `VultContext`: DbContext implementation for SQL Server data access
+  - Configured with SQL Server Express
+  - Implements `IVultContext` interface from Core layer
 - **External Services**: Third-party API clients, email services, etc.
 - **Cross-Cutting Concerns**: Logging, caching, file storage
 
+**Database Configuration**:
+- Entity Framework Core 10.0
+- SQL Server provider
+- Code-first migrations (migrations stored in API project)
+- String-based enum storage for Gender and ClothingType
+- Decimal precision (18,2) for monetary values
+
 **Dependencies**: 
 - Vult.Core
+- Microsoft.EntityFrameworkCore.SqlServer
+- Microsoft.EntityFrameworkCore.Design
 
 **Design Principles**:
 - Repository pattern
