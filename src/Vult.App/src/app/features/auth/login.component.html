@@ -1,0 +1,47 @@
+<div class="login">
+  <div class="login__card">
+    <h1 class="login__title">Login</h1>
+    
+    @if (errorMessage()) {
+      <div class="login__error">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form class="login__form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="login__form-group">
+        <label for="username" class="login__label">Username</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          class="login__input"
+          [class.login__input--invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+        />
+      </div>
+
+      <div class="login__form-group">
+        <label for="password" class="login__label">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          class="login__input"
+          [class.login__input--invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="login__button"
+        [disabled]="loginForm.invalid || isLoading()"
+      >
+        @if (isLoading()) {
+          Logging in...
+        } @else {
+          Login
+        }
+      </button>
+    </form>
+  </div>
+</div>
