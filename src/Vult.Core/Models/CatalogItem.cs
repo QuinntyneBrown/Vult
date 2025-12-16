@@ -1,4 +1,6 @@
-using System.ComponentModel.DataAnnotations;
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
 using Vult.Core.Enums;
 
 namespace Vult.Core.Models;
@@ -7,30 +9,18 @@ public class CatalogItem
 {
     public Guid CatalogItemId { get; set; }
     
-    [Required]
-    [Range(0.01, double.MaxValue, ErrorMessage = "Estimated MSRP must be greater than 0")]
     public decimal EstimatedMSRP { get; set; }
     
-    [Required]
-    [Range(0.01, double.MaxValue, ErrorMessage = "Estimated Resale Value must be greater than 0")]
     public decimal EstimatedResaleValue { get; set; }
     
-    [Required]
-    [StringLength(1000, ErrorMessage = "Description cannot exceed 1000 characters")]
     public string Description { get; set; } = string.Empty;
     
-    [Required]
-    [StringLength(50, ErrorMessage = "Size cannot exceed 50 characters")]
     public string Size { get; set; } = string.Empty;
     
-    [Required]
-    [StringLength(100, ErrorMessage = "Brand Name cannot exceed 100 characters")]
     public string BrandName { get; set; } = string.Empty;
     
-    [Required]
     public Gender Gender { get; set; }
     
-    [Required]
     public ItemType ItemType { get; set; }
     
     public DateTime CreatedDate { get; set; }
