@@ -1,0 +1,76 @@
+<div class="catalog-container">
+  <header class="catalog-header">
+    <h1>Catalog Items</h1>
+    <button class="btn btn-primary" (click)="toggleUpload()" type="button">
+      {{ showUpload() ? 'Hide Upload' : 'Upload Photos' }}
+    </button>
+  </header>
+
+  <div class="upload-section" *ngIf="showUpload()">
+    <app-photo-upload (uploadComplete)="onUploadComplete($event)"></app-photo-upload>
+  </div>
+
+  <div class="error-message" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+  <div class="loading" *ngIf="isLoading()">
+    <div class="spinner"></div>
+    <p>Loading catalog items...</p>
+  </div>
+
+  <div class="catalog-grid" *ngIf="!isLoading()">
+    <div class="catalog-item" *ngFor="let item of catalogItems()">
+      <div class="item-image">
+        <img *ngIf="item.catalogItemImages && item.catalogItemImages.length > 0" 
+             [src]="'data:image/jpeg;base64,' + item.catalogItemImages[0].imageData"
+             [alt]="item.description || 'Catalog item'">
+        <div class="placeholder" *ngIf="!item.catalogItemImages || item.catalogItemImages.length === 0">
+          No Image
+        </div>
+      </div>
+      <div class="item-details">
+        <h3>{{ item.brandName || 'Unknown Brand' }}</h3>
+        <p class="description">{{ item.description || 'No description' }}</p>
+        <div class="item-meta">
+          <span class="size" *ngIf="item.size">Size: {{ item.size }}</span>
+          <span class="price" *ngIf="item.estimatedResaleValue">
+            ${{ item.estimatedResaleValue.toFixed(2) }}
+          </span>
+        </div>
+        <button class="btn btn-danger btn-sm" 
+                (click)="deleteCatalogItem(item.catalogItemId)"
+                type="button">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading() && catalogItems().length === 0">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+    </svg>
+    <h2>No catalog items yet</h2>
+    <p>Upload photos to get started</p>
+    <button class="btn btn-primary" (click)="showUpload.set(true)" type="button">
+      Upload Photos
+    </button>
+  </div>
+
+  <div class="pagination" *ngIf="!isLoading() && catalogItems().length > 0">
+    <button class="btn btn-secondary" 
+            (click)="previousPage()" 
+            [disabled]="pageNumber() === 1"
+            type="button">
+      Previous
+    </button>
+    <span class="page-info">Page {{ pageNumber() }}</span>
+    <button class="btn btn-secondary" 
+            (click)="nextPage()"
+            [disabled]="catalogItems().length < pageSize()"
+            type="button">
+      Next
+    </button>
+  </div>
+</div>

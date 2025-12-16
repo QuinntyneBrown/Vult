@@ -4,13 +4,21 @@ import { authGuard } from './core/guards';
 export const routes: Routes = [
   {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then(m => m.authRoutes)
+    loadChildren: () => import('./pages/auth/auth.routes').then(m => m.authRoutes)
   },
   {
     path: '',
     canActivate: [authGuard],
     children: [
-      // Your protected routes go here
+      {
+        path: 'catalog',
+        loadChildren: () => import('./pages/catalog/catalog.routes').then(m => m.catalogRoutes)
+      },
+      {
+        path: '',
+        redirectTo: 'catalog',
+        pathMatch: 'full'
+      }
     ]
   },
   {
