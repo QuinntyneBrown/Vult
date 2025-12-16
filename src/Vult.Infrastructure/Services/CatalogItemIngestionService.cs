@@ -43,9 +43,10 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
 
         _logger.LogInformation("Starting ingestion of {Count} images", images.Length);
 
-        // Group images that likely belong to the same item (simplified approach)
-        // In production, you might want to batch images of the same item together
-        var catalogItemsToCreate = new List<(CatalogItem Item, List<byte[]> Images)>();
+        // Process each image and create individual catalog items
+        // Note: Currently each image creates a separate catalog item
+        // In production, implement logic to group images of the same item together
+        var catalogItemsToCreate = new List<CatalogItem>();
 
         for (var i = 0; i < images.Length; i++)
         {
@@ -100,7 +101,7 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
                 };
 
                 catalogItem.CatalogItemImages.Add(catalogItemImage);
-                catalogItemsToCreate.Add((catalogItem, new List<byte[]> { imageData }));
+                catalogItemsToCreate.Add(catalogItem);
 
                 ingestionResult.SuccessfullyProcessed++;
                 _logger.LogInformation("Successfully processed image {Index}: {Brand} {ItemType}", i, catalogItem.BrandName, catalogItem.ItemType);
@@ -118,14 +119,14 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
         {
             try
             {
-                foreach (var (item, _) in catalogItemsToCreate)
+                foreach (var item in catalogItemsToCreate)
                 {
                     _context.CatalogItems.Add(item);
                 }
 
                 await _context.SaveChangesAsync(cancellationToken);
                 
-                ingestionResult.CatalogItems.AddRange(catalogItemsToCreate.Select(x => x.Item));
+                ingestionResult.CatalogItems.AddRange(catalogItemsToCreate);
                 ingestionResult.Success = true;
                 
                 _logger.LogInformation(

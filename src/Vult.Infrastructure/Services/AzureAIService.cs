@@ -131,7 +131,12 @@ public class AzureAIService : IAzureAIService
     private string GenerateResellerDescription(string imageDescription)
     {
         // Generate a friendly reseller description based on the image caption
-        // This is a simplified approach - in production, use GPT or similar for better descriptions
+        // In production, use GPT or similar for better descriptions, or externalize to configuration
+        if (string.IsNullOrWhiteSpace(imageDescription))
+        {
+            return "Great condition item! Perfect for resale with high demand.";
+        }
+        
         return $"Great condition item! {imageDescription}. Perfect for resale with high demand. Don't miss this opportunity!";
     }
 
@@ -180,7 +185,11 @@ public class AzureAIService : IAzureAIService
         {
             if (detections.Any(d => d.Contains(brand)))
             {
-                return brand.Split(' ').Select(w => char.ToUpper(w[0]) + w.Substring(1)).Aggregate((a, b) => a + " " + b);
+                // Convert to title case
+                var words = brand.Split(' ');
+                var titleCased = string.Join(" ", words.Select(w => 
+                    string.IsNullOrEmpty(w) ? w : char.ToUpper(w[0]) + (w.Length > 1 ? w.Substring(1) : "")));
+                return titleCased;
             }
         }
         
