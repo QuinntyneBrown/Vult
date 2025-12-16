@@ -5,7 +5,7 @@ namespace Vult.Core.Models;
 
 public class CatalogItem
 {
-    public Guid Id { get; set; }
+    public Guid CatalogItemId { get; set; }
     
     [Required]
     [Range(0.01, double.MaxValue, ErrorMessage = "Estimated MSRP must be greater than 0")]
@@ -31,7 +31,7 @@ public class CatalogItem
     public Gender Gender { get; set; }
     
     [Required]
-    public ClothingType ClothingType { get; set; }
+    public ItemType ItemType { get; set; }
     
     public DateTime CreatedDate { get; set; }
     

@@ -1,0 +1,55 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Vult.Core.Models;
+
+namespace Vult.Infrastructure.Data.Configurations;
+
+public class CatalogItemConfiguration : IEntityTypeConfiguration<CatalogItem>
+{
+    public void Configure(EntityTypeBuilder<CatalogItem> builder)
+    {
+        builder.ToTable("CatalogItems");
+        
+        builder.HasKey(e => e.CatalogItemId);
+        
+        builder.Property(e => e.Description)
+            .IsRequired()
+            .HasMaxLength(1000);
+        
+        builder.Property(e => e.Size)
+            .IsRequired()
+            .HasMaxLength(50);
+        
+        builder.Property(e => e.BrandName)
+            .IsRequired()
+            .HasMaxLength(100);
+        
+        builder.Property(e => e.EstimatedMSRP)
+            .IsRequired()
+            .HasColumnType("decimal(18,2)");
+        
+        builder.Property(e => e.EstimatedResaleValue)
+            .IsRequired()
+            .HasColumnType("decimal(18,2)");
+        
+        builder.Property(e => e.Gender)
+            .IsRequired()
+            .HasConversion<string>();
+        
+        builder.Property(e => e.ItemType)
+            .IsRequired()
+            .HasConversion<string>();
+        
+        builder.Property(e => e.CreatedDate)
+            .IsRequired();
+        
+        builder.Property(e => e.UpdatedDate)
+            .IsRequired();
+        
+        // Configure relationship with CatalogItemImages
+        builder.HasMany(e => e.CatalogItemImages)
+            .WithOne(e => e.CatalogItem)
+            .HasForeignKey(e => e.CatalogItemId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+}
