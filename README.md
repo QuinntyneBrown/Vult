@@ -1,270 +1,199 @@
 # Vult
 
-A modern .NET solution built with clean architecture principles, providing a scalable foundation for enterprise applications.
+Vult is a catalog management system with AI-powered item ingestion and evaluation, built for resale businesses that need fast, consistent pricing and rich product data.
 
-## 🏗️ Solution Structure
+It consists of:
 
-The solution follows a layered architecture pattern with clear separation of concerns:
+- **Vult Backend Services** – .NET 10 Web API, Entity Framework Core, SQL Server, Azure AI integration.
+- **Vult Web Application** – Angular 21 SPA for managing catalog items, including drag-and-drop photo ingestion.
 
-```
+---
+
+## Solution Structure
+
+The solution follows a ZoomLoop-style clean architecture with clear separation of concerns:
+
+```text
 Vult/
 ├── src/
-│   ├── Vult.Core/              # Domain models, interfaces, and business logic
-│   ├── Vult.Infrastructure/    # Data access, external services, and infrastructure concerns
-│   ├── Vult.Api/               # RESTful API endpoints and controllers
-│   └── Vult.App/               # Web application UI (Razor Pages)
+│   ├── Vult.Core/              # Domain models, enums, interfaces, core business logic
+│   ├── Vult.Infrastructure/    # EF Core context, mappings, Azure AI integrations, persistence
+│   ├── Vult.Api/               # ASP.NET Core Web API, CQS handlers, controllers
+│   └── Vult.App/               # Angular web application (frontend)
 └── test/
-    ├── Vult.Core.Tests/        # Unit tests for Core layer
-    ├── Vult.Infrastructure.Tests/  # Unit tests for Infrastructure layer
-    └── Vult.Api.Tests/         # Unit tests for API layer
+    ├── Vult.Core.Tests/        # NUnit tests for Core
+    ├── Vult.Infrastructure.Tests/  # NUnit tests for Infrastructure
+    └── Vult.Api.Tests/         # NUnit tests for API
 ```
 
-## 📋 Prerequisites
+---
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) or later
-- [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (LocalDB or full instance)
+## Prerequisites
+
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (matching the `net10.0` target)
+- [Node.js 20+](https://nodejs.org/) and npm (for the Angular app)
+- [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (or compatible SQL Server instance)
+- (Optional, for AI features) Azure subscription with Computer Vision / Azure AI Vision
 - IDE of your choice:
-  - [Visual Studio 2022](https://visualstudio.microsoft.com/) (v17.12 or later)
-  - [Visual Studio Code](https://code.visualstudio.com/) with C# extension
-  - [JetBrains Rider](https://www.jetbrains.com/rider/)
+  - Visual Studio 2022 (17.12+)
+  - Visual Studio Code with C# and Angular tooling
+  - Rider
 
-## 🚀 Getting Started
+---
 
-### Clone the Repository
+## Getting Started
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/QuinntyneBrown/Vult.git
 cd Vult
 ```
 
-### Build the Solution
+### 2. Backend – Build and Run
+
+Build the .NET solution:
 
 ```bash
-dotnet build
+dotnet build Vult.sln
 ```
 
-### Database Setup
+#### Database Configuration
 
-The application uses Entity Framework Core with SQL Server Express for data persistence.
+Vult uses Entity Framework Core with SQL Server (typically SQL Server Express).
 
-#### 1. Configure Connection String
-
-The default connection string in `src/Vult.Api/appsettings.json` is configured for SQL Server Express:
-
-```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=VultDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true"
-}
-```
-
-**Adjust the connection string** based on your SQL Server installation:
-- For **SQL Server Express**: `Server=localhost\\SQLEXPRESS;...`
-- For **LocalDB**: `Server=(localdb)\\mssqllocaldb;...`
-- For **full SQL Server**: `Server=localhost;...`
-
-#### 2. Apply Database Migrations
-
-Navigate to the API project and run migrations to create the database:
+1. Update the connection string in `src/Vult.Api/appsettings.Development.json` (or `appsettings.json`) under `ConnectionStrings:DefaultConnection` to point to your SQL Server instance.
+2. Apply migrations from the API project:
 
 ```bash
 cd src/Vult.Api
 dotnet ef database update
 ```
 
-This will:
-- Create the `VultDb` database
-- Create the `CatalogItems` and `CatalogItemImages` tables
-- Apply all pending migrations
+This will create the Vult database and apply the current schema (catalog tables, etc.).
 
-#### 3. Verify Database Creation
+#### Run the API
 
-You can verify the database was created successfully using:
+From `src/Vult.Api`:
 
 ```bash
-dotnet ef database update --verbose
+dotnet run
 ```
 
-Or connect to SQL Server using SQL Server Management Studio (SSMS) or Azure Data Studio to inspect the database structure.
+By default the API will listen on the ports configured in `launchSettings.json` or environment-specific settings.
 
-### Run Tests
+### 3. Frontend – Angular App
+
+From the `src/Vult.App` directory:
+
+```bash
+cd ../Vult.App
+npm install
+npm start   # runs "ng serve"
+```
+
+The Angular development server typically runs on `http://localhost:4200`. The app will be configured to call the Vult.Api via an Angular proxy once API endpoints are in place.
+
+### 4. Running Tests
+
+#### .NET Tests
+
+From the repo root:
 
 ```bash
 dotnet test
 ```
 
-### Run the API
+This runs the NUnit test projects under `test/`.
+
+#### Angular Tests
+
+From `src/Vult.App`:
 
 ```bash
-cd src/Vult.Api
-dotnet run
+npm test
 ```
 
-The API will be available at `https://localhost:5001` (or the port shown in the console output).
+E2E tests (Playwright) will be added under a dedicated e2e setup as the frontend feature set matures.
 
-### Run the Web Application
+---
 
-```bash
-cd src/Vult.App
-dotnet run
-```
+## Architecture Overview
 
-The web application will be available at `https://localhost:5002` (or the port shown in the console output).
+Vult follows a layered, clean architecture inspired by the ZoomLoop repository. High-level goals:
 
-## 🏛️ Architecture
+- Keep the **domain (Core)** independent of infrastructure and UI.
+- Encapsulate **data access and external services** in Infrastructure.
+- Keep the **API** thin, delegating work to commands/queries and domain services.
+- Treat the **Angular app** as a client of the API, focused on UX.
 
-### Core Layer (`Vult.Core`)
+### Vult.Core (Domain)
 
-The Core layer contains the domain model and business logic. It defines:
+Responsible for core business concepts and rules:
 
-- **Domain Entities**: Core business objects and value types
-  - `CatalogItem`: Represents catalog items with properties like MSRP, resale value, brand, size, etc.
-  - `CatalogItemImage`: Represents images associated with catalog items
-- **Enums**: Domain enumerations
-  - `Gender`: Mens, Womens, Unisex
-  - `ClothingType`: Shoe, Pants, Jacket, Shirt, Shorts, Dress, Skirt, Sweater, Hoodie, Coat
-- **Interfaces**: Contracts for repositories, services, and external dependencies
-  - `IVultContext`: Database context interface for data access
-- **Business Logic**: Domain services and business rules
-- **Exceptions**: Custom domain exceptions
+- Domain models such as `CatalogItem`, `CatalogItemImage`, `User`, `Role`.
+- Enums such as gender and item type for catalog classification.
+- Interfaces like `IVultContext`, `IAzureAIService`, and service abstractions.
+- Validation rules and domain behavior.
 
-**Dependencies**: Microsoft.EntityFrameworkCore (for IVultContext interface only)
+This project has no dependency on ASP.NET Core, EF Core implementations, or Angular.
 
-**Design Principles**:
-- Domain-Driven Design (DDD)
-- SOLID principles
-- Dependency Inversion
+### Vult.Infrastructure (Persistence & Integrations)
 
-### Infrastructure Layer (`Vult.Infrastructure`)
+Implements infrastructure concerns:
 
-The Infrastructure layer implements the interfaces defined in the Core layer:
+- `VultContext` EF Core DbContext implementing `IVultContext`.
+- Entity configurations and mappings for CatalogItem, CatalogItemImage, auth models, etc.
+- SQL Server configuration and migrations support.
+- Azure AI service integration (via Azure.AI.Vision.ImageAnalysis) used for image analysis.
 
-- **Data Access**: Entity Framework Core, repository implementations
-  - `VultContext`: DbContext implementation for SQL Server data access
-  - Configured with SQL Server Express
-  - Implements `IVultContext` interface from Core layer
-- **External Services**: Third-party API clients, email services, etc.
-- **Cross-Cutting Concerns**: Logging, caching, file storage
+Infrastructure depends on Vult.Core and EF Core / Azure SDK packages.
 
-**Database Configuration**:
-- Entity Framework Core 10.0
-- SQL Server provider
-- Code-first migrations (migrations stored in API project)
-- String-based enum storage for Gender and ClothingType
-- Decimal precision (18,2) for monetary values
+### Vult.Api (Backend Services)
 
-**Dependencies**: 
-- Vult.Core
-- Microsoft.EntityFrameworkCore.SqlServer
-- Microsoft.EntityFrameworkCore.Design
+ASP.NET Core Web API providing:
 
-**Design Principles**:
-- Repository pattern
-- Unit of Work pattern
-- Dependency Injection
+- CQS-style commands and queries for catalog operations.
+- Authentication and authorization services (JWT-based).
+- Controllers and/or minimal APIs for catalog items, ingestion, images, and auth.
+- DI configuration wiring Core and Infrastructure together.
+- OpenAPI/Swagger for discoverable API documentation.
 
-### API Layer (`Vult.Api`)
+### Vult.App (Angular Web Application)
 
-The API layer provides RESTful endpoints for external consumers:
+Angular 21 single-page application providing the user experience:
 
-- **Controllers**: HTTP endpoints and request handling
-- **DTOs**: Data transfer objects for API contracts
-- **Middleware**: Authentication, error handling, logging
-- **Configuration**: Dependency injection, services setup
+- Authentication UI (login/register) aligned with backend auth.
+- Catalog management (list, create, edit, delete items).
+- Photo upload with drag-and-drop and ingestion progress.
+- Image viewing (thumbnails, gallery, zoom/lightbox).
 
-**Dependencies**: 
-- Vult.Core
-- Vult.Infrastructure
+The app communicates with Vult.Api via HTTP, following DTO contracts defined in the API layer.
 
-**Technologies**:
-- ASP.NET Core Web API
-- OpenAPI/Swagger for API documentation
+---
 
-### App Layer (`Vult.App`)
+## Testing & Quality
 
-The App layer provides a web-based user interface:
+- **Backend**: NUnit test projects under `test/` cover domain models, services, data access, commands, queries, and controllers.
+- **Frontend**: Unit tests with Vitest, with planned Playwright e2e coverage for key user flows (auth, catalog CRUD, ingestion, image viewing).
 
-- **Pages**: Razor Pages for server-rendered UI
-- **View Models**: Data models for views
-- **Static Assets**: CSS, JavaScript, images
+As the project evolves, CI will run both backend and frontend test suites and publish coverage reports.
 
-**Dependencies**: 
-- Vult.Core
+---
 
-**Technologies**:
-- ASP.NET Core Razor Pages
-- Bootstrap (default template styling)
+## Contributing
 
-## 🧪 Testing
+1. Create a feature branch from `main`.
+2. Follow the solution architecture (Core → Infrastructure → Api → App) and keep concerns separated.
+3. Add or update tests for any new behavior.
+4. Ensure `dotnet test` and relevant `npm` scripts pass.
+5. Submit a pull request.
 
-The solution uses [NUnit](https://nunit.org/) as the testing framework. Each source project has a corresponding test project:
+---
 
-- **Vult.Core.Tests**: Tests for domain logic and business rules
-- **Vult.Infrastructure.Tests**: Tests for data access and external integrations
-- **Vult.Api.Tests**: Tests for API endpoints and controllers
+## License & Authors
 
-### Running Tests
+- Author: Quinntyne Brown
+- License: TBD (to be specified for the repository)
 
-```bash
-# Run all tests
-dotnet test
-
-# Run tests for a specific project
-dotnet test test/Vult.Core.Tests/Vult.Core.Tests.csproj
-
-# Run tests with code coverage
-dotnet test --collect:"XPlat Code Coverage"
-```
-
-## 🔧 Development Guidelines
-
-### Adding New Features
-
-1. **Define the domain model** in `Vult.Core`
-2. **Implement data access** in `Vult.Infrastructure`
-3. **Create API endpoints** in `Vult.Api`
-4. **Write tests** for each layer
-5. **Update documentation** as needed
-
-### Project References
-
-- Infrastructure can reference Core
-- API can reference Core and Infrastructure
-- App can reference Core
-- Test projects reference their corresponding source projects
-- Core should not reference any other project (keep it pure)
-
-### Coding Standards
-
-- Follow [C# Coding Conventions](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
-- Use async/await for I/O operations
-- Implement proper error handling and logging
-- Write meaningful unit tests for business logic
-- Keep methods small and focused (Single Responsibility Principle)
-
-## 📦 NuGet Packages
-
-Key packages used across the solution:
-
-- **Testing**: NUnit, NUnit3TestAdapter, Microsoft.NET.Test.Sdk
-- **API**: Microsoft.AspNetCore.OpenApi (for Swagger/OpenAPI support)
-
-## 🤝 Contributing
-
-1. Create a feature branch from `main`
-2. Make your changes following the coding standards
-3. Ensure all tests pass
-4. Submit a pull request
-
-## 📄 License
-
-[Specify your license here]
-
-## 👥 Authors
-
-Quinntyne Brown
-
-## 🔗 Additional Resources
-
-- [ASP.NET Core Documentation](https://docs.microsoft.com/en-us/aspnet/core/)
-- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Domain-Driven Design](https://martinfowler.com/tags/domain%20driven%20design.html)
+For more details on AI configuration, see the documentation under `docs/`.
