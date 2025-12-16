@@ -24,7 +24,8 @@ public class GetCatalogItemsQueryHandler
         // Apply filters
         if (!string.IsNullOrEmpty(query.BrandName))
         {
-            queryable = queryable.Where(x => x.BrandName.Contains(query.BrandName));
+            var brandNameLower = query.BrandName.ToLower();
+            queryable = queryable.Where(x => x.BrandName.ToLower().Contains(brandNameLower));
         }
 
         if (query.ItemType.HasValue)

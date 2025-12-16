@@ -28,8 +28,9 @@ public class UpdateCatalogItemCommandHandler
             return result;
         }
 
-        // Find existing catalog item
+        // Find existing catalog item with images
         var catalogItem = await _context.CatalogItems
+            .Include(x => x.CatalogItemImages)
             .FirstOrDefaultAsync(x => x.CatalogItemId == command.CatalogItem.CatalogItemId, cancellationToken);
 
         if (catalogItem == null)
@@ -44,13 +45,8 @@ public class UpdateCatalogItemCommandHandler
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        // Reload with images to ensure proper mapping
-        var updatedItem = await _context.CatalogItems
-            .Include(x => x.CatalogItemImages)
-            .FirstOrDefaultAsync(x => x.CatalogItemId == catalogItem.CatalogItemId, cancellationToken);
-
         result.Success = true;
-        result.CatalogItem = updatedItem?.ToDto();
+        result.CatalogItem = catalogItem.ToDto();
 
         return result;
     }

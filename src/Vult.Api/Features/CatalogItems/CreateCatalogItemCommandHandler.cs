@@ -34,13 +34,8 @@ public class CreateCatalogItemCommandHandler
         _context.CatalogItems.Add(catalogItem);
         await _context.SaveChangesAsync(cancellationToken);
 
-        // Reload with images to ensure proper mapping
-        var savedItem = await _context.CatalogItems
-            .Include(x => x.CatalogItemImages)
-            .FirstOrDefaultAsync(x => x.CatalogItemId == catalogItem.CatalogItemId, cancellationToken);
-
         result.Success = true;
-        result.CatalogItem = savedItem?.ToDto();
+        result.CatalogItem = catalogItem.ToDto();
 
         return result;
     }
