@@ -51,8 +51,15 @@ public class CatalogItemEvaluationService : ICatalogItemEvaluationService
 
             _logger.LogInformation("Re-evaluating catalog item {CatalogItemId}", catalogItemId);
 
-            // Use the first image for re-evaluation
-            var firstImage = catalogItem.CatalogItemImages.First();
+            // Use the first image for re-evaluation (safely)
+            var firstImage = catalogItem.CatalogItemImages.FirstOrDefault();
+            if (firstImage == null)
+            {
+                result.Success = false;
+                result.Errors.Add($"Catalog item {catalogItemId} has no images to re-evaluate");
+                return result;
+            }
+            
             var analysisResult = await _azureAIService.AnalyzeImageAsync(firstImage.ImageData, cancellationToken);
 
             if (!analysisResult.Success)

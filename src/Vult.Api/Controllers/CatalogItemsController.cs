@@ -135,7 +135,13 @@ public class CatalogItemsController : ControllerBase
         [FromBody] UpdateCatalogItemDto dto,
         CancellationToken cancellationToken = default)
     {
-        // Set the ID from the route
+        // Validate that the ID in the route matches the ID in the DTO (if provided)
+        if (dto.CatalogItemId != Guid.Empty && dto.CatalogItemId != id)
+        {
+            return BadRequest(new { errors = new[] { "The ID in the URL does not match the ID in the request body" } });
+        }
+        
+        // Set the ID from the route to ensure consistency
         dto.CatalogItemId = id;
         
         var command = new UpdateCatalogItemCommand
