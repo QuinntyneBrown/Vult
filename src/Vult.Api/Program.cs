@@ -8,6 +8,7 @@ using System.Text;
 using Vult.Api.Services;
 using Vult.Core.Interfaces;
 using Vult.Infrastructure.Data;
+using Vult.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,10 @@ builder.Services.AddScoped<IVultContext>(provider => provider.GetRequiredService
 // Register Authentication and Authorization Services
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
+
+// Register Azure AI Services
+builder.Services.AddSingleton<IAzureAIService, AzureAIService>();
+builder.Services.AddScoped<ICatalogItemIngestionService, CatalogItemIngestionService>();
 
 // Configure JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "DefaultSecretKey12345678901234567890";
