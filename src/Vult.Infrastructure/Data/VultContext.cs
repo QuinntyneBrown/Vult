@@ -71,6 +71,7 @@ public class VultContext : DbContext, IVultContext
                 .HasMaxLength(500);
             
             entity.Property(e => e.AltText)
+                .IsRequired()
                 .HasMaxLength(200);
             
             entity.Property(e => e.CreatedDate)
