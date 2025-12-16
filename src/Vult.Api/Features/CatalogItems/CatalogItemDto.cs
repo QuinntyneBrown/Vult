@@ -3,30 +3,19 @@
 
 using Vult.Core.Enums;
 
-namespace Vult.Core.Models;
+namespace Vult.Api.Features.CatalogItems;
 
-public class CatalogItem
+public class CatalogItemDto
 {
     public Guid CatalogItemId { get; set; }
-    
     public decimal EstimatedMSRP { get; set; }
-    
     public decimal EstimatedResaleValue { get; set; }
-    
     public string Description { get; set; } = string.Empty;
-    
     public string Size { get; set; } = string.Empty;
-    
     public string BrandName { get; set; } = string.Empty;
-    
     public Gender Gender { get; set; }
-    
     public ItemType ItemType { get; set; }
-    
     public DateTime CreatedDate { get; set; }
-    
     public DateTime UpdatedDate { get; set; }
-    
-    // Navigation property
-    public ICollection<CatalogItemImage> CatalogItemImages { get; set; } = new List<CatalogItemImage>();
+    public List<CatalogItemImageDto> Images { get; set; } = new();
 }
