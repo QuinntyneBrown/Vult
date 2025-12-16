@@ -7,15 +7,15 @@ namespace Vult.Core.Tests.Models;
 public class CatalogItemTests
 {
     [Test]
-    public void CatalogItem_ShouldHaveIdProperty()
+    public void CatalogItem_ShouldHaveCatalogItemIdProperty()
     {
         // Arrange & Act
         var catalogItem = new CatalogItem();
         var id = Guid.NewGuid();
-        catalogItem.Id = id;
+        catalogItem.CatalogItemId = id;
 
         // Assert
-        Assert.That(catalogItem.Id, Is.EqualTo(id));
+        Assert.That(catalogItem.CatalogItemId, Is.EqualTo(id));
     }
 
     [Test]
@@ -79,13 +79,13 @@ public class CatalogItemTests
     }
 
     [Test]
-    public void CatalogItem_ShouldHaveClothingTypeProperty()
+    public void CatalogItem_ShouldHaveItemTypeProperty()
     {
         // Arrange & Act
-        var catalogItem = new CatalogItem { ClothingType = ClothingType.Shoe };
+        var catalogItem = new CatalogItem { ItemType = ItemType.Shoe };
 
         // Assert
-        Assert.That(catalogItem.ClothingType, Is.EqualTo(ClothingType.Shoe));
+        Assert.That(catalogItem.ItemType, Is.EqualTo(ItemType.Shoe));
     }
 
     [Test]
@@ -130,9 +130,9 @@ public class CatalogItemTests
         var catalogItem = new CatalogItem();
         var image = new CatalogItemImage
         {
-            Id = Guid.NewGuid(),
-            Url = "https://example.com/image.jpg",
-            AltText = "Test image"
+            CatalogItemImageId = Guid.NewGuid(),
+            ImageData = new byte[] { 1, 2, 3 },
+            Description = "Test image"
         };
 
         // Act
@@ -174,32 +174,32 @@ public class CatalogItemTests
     }
 
     [Test]
-    public void ClothingType_ShouldHaveShoeValue()
+    public void ItemType_ShouldHaveShoeValue()
     {
         // Arrange & Act
-        var type = ClothingType.Shoe;
+        var type = ItemType.Shoe;
 
         // Assert
-        Assert.That(type, Is.EqualTo(ClothingType.Shoe));
+        Assert.That(type, Is.EqualTo(ItemType.Shoe));
     }
 
     [Test]
-    public void ClothingType_ShouldHavePantsValue()
+    public void ItemType_ShouldHavePantsValue()
     {
         // Arrange & Act
-        var type = ClothingType.Pants;
+        var type = ItemType.Pants;
 
         // Assert
-        Assert.That(type, Is.EqualTo(ClothingType.Pants));
+        Assert.That(type, Is.EqualTo(ItemType.Pants));
     }
 
     [Test]
-    public void ClothingType_ShouldHaveJacketValue()
+    public void ItemType_ShouldHaveJacketValue()
     {
         // Arrange & Act
-        var type = ClothingType.Jacket;
+        var type = ItemType.Jacket;
 
         // Assert
-        Assert.That(type, Is.EqualTo(ClothingType.Jacket));
+        Assert.That(type, Is.EqualTo(ItemType.Jacket));
     }
 }
