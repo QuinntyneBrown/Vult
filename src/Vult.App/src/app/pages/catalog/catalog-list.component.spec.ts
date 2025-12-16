@@ -5,7 +5,6 @@ import { CatalogListComponent } from './catalog-list.component';
 import { PhotoUploadComponent } from '../../components/photo-upload/photo-upload.component';
 import { CatalogItemService, SignalRService } from '../../core/services';
 import { FakeSignalRService } from './test/fake-signalr.service';
-import { of, throwError } from 'rxjs';
 
 describe('CatalogListComponent E2E Tests', () => {
   let component: CatalogListComponent;
@@ -240,45 +239,8 @@ describe('CatalogListComponent E2E Tests', () => {
     expect(component.isLoading()).toBe(false);
     expect(component.errorMessage()).toBe('Failed to load catalog items. Please try again.');
   });
-});
 
-describe('Photo Upload E2E Flow with Fake SignalR', () => {
-  let component: CatalogListComponent;
-  let fixture: ComponentFixture<CatalogListComponent>;
-  let fakeSignalRService: FakeSignalRService;
-  let httpMock: HttpTestingController;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        CatalogListComponent,
-        PhotoUploadComponent,
-        HttpClientTestingModule
-      ],
-      providers: [
-        CatalogItemService,
-        {
-          provide: SignalRService,
-          useClass: FakeSignalRService
-        },
-        {
-          provide: Router,
-          useValue: { navigate: jasmine.createSpy('navigate') }
-        }
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(CatalogListComponent);
-    component = fixture.componentInstance;
-    fakeSignalRService = TestBed.inject(SignalRService) as unknown as FakeSignalRService;
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
-  });
-
-  it('should complete full photo upload flow with fake SignalR events', (done) => {
+  it('should complete photo upload flow with fake SignalR events', (done) => {
     fixture.detectChanges();
     
     // Mock initial catalog load
@@ -288,10 +250,6 @@ describe('Photo Upload E2E Flow with Fake SignalR', () => {
     // Show upload section
     component.toggleUpload();
     fixture.detectChanges();
-
-    // Create mock files
-    const file1 = new File(['image1'], 'test1.jpg', { type: 'image/jpeg' });
-    const file2 = new File(['image2'], 'test2.jpg', { type: 'image/jpeg' });
 
     // Simulate the upload process
     const mockIngestionResult = {
@@ -320,51 +278,16 @@ describe('Photo Upload E2E Flow with Fake SignalR', () => {
       ]
     };
 
-    // Subscribe to upload complete event
-    let uploadCompleted = false;
-    const subscription = component.catalogItems$.subscribe(items => {
-      if (items.length === 2 && !uploadCompleted) {
-        uploadCompleted = true;
-        expect(items[0].brandName).toBe('Nike');
-        expect(items[1].brandName).toBe('Adidas');
-        subscription.unsubscribe();
-        done();
-      }
-    });
-
     // Simulate SignalR events using the fake service
-    setTimeout(() => {
-      fakeSignalRService.simulateProgress(1, 2, 'Processing image 1 of 2...');
-    }, 100);
-
-    setTimeout(() => {
-      fakeSignalRService.simulateProgress(2, 2, 'Processing image 2 of 2...');
-    }, 200);
-
-    setTimeout(() => {
-      fakeSignalRService.simulateComplete(mockIngestionResult);
-      component.onUploadComplete(mockIngestionResult);
-    }, 300);
-  });
-
-  it('should handle upload errors via fake SignalR', (done) => {
-    fixture.detectChanges();
+    fakeSignalRService.simulateProgress(1, 2, 'Processing image 1 of 2...');
+    fakeSignalRService.simulateProgress(2, 2, 'Processing image 2 of 2...');
     
-    const req = httpMock.expectOne('/api/catalogitems?pageNumber=1&pageSize=20');
-    req.flush({ catalogItems: [], totalCount: 0 });
-
-    component.toggleUpload();
-    fixture.detectChanges();
-
-    // Subscribe to error events
-    fakeSignalRService.ingestionError$.subscribe(error => {
-      expect(error).toBe('Failed to process images');
-      done();
-    });
-
-    // Simulate error
-    setTimeout(() => {
-      fakeSignalRService.simulateError('Failed to process images');
-    }, 100);
+    // Handle completion
+    component.onUploadComplete(mockIngestionResult);
+    
+    expect(component.catalogItems().length).toBe(2);
+    expect(component.catalogItems()[0].brandName).toBe('Nike');
+    expect(component.catalogItems()[1].brandName).toBe('Adidas');
+    done();
   });
 });

@@ -193,7 +193,7 @@ public class IngestPhotosCommandHandlerTests
         _mockClientProxy.Verify(
             c => c.SendCoreAsync(
                 "IngestionError",
-                It.Is<object[]>(args => args.Length > 0 && args[0].ToString()!.Contains("Processing failed")),
+                It.Is<object[]>(args => args.Length > 0 && args[0] != null && args[0].ToString()!.Contains("Processing failed")),
                 It.IsAny<CancellationToken>()),
             Times.Once);
     }

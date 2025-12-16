@@ -30,7 +30,6 @@ public class PhotoUploadController : ControllerBase
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Ingestion result with created catalog items</returns>
     [HttpPost]
-    [RequestSizeLimit(100_000_000)] // 100MB limit
     [ProducesResponseType(typeof(IngestPhotosCommandResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IngestPhotosCommandResult>> UploadPhotos(
