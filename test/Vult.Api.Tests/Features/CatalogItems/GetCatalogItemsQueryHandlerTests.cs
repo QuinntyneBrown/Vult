@@ -53,7 +53,7 @@ public class GetCatalogItemsQueryHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.Items, Has.Count.EqualTo(10));
@@ -106,7 +106,7 @@ public class GetCatalogItemsQueryHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.Items, Has.Count.EqualTo(1));
@@ -156,7 +156,7 @@ public class GetCatalogItemsQueryHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.Items, Has.Count.EqualTo(1));
@@ -206,7 +206,7 @@ public class GetCatalogItemsQueryHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.Items, Has.Count.EqualTo(1));
@@ -256,7 +256,7 @@ public class GetCatalogItemsQueryHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.Items, Has.Count.EqualTo(2));
@@ -307,7 +307,7 @@ public class GetCatalogItemsQueryHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.Items, Has.Count.EqualTo(2));
@@ -358,7 +358,7 @@ public class GetCatalogItemsQueryHandlerTests
         var query = new GetCatalogItemsQuery();
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.Items, Has.Count.EqualTo(2));

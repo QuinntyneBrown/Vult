@@ -62,7 +62,7 @@ public class UpdateCatalogItemCommandHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(command);
+        var result = await handler.Handle(command, default);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -98,7 +98,7 @@ public class UpdateCatalogItemCommandHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(command);
+        var result = await handler.Handle(command, default);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -127,7 +127,7 @@ public class UpdateCatalogItemCommandHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(command);
+        var result = await handler.Handle(command, default);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -173,7 +173,7 @@ public class UpdateCatalogItemCommandHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(command);
+        var result = await handler.Handle(command, default);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -219,7 +219,7 @@ public class UpdateCatalogItemCommandHandlerTests
         };
 
         // Act
-        var result = await handler.HandleAsync(command);
+        var result = await handler.Handle(command, default);
 
         // Assert
         Assert.That(result.Success, Is.False);

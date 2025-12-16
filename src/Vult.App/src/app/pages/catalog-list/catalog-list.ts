@@ -1,18 +1,18 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { PhotoUploadComponent } from '../../components/photo-upload/photo-upload.component';
+import { CatalogItemImagesUpload } from '../../components/catalog-item-images-upload';
 import { CatalogItemService } from '../../core/services';
 import { CatalogItem, IngestionResult } from '../../core/models';
 
 @Component({
   selector: 'app-catalog-list',
   standalone: true,
-  imports: [CommonModule, PhotoUploadComponent],
-  templateUrl: './catalog-list.component.html',
-  styleUrls: ['./catalog-list.component.scss']
+  imports: [CommonModule, CatalogItemImagesUpload],
+  templateUrl: './catalog-list.html',
+  styleUrls: ['./catalog-list.scss']
 })
-export class CatalogListComponent implements OnInit {
+export class CatalogList implements OnInit {
   catalogItems = signal<CatalogItem[]>([]);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
@@ -53,16 +53,11 @@ export class CatalogListComponent implements OnInit {
   onUploadComplete(result: IngestionResult): void {
     console.log('Upload complete:', result);
     
-    // Add new items to the list
     if (result.catalogItems && result.catalogItems.length > 0) {
       this.catalogItems.update(current => [...result.catalogItems, ...current]);
     }
 
-    // Show success message
     this.showUpload.set(false);
-    
-    // Optionally reload the full list
-    // this.loadCatalogItems();
   }
 
   toggleUpload(): void {

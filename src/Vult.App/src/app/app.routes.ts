@@ -1,10 +1,17 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards';
+import { Login } from './pages/login/login';
+import { CatalogList } from './pages/catalog-list/catalog-list';
 
 export const routes: Routes = [
   {
     path: 'auth',
-    loadChildren: () => import('./pages/auth/auth.routes').then(m => m.authRoutes)
+    children: [
+      {
+        path: 'login',
+        component: Login
+      }
+    ]
   },
   {
     path: '',
@@ -12,7 +19,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'catalog',
-        loadChildren: () => import('./pages/catalog/catalog.routes').then(m => m.catalogRoutes)
+        component: CatalogList
       },
       {
         path: '',

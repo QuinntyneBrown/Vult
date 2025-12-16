@@ -48,7 +48,7 @@ public class GetCatalogItemByIdQueryHandlerTests
         var query = new GetCatalogItemByIdQuery(catalogItemId);
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.CatalogItem, Is.Not.Null);
@@ -65,7 +65,7 @@ public class GetCatalogItemByIdQueryHandlerTests
         var query = new GetCatalogItemByIdQuery(Guid.NewGuid());
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.CatalogItem, Is.Null);
@@ -110,7 +110,7 @@ public class GetCatalogItemByIdQueryHandlerTests
         var query = new GetCatalogItemByIdQuery(catalogItemId);
 
         // Act
-        var result = await handler.HandleAsync(query);
+        var result = await handler.Handle(query, default);
 
         // Assert
         Assert.That(result.CatalogItem, Is.Not.Null);

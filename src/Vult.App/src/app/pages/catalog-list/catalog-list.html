@@ -7,7 +7,7 @@
   </header>
 
   <div class="upload-section" *ngIf="showUpload()">
-    <app-photo-upload (uploadComplete)="onUploadComplete($event)"></app-photo-upload>
+    <app-catalog-item-images-upload (uploadComplete)="onUploadComplete($event)"></app-catalog-item-images-upload>
   </div>
 
   <div class="error-message" *ngIf="errorMessage()">

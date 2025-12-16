@@ -10,13 +10,13 @@ interface PhotoPreview {
 }
 
 @Component({
-  selector: 'app-photo-upload',
+  selector: 'app-catalog-item-images-upload',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './photo-upload.component.html',
-  styleUrls: ['./photo-upload.component.scss']
+  templateUrl: './catalog-item-images-upload.html',
+  styleUrls: ['./catalog-item-images-upload.scss']
 })
-export class PhotoUploadComponent implements OnInit, OnDestroy {
+export class CatalogItemImagesUpload implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   
   photos = signal<PhotoPreview[]>([]);
@@ -33,10 +33,8 @@ export class PhotoUploadComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    // Connect to SignalR hub
     await this.signalRService.startConnection();
 
-    // Subscribe to ingestion events
     this.signalRService.ingestionProgress$
       .pipe(takeUntil(this.destroy$))
       .subscribe(progress => {
@@ -136,8 +134,7 @@ export class PhotoUploadComponent implements OnInit, OnDestroy {
     const files = this.photos().map(p => p.file);
 
     this.catalogItemService.uploadPhotos(files).subscribe({
-      next: (result) => {
-        // Result will be handled by SignalR events
+      next: () => {
         console.log('Upload initiated successfully');
       },
       error: (error) => {

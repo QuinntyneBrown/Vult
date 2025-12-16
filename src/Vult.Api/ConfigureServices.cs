@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +27,12 @@ public static class ConfigureServices
         
         // OpenAPI
         services.AddOpenApi();
+
+        // MediatR
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(ConfigureServices).Assembly);
+        });
 
         // Database
         services.AddDbContext<VultContext>(options =>
@@ -89,14 +96,6 @@ public static class ConfigureServices
             });
 
         services.AddAuthorization();
-
-        // Command and Query Handlers
-        services.AddScoped<GetCatalogItemsQueryHandler>();
-        services.AddScoped<GetCatalogItemByIdQueryHandler>();
-        services.AddScoped<CreateCatalogItemCommandHandler>();
-        services.AddScoped<UpdateCatalogItemCommandHandler>();
-        services.AddScoped<DeleteCatalogItemCommandHandler>();
-        services.AddScoped<IngestPhotosCommandHandler>();
 
         return services;
     }

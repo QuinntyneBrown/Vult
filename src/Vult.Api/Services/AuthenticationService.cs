@@ -128,6 +128,32 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
+    public async Task<string?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+    {
+        // Validate the refresh token as a JWT first
+        if (!ValidateToken(refreshToken))
+        {
+            return null;
+        }
+
+        var userId = GetUserIdFromToken(refreshToken);
+        if (userId == null)
+        {
+            return null;
+        }
+
+        var user = await _context.Users
+            .Include(u => u.Roles)
+            .FirstOrDefaultAsync(u => u.UserId == userId.Value, cancellationToken);
+
+        if (user == null || !user.IsActive)
+        {
+            return null;
+        }
+
+        return GenerateJwtToken(user);
+    }
+
     private string GenerateJwtToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();

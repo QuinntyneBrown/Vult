@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
-import { CatalogListComponent } from './catalog-list.component';
-import { PhotoUploadComponent } from '../../components/photo-upload/photo-upload.component';
+import { CatalogList } from './catalog-list';
+import { PhotoUpload } from '../../components/catalog-item-images-upload/catalog-item-images-upload';
 import { CatalogItemService, SignalRService } from '../../core/services';
 import { FakeSignalRService } from './test/fake-signalr.service';
 import { of, throwError } from 'rxjs';
 
-describe('CatalogListComponent E2E Tests', () => {
-  let component: CatalogListComponent;
-  let fixture: ComponentFixture<CatalogListComponent>;
+describe('CatalogList E2E Tests', () => {
+  let component: CatalogList;
+  let fixture: ComponentFixture<CatalogList>;
   let catalogItemService: CatalogItemService;
   let fakeSignalRService: FakeSignalRService;
   let httpMock: HttpTestingController;
@@ -18,8 +18,8 @@ describe('CatalogListComponent E2E Tests', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        CatalogListComponent,
-        PhotoUploadComponent,
+        CatalogList,
+        PhotoUpload,
         HttpClientTestingModule
       ],
       providers: [
@@ -35,7 +35,7 @@ describe('CatalogListComponent E2E Tests', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CatalogListComponent);
+    fixture = TestBed.createComponent(CatalogList);
     component = fixture.componentInstance;
     catalogItemService = TestBed.inject(CatalogItemService);
     fakeSignalRService = TestBed.inject(SignalRService) as unknown as FakeSignalRService;
@@ -243,16 +243,16 @@ describe('CatalogListComponent E2E Tests', () => {
 });
 
 describe('Photo Upload E2E Flow with Fake SignalR', () => {
-  let component: CatalogListComponent;
-  let fixture: ComponentFixture<CatalogListComponent>;
+  let component: CatalogList;
+  let fixture: ComponentFixture<CatalogList>;
   let fakeSignalRService: FakeSignalRService;
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        CatalogListComponent,
-        PhotoUploadComponent,
+        CatalogList,
+        PhotoUpload,
         HttpClientTestingModule
       ],
       providers: [
@@ -268,7 +268,7 @@ describe('Photo Upload E2E Flow with Fake SignalR', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CatalogListComponent);
+    fixture = TestBed.createComponent(CatalogList);
     component = fixture.componentInstance;
     fakeSignalRService = TestBed.inject(SignalRService) as unknown as FakeSignalRService;
     httpMock = TestBed.inject(HttpTestingController);

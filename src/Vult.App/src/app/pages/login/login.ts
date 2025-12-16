@@ -8,10 +8,10 @@ import { AuthService } from '../../core/services';
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  templateUrl: './login.html',
+  styleUrls: ['./login.scss']
 })
-export class LoginComponent {
+export class Login {
   loginForm: FormGroup;
   errorMessage = signal<string | null>(null);
   isLoading = signal(false);

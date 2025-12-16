@@ -1,12 +1,13 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Vult.Core.Interfaces;
 
 namespace Vult.Api.Features.CatalogItems;
 
-public class GetCatalogItemsQueryHandler
+public class GetCatalogItemsQueryHandler : IRequestHandler<GetCatalogItemsQuery, GetCatalogItemsQueryResult>
 {
     private readonly IVultContext _context;
 
@@ -15,7 +16,7 @@ public class GetCatalogItemsQueryHandler
         _context = context;
     }
 
-    public async Task<GetCatalogItemsQueryResult> HandleAsync(GetCatalogItemsQuery query, CancellationToken cancellationToken = default)
+    public async Task<GetCatalogItemsQueryResult> Handle(GetCatalogItemsQuery query, CancellationToken cancellationToken)
     {
         var queryable = _context.CatalogItems
             .Include(x => x.CatalogItemImages)

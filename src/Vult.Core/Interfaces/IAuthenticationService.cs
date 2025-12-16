@@ -39,4 +39,14 @@ public interface IAuthenticationService
     /// <param name="token">The JWT token</param>
     /// <returns>User ID if token is valid, null otherwise</returns>
     Guid? GetUserIdFromToken(string token);
+
+    /// <summary>
+    /// Refreshes an access token using a refresh token.
+    /// For this implementation the refresh token is also a JWT and is validated
+    /// before a new access token is issued.
+    /// </summary>
+    /// <param name="refreshToken">The refresh token (JWT)</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>New access token if refresh succeeds, null otherwise</returns>
+    Task<string?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
 }

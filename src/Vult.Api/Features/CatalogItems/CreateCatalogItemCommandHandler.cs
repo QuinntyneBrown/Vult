@@ -1,12 +1,13 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Vult.Core.Interfaces;
 
 namespace Vult.Api.Features.CatalogItems;
 
-public class CreateCatalogItemCommandHandler
+public class CreateCatalogItemCommandHandler : IRequestHandler<CreateCatalogItemCommand, CreateCatalogItemCommandResult>
 {
     private readonly IVultContext _context;
 
@@ -15,7 +16,7 @@ public class CreateCatalogItemCommandHandler
         _context = context;
     }
 
-    public async Task<CreateCatalogItemCommandResult> HandleAsync(CreateCatalogItemCommand command, CancellationToken cancellationToken = default)
+    public async Task<CreateCatalogItemCommandResult> Handle(CreateCatalogItemCommand command, CancellationToken cancellationToken)
     {
         var result = new CreateCatalogItemCommandResult();
 

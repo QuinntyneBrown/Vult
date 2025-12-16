@@ -14,28 +14,28 @@ using Vult.Core.Models;
 namespace Vult.Api.Tests.Features.CatalogItems;
 
 [TestFixture]
-public class IngestPhotosCommandHandlerTests
+public class IngestCatalogItemPhotosCommandHandlerTests
 {
     private Mock<ICatalogItemIngestionService> _mockIngestionService = null!;
     private Mock<IHubContext<IngestionHub>> _mockHubContext = null!;
-    private Mock<ILogger<IngestPhotosCommandHandler>> _mockLogger = null!;
+    private Mock<ILogger<IngestCatalogItemPhotosCommandHandler>> _mockLogger = null!;
     private Mock<IHubClients> _mockClients = null!;
     private Mock<IClientProxy> _mockClientProxy = null!;
-    private IngestPhotosCommandHandler _handler = null!;
+    private IngestCatalogItemPhotosCommandHandler _handler = null!;
 
     [SetUp]
     public void Setup()
     {
         _mockIngestionService = new Mock<ICatalogItemIngestionService>();
         _mockHubContext = new Mock<IHubContext<IngestionHub>>();
-        _mockLogger = new Mock<ILogger<IngestPhotosCommandHandler>>();
+        _mockLogger = new Mock<ILogger<IngestCatalogItemPhotosCommandHandler>>();
         _mockClients = new Mock<IHubClients>();
         _mockClientProxy = new Mock<IClientProxy>();
 
         _mockHubContext.Setup(h => h.Clients).Returns(_mockClients.Object);
         _mockClients.Setup(c => c.All).Returns(_mockClientProxy.Object);
 
-        _handler = new IngestPhotosCommandHandler(
+        _handler = new IngestCatalogItemPhotosCommandHandler(
             _mockIngestionService.Object,
             _mockHubContext.Object,
             _mockLogger.Object);
@@ -45,10 +45,10 @@ public class IngestPhotosCommandHandlerTests
     public async Task HandleAsync_WithNoPhotos_ReturnsErrorResult()
     {
         // Arrange
-        var command = new IngestPhotosCommand { Photos = new List<IFormFile>() };
+        var command = new IngestCatalogItemPhotosCommand { Photos = new List<IFormFile>() };
 
         // Act
-        var result = await _handler.HandleAsync(command);
+        var result = await _handler.Handle(command, default);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -63,7 +63,7 @@ public class IngestPhotosCommandHandlerTests
         var mockFile1 = CreateMockFormFile("image1.jpg", "image/jpeg");
         var mockFile2 = CreateMockFormFile("image2.jpg", "image/jpeg");
         
-        var command = new IngestPhotosCommand 
+        var command = new IngestCatalogItemPhotosCommand 
         { 
             Photos = new List<IFormFile> { mockFile1.Object, mockFile2.Object }
         };
@@ -91,7 +91,7 @@ public class IngestPhotosCommandHandlerTests
             .ReturnsAsync(mockIngestionResult);
 
         // Act
-        var result = await _handler.HandleAsync(command);
+        var result = await _handler.Handle(command, default);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -106,7 +106,7 @@ public class IngestPhotosCommandHandlerTests
     {
         // Arrange
         var mockFile = CreateMockFormFile("image.jpg", "image/jpeg");
-        var command = new IngestPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
+        var command = new IngestCatalogItemPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
 
         var mockIngestionResult = new CatalogItemIngestionResult
         {
@@ -122,7 +122,7 @@ public class IngestPhotosCommandHandlerTests
             .ReturnsAsync(mockIngestionResult);
 
         // Act
-        await _handler.HandleAsync(command);
+        await _handler.Handle(command, default);
 
         // Assert - Verify SignalR progress notifications were sent
         _mockClientProxy.Verify(
@@ -138,7 +138,7 @@ public class IngestPhotosCommandHandlerTests
     {
         // Arrange
         var mockFile = CreateMockFormFile("image.jpg", "image/jpeg");
-        var command = new IngestPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
+        var command = new IngestCatalogItemPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
 
         var mockIngestionResult = new CatalogItemIngestionResult
         {
@@ -154,7 +154,7 @@ public class IngestPhotosCommandHandlerTests
             .ReturnsAsync(mockIngestionResult);
 
         // Act
-        await _handler.HandleAsync(command);
+        await _handler.Handle(command, default);
 
         // Assert - Verify completion notification was sent
         _mockClientProxy.Verify(
@@ -170,7 +170,7 @@ public class IngestPhotosCommandHandlerTests
     {
         // Arrange
         var mockFile = CreateMockFormFile("image.jpg", "image/jpeg");
-        var command = new IngestPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
+        var command = new IngestCatalogItemPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
 
         var mockIngestionResult = new CatalogItemIngestionResult
         {
@@ -187,7 +187,7 @@ public class IngestPhotosCommandHandlerTests
             .ReturnsAsync(mockIngestionResult);
 
         // Act
-        await _handler.HandleAsync(command);
+        await _handler.Handle(command, default);
 
         // Assert - Verify error notification was sent
         _mockClientProxy.Verify(

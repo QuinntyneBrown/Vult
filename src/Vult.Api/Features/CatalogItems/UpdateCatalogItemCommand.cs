@@ -1,9 +1,11 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using MediatR;
+
 namespace Vult.Api.Features.CatalogItems;
 
-public class UpdateCatalogItemCommand
+public class UpdateCatalogItemCommand : IRequest<UpdateCatalogItemCommandResult>
 {
     public UpdateCatalogItemDto CatalogItem { get; set; } = null!;
 }

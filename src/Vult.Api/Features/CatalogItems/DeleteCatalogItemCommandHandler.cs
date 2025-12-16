@@ -1,12 +1,13 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Vult.Core.Interfaces;
 
 namespace Vult.Api.Features.CatalogItems;
 
-public class DeleteCatalogItemCommandHandler
+public class DeleteCatalogItemCommandHandler : IRequestHandler<DeleteCatalogItemCommand, DeleteCatalogItemCommandResult>
 {
     private readonly IVultContext _context;
 
@@ -15,7 +16,7 @@ public class DeleteCatalogItemCommandHandler
         _context = context;
     }
 
-    public async Task<DeleteCatalogItemCommandResult> HandleAsync(DeleteCatalogItemCommand command, CancellationToken cancellationToken = default)
+    public async Task<DeleteCatalogItemCommandResult> Handle(DeleteCatalogItemCommand command, CancellationToken cancellationToken)
     {
         var result = new DeleteCatalogItemCommandResult();
 

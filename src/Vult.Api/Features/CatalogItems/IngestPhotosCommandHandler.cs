@@ -1,33 +1,34 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Vult.Api.Hubs;
 using Vult.Core.Interfaces;
 
 namespace Vult.Api.Features.CatalogItems;
 
-public class IngestPhotosCommandHandler
+public class IngestCatalogItemPhotosCommandHandler : IRequestHandler<IngestCatalogItemPhotosCommand, IngestCatalogItemPhotosCommandResult>
 {
     private readonly ICatalogItemIngestionService _ingestionService;
     private readonly IHubContext<IngestionHub> _hubContext;
-    private readonly ILogger<IngestPhotosCommandHandler> _logger;
+    private readonly ILogger<IngestCatalogItemPhotosCommandHandler> _logger;
 
-    public IngestPhotosCommandHandler(
+    public IngestCatalogItemPhotosCommandHandler(
         ICatalogItemIngestionService ingestionService,
         IHubContext<IngestionHub> hubContext,
-        ILogger<IngestPhotosCommandHandler> logger)
+        ILogger<IngestCatalogItemPhotosCommandHandler> logger)
     {
         _ingestionService = ingestionService;
         _hubContext = hubContext;
         _logger = logger;
     }
 
-    public async Task<IngestPhotosCommandResult> HandleAsync(
-        IngestPhotosCommand command,
-        CancellationToken cancellationToken = default)
+    public async Task<IngestCatalogItemPhotosCommandResult> Handle(
+        IngestCatalogItemPhotosCommand command,
+        CancellationToken cancellationToken)
     {
-        var result = new IngestPhotosCommandResult();
+        var result = new IngestCatalogItemPhotosCommandResult();
 
         if (command.Photos == null || !command.Photos.Any())
         {

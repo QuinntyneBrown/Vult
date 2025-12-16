@@ -1,8 +1,11 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Vult.Api.Controllers;
 using Vult.Api.Features.CatalogItems;
 using Vult.Core.Enums;
@@ -27,9 +30,10 @@ public class CatalogItemsControllerTests
     public async Task GetCatalogItems_ShouldReturnOkWithItems()
     {
         // Arrange
-        await using var context = GetInMemoryContext();
-        
-        var catalogItem = new CatalogItem
+        var mediatorMock = new Mock<IMediator>();
+        var loggerMock = new Mock<ILogger<CatalogItemsController>>();
+
+        var catalogItemDto = new CatalogItemDto
         {
             CatalogItemId = Guid.NewGuid(),
             BrandName = "Nike",
@@ -42,17 +46,18 @@ public class CatalogItemsControllerTests
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow
         };
-        
-        context.CatalogItems.Add(catalogItem);
-        await context.SaveChangesAsync();
 
-        var handler = new GetCatalogItemsQueryHandler(context);
-        var controller = new CatalogItemsController(
-            handler,
-            new GetCatalogItemByIdQueryHandler(context),
-            new CreateCatalogItemCommandHandler(context),
-            new UpdateCatalogItemCommandHandler(context),
-            new DeleteCatalogItemCommandHandler(context));
+        mediatorMock
+            .Setup(m => m.Send(It.IsAny<GetCatalogItemsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetCatalogItemsQueryResult
+            {
+                Items = new List<CatalogItemDto> { catalogItemDto },
+                TotalCount = 1,
+                PageNumber = 1,
+                PageSize = 10
+            });
+
+        var controller = new CatalogItemsController(mediatorMock.Object, loggerMock.Object);
 
         // Act
         var result = await controller.GetCatalogItems();
@@ -70,32 +75,30 @@ public class CatalogItemsControllerTests
     public async Task GetCatalogItemById_ShouldReturnOk_WhenItemExists()
     {
         // Arrange
-        await using var context = GetInMemoryContext();
-        
         var catalogItemId = Guid.NewGuid();
-        var catalogItem = new CatalogItem
-        {
-            CatalogItemId = catalogItemId,
-            BrandName = "Nike",
-            Description = "Test Item",
-            Size = "M",
-            EstimatedMSRP = 100m,
-            EstimatedResaleValue = 60m,
-            Gender = Gender.Mens,
-            ItemType = ItemType.Shirt,
-            CreatedDate = DateTime.UtcNow,
-            UpdatedDate = DateTime.UtcNow
-        };
-        
-        context.CatalogItems.Add(catalogItem);
-        await context.SaveChangesAsync();
+        var mediatorMock = new Mock<IMediator>();
+        var loggerMock = new Mock<ILogger<CatalogItemsController>>();
 
-        var controller = new CatalogItemsController(
-            new GetCatalogItemsQueryHandler(context),
-            new GetCatalogItemByIdQueryHandler(context),
-            new CreateCatalogItemCommandHandler(context),
-            new UpdateCatalogItemCommandHandler(context),
-            new DeleteCatalogItemCommandHandler(context));
+        mediatorMock
+            .Setup(m => m.Send(It.IsAny<GetCatalogItemByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetCatalogItemByIdQueryResult
+            {
+                CatalogItem = new CatalogItemDto
+                {
+                    CatalogItemId = catalogItemId,
+                    BrandName = "Nike",
+                    Description = "Test Item",
+                    Size = "M",
+                    EstimatedMSRP = 100m,
+                    EstimatedResaleValue = 60m,
+                    Gender = Gender.Mens,
+                    ItemType = ItemType.Shirt,
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                }
+            });
+
+        var controller = new CatalogItemsController(mediatorMock.Object, loggerMock.Object);
 
         // Act
         var result = await controller.GetCatalogItemById(catalogItemId);
@@ -113,14 +116,17 @@ public class CatalogItemsControllerTests
     public async Task GetCatalogItemById_ShouldReturnNotFound_WhenItemDoesNotExist()
     {
         // Arrange
-        await using var context = GetInMemoryContext();
-        
-        var controller = new CatalogItemsController(
-            new GetCatalogItemsQueryHandler(context),
-            new GetCatalogItemByIdQueryHandler(context),
-            new CreateCatalogItemCommandHandler(context),
-            new UpdateCatalogItemCommandHandler(context),
-            new DeleteCatalogItemCommandHandler(context));
+        var mediatorMock = new Mock<IMediator>();
+        var loggerMock = new Mock<ILogger<CatalogItemsController>>();
+
+        mediatorMock
+            .Setup(m => m.Send(It.IsAny<GetCatalogItemByIdQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetCatalogItemByIdQueryResult
+            {
+                CatalogItem = null
+            });
+
+        var controller = new CatalogItemsController(mediatorMock.Object, loggerMock.Object);
 
         var nonExistentId = Guid.NewGuid();
 
@@ -135,14 +141,30 @@ public class CatalogItemsControllerTests
     public async Task CreateCatalogItem_ShouldReturnCreated_WhenSuccessful()
     {
         // Arrange
-        await using var context = GetInMemoryContext();
-        
-        var controller = new CatalogItemsController(
-            new GetCatalogItemsQueryHandler(context),
-            new GetCatalogItemByIdQueryHandler(context),
-            new CreateCatalogItemCommandHandler(context),
-            new UpdateCatalogItemCommandHandler(context),
-            new DeleteCatalogItemCommandHandler(context));
+        var mediatorMock = new Mock<IMediator>();
+        var loggerMock = new Mock<ILogger<CatalogItemsController>>();
+
+        mediatorMock
+            .Setup(m => m.Send(It.IsAny<CreateCatalogItemCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new CreateCatalogItemCommandResult
+            {
+                Success = true,
+                CatalogItem = new CatalogItemDto
+                {
+                    CatalogItemId = Guid.NewGuid(),
+                    BrandName = "Nike",
+                    Description = "Test Item",
+                    Size = "M",
+                    EstimatedMSRP = 100m,
+                    EstimatedResaleValue = 60m,
+                    Gender = Gender.Mens,
+                    ItemType = ItemType.Shirt,
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                }
+            });
+
+        var controller = new CatalogItemsController(mediatorMock.Object, loggerMock.Object);
 
         var dto = new CreateCatalogItemDto
         {
@@ -173,14 +195,18 @@ public class CatalogItemsControllerTests
     public async Task CreateCatalogItem_ShouldReturnBadRequest_WhenValidationFails()
     {
         // Arrange
-        await using var context = GetInMemoryContext();
-        
-        var controller = new CatalogItemsController(
-            new GetCatalogItemsQueryHandler(context),
-            new GetCatalogItemByIdQueryHandler(context),
-            new CreateCatalogItemCommandHandler(context),
-            new UpdateCatalogItemCommandHandler(context),
-            new DeleteCatalogItemCommandHandler(context));
+        var mediatorMock = new Mock<IMediator>();
+        var loggerMock = new Mock<ILogger<CatalogItemsController>>();
+
+        mediatorMock
+            .Setup(m => m.Send(It.IsAny<CreateCatalogItemCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new CreateCatalogItemCommandResult
+            {
+                Success = false,
+                Errors = new List<string> { "Validation failed" }
+            });
+
+        var controller = new CatalogItemsController(mediatorMock.Object, loggerMock.Object);
 
         var dto = new CreateCatalogItemDto
         {
@@ -204,32 +230,31 @@ public class CatalogItemsControllerTests
     public async Task UpdateCatalogItem_ShouldReturnOk_WhenSuccessful()
     {
         // Arrange
-        await using var context = GetInMemoryContext();
-        
         var catalogItemId = Guid.NewGuid();
-        var catalogItem = new CatalogItem
-        {
-            CatalogItemId = catalogItemId,
-            BrandName = "Nike",
-            Description = "Original Item",
-            Size = "M",
-            EstimatedMSRP = 100m,
-            EstimatedResaleValue = 60m,
-            Gender = Gender.Mens,
-            ItemType = ItemType.Shirt,
-            CreatedDate = DateTime.UtcNow,
-            UpdatedDate = DateTime.UtcNow
-        };
-        
-        context.CatalogItems.Add(catalogItem);
-        await context.SaveChangesAsync();
+        var mediatorMock = new Mock<IMediator>();
+        var loggerMock = new Mock<ILogger<CatalogItemsController>>();
 
-        var controller = new CatalogItemsController(
-            new GetCatalogItemsQueryHandler(context),
-            new GetCatalogItemByIdQueryHandler(context),
-            new CreateCatalogItemCommandHandler(context),
-            new UpdateCatalogItemCommandHandler(context),
-            new DeleteCatalogItemCommandHandler(context));
+        mediatorMock
+            .Setup(m => m.Send(It.IsAny<UpdateCatalogItemCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new UpdateCatalogItemCommandResult
+            {
+                Success = true,
+                CatalogItem = new CatalogItemDto
+                {
+                    CatalogItemId = catalogItemId,
+                    BrandName = "Adidas",
+                    Description = "Updated Item",
+                    Size = "L",
+                    EstimatedMSRP = 120m,
+                    EstimatedResaleValue = 72m,
+                    Gender = Gender.Womens,
+                    ItemType = ItemType.Pants,
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                }
+            });
+
+        var controller = new CatalogItemsController(mediatorMock.Object, loggerMock.Object);
 
         var dto = new UpdateCatalogItemDto
         {
@@ -259,14 +284,18 @@ public class CatalogItemsControllerTests
     public async Task UpdateCatalogItem_ShouldReturnNotFound_WhenItemDoesNotExist()
     {
         // Arrange
-        await using var context = GetInMemoryContext();
-        
-        var controller = new CatalogItemsController(
-            new GetCatalogItemsQueryHandler(context),
-            new GetCatalogItemByIdQueryHandler(context),
-            new CreateCatalogItemCommandHandler(context),
-            new UpdateCatalogItemCommandHandler(context),
-            new DeleteCatalogItemCommandHandler(context));
+        var mediatorMock = new Mock<IMediator>();
+        var loggerMock = new Mock<ILogger<CatalogItemsController>>();
+
+        mediatorMock
+            .Setup(m => m.Send(It.IsAny<UpdateCatalogItemCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new UpdateCatalogItemCommandResult
+            {
+                Success = false,
+                Errors = new List<string> { "Catalog item not found" }
+            });
+
+        var controller = new CatalogItemsController(mediatorMock.Object, loggerMock.Object);
 
         var nonExistentId = Guid.NewGuid();
         var dto = new UpdateCatalogItemDto
@@ -292,32 +321,19 @@ public class CatalogItemsControllerTests
     public async Task DeleteCatalogItem_ShouldReturnNoContent_WhenSuccessful()
     {
         // Arrange
-        await using var context = GetInMemoryContext();
-        
-        var catalogItemId = Guid.NewGuid();
-        var catalogItem = new CatalogItem
-        {
-            CatalogItemId = catalogItemId,
-            BrandName = "Nike",
-            Description = "Test Item",
-            Size = "M",
-            EstimatedMSRP = 100m,
-            EstimatedResaleValue = 60m,
-            Gender = Gender.Mens,
-            ItemType = ItemType.Shirt,
-            CreatedDate = DateTime.UtcNow,
-            UpdatedDate = DateTime.UtcNow
-        };
-        
-        context.CatalogItems.Add(catalogItem);
-        await context.SaveChangesAsync();
+        var mediatorMock = new Mock<IMediator>();
+        var loggerMock = new Mock<ILogger<CatalogItemsController>>();
 
-        var controller = new CatalogItemsController(
-            new GetCatalogItemsQueryHandler(context),
-            new GetCatalogItemByIdQueryHandler(context),
-            new CreateCatalogItemCommandHandler(context),
-            new UpdateCatalogItemCommandHandler(context),
-            new DeleteCatalogItemCommandHandler(context));
+        mediatorMock
+            .Setup(m => m.Send(It.IsAny<DeleteCatalogItemCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new DeleteCatalogItemCommandResult
+            {
+                Success = true
+            });
+
+        var controller = new CatalogItemsController(mediatorMock.Object, loggerMock.Object);
+
+        var catalogItemId = Guid.NewGuid();
 
         // Act
         var result = await controller.DeleteCatalogItem(catalogItemId);
@@ -330,14 +346,18 @@ public class CatalogItemsControllerTests
     public async Task DeleteCatalogItem_ShouldReturnNotFound_WhenItemDoesNotExist()
     {
         // Arrange
-        await using var context = GetInMemoryContext();
-        
-        var controller = new CatalogItemsController(
-            new GetCatalogItemsQueryHandler(context),
-            new GetCatalogItemByIdQueryHandler(context),
-            new CreateCatalogItemCommandHandler(context),
-            new UpdateCatalogItemCommandHandler(context),
-            new DeleteCatalogItemCommandHandler(context));
+        var mediatorMock = new Mock<IMediator>();
+        var loggerMock = new Mock<ILogger<CatalogItemsController>>();
+
+        mediatorMock
+            .Setup(m => m.Send(It.IsAny<DeleteCatalogItemCommand>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new DeleteCatalogItemCommandResult
+            {
+                Success = false,
+                Errors = new List<string> { "Catalog item not found" }
+            });
+
+        var controller = new CatalogItemsController(mediatorMock.Object, loggerMock.Object);
 
         var nonExistentId = Guid.NewGuid();
 

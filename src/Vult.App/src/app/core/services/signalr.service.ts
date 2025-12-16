@@ -28,7 +28,7 @@ export class SignalRService {
     }
 
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('/hubs/ingestion', {
+      .withUrl('https://localhost:7266/hubs/ingestion', {
         accessTokenFactory: () => token
       })
       .configureLogging(LogLevel.Information)

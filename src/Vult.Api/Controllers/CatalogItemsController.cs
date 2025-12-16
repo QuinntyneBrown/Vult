@@ -1,6 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vult.Api.Features.CatalogItems;
@@ -12,25 +13,63 @@ namespace Vult.Api.Controllers;
 [Authorize]
 public class CatalogItemsController : ControllerBase
 {
-    private readonly GetCatalogItemsQueryHandler _getCatalogItemsHandler;
-    private readonly GetCatalogItemByIdQueryHandler _getCatalogItemByIdHandler;
-    private readonly CreateCatalogItemCommandHandler _createCatalogItemHandler;
-    private readonly UpdateCatalogItemCommandHandler _updateCatalogItemHandler;
-    private readonly DeleteCatalogItemCommandHandler _deleteCatalogItemHandler;
+    private readonly IMediator _mediator;
+    private readonly ILogger<CatalogItemsController> _logger;
 
-    public CatalogItemsController(
-        GetCatalogItemsQueryHandler getCatalogItemsHandler,
-        GetCatalogItemByIdQueryHandler getCatalogItemByIdHandler,
-        CreateCatalogItemCommandHandler createCatalogItemHandler,
-        UpdateCatalogItemCommandHandler updateCatalogItemHandler,
-        DeleteCatalogItemCommandHandler deleteCatalogItemHandler)
+    public CatalogItemsController(IMediator mediator, ILogger<CatalogItemsController> logger)
     {
-        _getCatalogItemsHandler = getCatalogItemsHandler;
-        _getCatalogItemByIdHandler = getCatalogItemByIdHandler;
-        _createCatalogItemHandler = createCatalogItemHandler;
-        _updateCatalogItemHandler = updateCatalogItemHandler;
-        _deleteCatalogItemHandler = deleteCatalogItemHandler;
+        _mediator = mediator;
+        _logger = logger;
     }
+
+    /// <summary>
+    /// Upload and ingest multiple photos to create catalog items
+    /// </summary>
+    /// <param name="files">Photo files to upload</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Ingestion result with created catalog items</returns>
+    [HttpPost]
+    [RequestSizeLimit(100_000_000)] // 100MB limit
+    [ProducesResponseType(typeof(IngestCatalogItemPhotosCommandResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<IngestCatalogItemPhotosCommandResult>> UploadPhotos(
+        [FromForm] List<IFormFile> files,
+        CancellationToken cancellationToken = default)
+    {
+        if (files == null || !files.Any())
+        {
+            return BadRequest(new { errors = new[] { "No files provided" } });
+        }
+
+        // Validate file types
+        var validExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+        var invalidFiles = files.Where(f => 
+            !validExtensions.Contains(Path.GetExtension(f.FileName).ToLowerInvariant()))
+            .ToList();
+
+        if (invalidFiles.Any())
+        {
+            return BadRequest(new 
+            { 
+                errors = new[] 
+                { 
+                    $"Invalid file types. Only image files are allowed: {string.Join(", ", validExtensions)}" 
+                } 
+            });
+        }
+
+        _logger.LogInformation("Uploading {Count} photos for ingestion", files.Count);
+
+        var command = new IngestCatalogItemPhotosCommand { Photos = files };
+        var result = await _mediator.Send(command, cancellationToken);
+
+        if (!result.Success && result.Errors.Any())
+        {
+            return BadRequest(new { errors = result.Errors });
+        }
+
+        return Ok(result);
+    }    
 
     /// <summary>
     /// Gets a paginated list of catalog items
@@ -64,7 +103,7 @@ public class CatalogItemsController : ControllerBase
             SortBy = sortBy
         };
 
-        var result = await _getCatalogItemsHandler.HandleAsync(query, cancellationToken);
+        var result = await _mediator.Send(query, cancellationToken);
         return Ok(result);
     }
 
@@ -82,7 +121,7 @@ public class CatalogItemsController : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var query = new GetCatalogItemByIdQuery(id);
-        var result = await _getCatalogItemByIdHandler.HandleAsync(query, cancellationToken);
+        var result = await _mediator.Send(query, cancellationToken);
 
         if (result.CatalogItem == null)
         {
@@ -106,7 +145,7 @@ public class CatalogItemsController : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var command = new CreateCatalogItemCommand { CatalogItem = dto };
-        var result = await _createCatalogItemHandler.HandleAsync(command, cancellationToken);
+        var result = await _mediator.Send(command, cancellationToken);
 
         if (!result.Success)
         {
@@ -149,7 +188,7 @@ public class CatalogItemsController : ControllerBase
             CatalogItem = dto
         };
 
-        var result = await _updateCatalogItemHandler.HandleAsync(command, cancellationToken);
+        var result = await _mediator.Send(command, cancellationToken);
 
         if (!result.Success)
         {
@@ -178,7 +217,7 @@ public class CatalogItemsController : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var command = new DeleteCatalogItemCommand(id);
-        var result = await _deleteCatalogItemHandler.HandleAsync(command, cancellationToken);
+        var result = await _mediator.Send(command, cancellationToken);
 
         if (!result.Success)
         {
