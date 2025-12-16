@@ -1,6 +1,14 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 import { CatalogItemImagesUpload } from '../../components/catalog-item-images-upload';
 import { CatalogItemService } from '../../core/services';
 import { CatalogItem, IngestionResult } from '../../core/models';
@@ -8,7 +16,15 @@ import { CatalogItem, IngestionResult } from '../../core/models';
 @Component({
   selector: 'app-catalog-list',
   standalone: true,
-  imports: [CommonModule, CatalogItemImagesUpload],
+  imports: [
+    CommonModule, 
+    CatalogItemImagesUpload,
+    MatButtonModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatChipsModule
+  ],
   templateUrl: './catalog-list.html',
   styleUrls: ['./catalog-list.scss']
 })

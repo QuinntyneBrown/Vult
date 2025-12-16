@@ -28,7 +28,7 @@ public class CatalogItemsController : ControllerBase
     /// <param name="files">Photo files to upload</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Ingestion result with created catalog items</returns>
-    [HttpPost]
+    [HttpPost("photos")]
     [RequestSizeLimit(100_000_000)] // 100MB limit
     [ProducesResponseType(typeof(IngestCatalogItemPhotosCommandResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

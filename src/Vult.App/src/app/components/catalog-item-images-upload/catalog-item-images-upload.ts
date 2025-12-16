@@ -1,5 +1,12 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
 import { Component, OnInit, OnDestroy, signal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
 import { Subject, takeUntil } from 'rxjs';
 import { CatalogItemService, SignalRService } from '../../core/services';
 import { IngestionProgress, IngestionResult } from '../../core/models';
@@ -12,7 +19,13 @@ interface PhotoPreview {
 @Component({
   selector: 'app-catalog-item-images-upload',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressBarModule,
+    MatCardModule
+  ],
   templateUrl: './catalog-item-images-upload.html',
   styleUrls: ['./catalog-item-images-upload.scss']
 })

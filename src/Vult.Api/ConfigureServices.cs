@@ -43,6 +43,9 @@ public static class ConfigureServices
         // IVultContext abstraction
         services.AddScoped<IVultContext>(provider => provider.GetRequiredService<VultContext>());
 
+        // Seed service
+        services.AddScoped<Vult.Infrastructure.ISeedService, Vult.Infrastructure.SeedService>();
+
         // Auth services
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IAuthorizationService, AuthorizationService>();
@@ -96,6 +99,29 @@ public static class ConfigureServices
             });
 
         services.AddAuthorization();
+
+        // CORS configuration
+        var allowedOrigins = configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>() ?? Array.Empty<string>();
+
+        services.AddCors(options => options.AddPolicy("CorsPolicy",
+            builder =>
+            {
+                if (allowedOrigins.Length > 0)
+                {
+                    builder.WithOrigins(allowedOrigins)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                }
+                else
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }
+            }));
 
         return services;
     }

@@ -1,3 +1,5 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
 <div class="photo-upload">
   <div class="upload-area" 
        [class.dragging]="isDragging()"
@@ -6,78 +8,91 @@
        (drop)="onDrop($event)">
     
     <div class="upload-prompt" *ngIf="photos().length === 0">
-      <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-      </svg>
+      <mat-icon class="upload-icon">cloud_upload</mat-icon>
       <h3>Drag and drop photos here</h3>
       <p>or</p>
-      <label class="file-input-label">
+      <button mat-raised-button color="primary" class="file-input-button" [disabled]="isUploading()">
         <input type="file" 
                multiple 
                accept="image/*" 
                (change)="onFileSelect($event)"
-               [disabled]="isUploading()">
-        Choose Files
-      </label>
+               [disabled]="isUploading()"
+               style="display: none;"
+               #fileInput>
+        <label (click)="fileInput.click()" style="cursor: pointer; margin: 0;">
+          <mat-icon>add_photo_alternate</mat-icon>
+          Choose Files
+        </label>
+      </button>
     </div>
 
     <div class="photo-previews" *ngIf="photos().length > 0">
       <div class="photo-preview" *ngFor="let photo of photos(); let i = index">
         <img [src]="photo.url" [alt]="photo.file.name">
-        <button class="remove-btn" 
+        <button mat-mini-fab 
+                color="warn"
+                class="remove-btn" 
                 (click)="removePhoto(i)"
                 [disabled]="isUploading()"
                 type="button">
-          ×
+          <mat-icon>close</mat-icon>
         </button>
         <div class="photo-name">{{ photo.file.name }}</div>
       </div>
       
       <div class="add-more" *ngIf="!isUploading()">
-        <label class="add-more-label">
+        <button mat-stroked-button class="add-more-button">
           <input type="file" 
                  multiple 
                  accept="image/*" 
-                 (change)="onFileSelect($event)">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          <span>Add More</span>
-        </label>
+                 (change)="onFileSelect($event)"
+                 style="display: none;"
+                 #addMoreInput>
+          <label (click)="addMoreInput.click()" style="cursor: pointer; margin: 0; display: flex; flex-direction: column; align-items: center;">
+            <mat-icon>add</mat-icon>
+            <span>Add More</span>
+          </label>
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="upload-progress" *ngIf="uploadProgress()">
-    <div class="progress-bar">
-      <div class="progress-fill" 
-           [style.width.%]="(uploadProgress()!.current / uploadProgress()!.total) * 100">
-      </div>
+  @if (uploadProgress()) {
+    <div class="upload-progress">
+      <mat-progress-bar 
+        mode="determinate" 
+        [value]="(uploadProgress()!.current / uploadProgress()!.total) * 100">
+      </mat-progress-bar>
+      <p class="progress-text">
+        {{ uploadProgress()!.status }} 
+        ({{ uploadProgress()!.current }} / {{ uploadProgress()!.total }})
+      </p>
     </div>
-    <p class="progress-text">
-      {{ uploadProgress()!.status }} 
-      ({{ uploadProgress()!.current }} / {{ uploadProgress()!.total }})
-    </p>
-  </div>
+  }
 
-  <div class="error-message" *ngIf="errorMessage()">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-    {{ errorMessage() }}
-  </div>
+  @if (errorMessage()) {
+    <mat-card class="error-message">
+      <mat-card-content>
+        <mat-icon color="warn">error</mat-icon>
+        {{ errorMessage() }}
+      </mat-card-content>
+    </mat-card>
+  }
 
   <div class="actions" *ngIf="photos().length > 0">
-    <button class="btn btn-secondary" 
+    <button mat-stroked-button 
             (click)="clearPhotos()"
             [disabled]="isUploading()"
             type="button">
+      <mat-icon>clear</mat-icon>
       Clear All
     </button>
-    <button class="btn btn-primary" 
+    <button mat-raised-button 
+            color="primary"
             (click)="uploadPhotos()"
             [disabled]="isUploading()"
             type="button">
+      <mat-icon>cloud_upload</mat-icon>
       {{ isUploading() ? 'Uploading...' : 'Upload Photos' }}
     </button>
   </div>

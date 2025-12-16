@@ -1,3 +1,6 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -46,7 +49,7 @@ export class CatalogItemService {
       formData.append('files', file, file.name);
     });
 
-    return this.http.post<IngestionResult>(`${this.API_URL}/photoupload`, formData);
+    return this.http.post<IngestionResult>(`${this.API_URL}/catalogitems/photos`, formData);
   }
 
   deleteCatalogItem(id: string): Observable<void> {

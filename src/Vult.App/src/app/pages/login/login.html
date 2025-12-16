@@ -1,47 +1,60 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
 <div class="login">
-  <div class="login__card">
-    <h1 class="login__title">Login</h1>
+  <mat-card class="login__card">
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
     
-    @if (errorMessage()) {
-      <div class="login__error">
-        {{ errorMessage() }}
-      </div>
-    }
+    <mat-card-content>
+      @if (errorMessage()) {
+        <div class="login__error">
+          {{ errorMessage() }}
+        </div>
+      }
 
-    <form class="login__form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="login__form-group">
-        <label for="username" class="login__label">Username</label>
-        <input
-          id="username"
-          type="text"
-          formControlName="username"
-          class="login__input"
-          [class.login__input--invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
-        />
-      </div>
+      <form class="login__form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="login__form-field">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="username"
+            placeholder="Enter your username"
+          />
+          @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+            <mat-error>Username is required</mat-error>
+          }
+        </mat-form-field>
 
-      <div class="login__form-group">
-        <label for="password" class="login__label">Password</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          class="login__input"
-          [class.login__input--invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-        />
-      </div>
+        <mat-form-field appearance="outline" class="login__form-field">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="password"
+            placeholder="Enter your password"
+          />
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <mat-error>Password is required</mat-error>
+          }
+        </mat-form-field>
 
-      <button
-        type="submit"
-        class="login__button"
-        [disabled]="loginForm.invalid || isLoading()"
-      >
-        @if (isLoading()) {
-          Logging in...
-        } @else {
-          Login
-        }
-      </button>
-    </form>
-  </div>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="login__button"
+          [disabled]="loginForm.invalid || isLoading()"
+        >
+          @if (isLoading()) {
+            <mat-spinner diameter="20" style="display: inline-block; margin-right: 8px;"></mat-spinner>
+            Logging in...
+          } @else {
+            Login
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>

@@ -1,3 +1,6 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
 import { test, expect } from '@playwright/test';
 
 // NOTE: Make sure `npm start` (ng serve) is running on http://localhost:4200 before running this test.
