@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Vult.Api.Features.CatalogItems;
 using Vult.Api.Services;
 using Vult.Core.Interfaces;
 using Vult.Infrastructure.Data;
@@ -17,6 +18,9 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        // Controllers
+        services.AddControllers();
+        
         // OpenAPI
         services.AddOpenApi();
 
@@ -36,6 +40,7 @@ public static class ConfigureServices
         // Azure AI services
         services.AddSingleton<IAzureAIService, AzureAIService>();
         services.AddScoped<ICatalogItemIngestionService, CatalogItemIngestionService>();
+        services.AddScoped<ICatalogItemEvaluationService, CatalogItemEvaluationService>();
 
         // JWT configuration
         var jwtKey = configuration["Jwt:Key"] ?? "DefaultSecretKey12345678901234567890";
@@ -64,6 +69,13 @@ public static class ConfigureServices
             });
 
         services.AddAuthorization();
+
+        // Command and Query Handlers
+        services.AddScoped<GetCatalogItemsQueryHandler>();
+        services.AddScoped<GetCatalogItemByIdQueryHandler>();
+        services.AddScoped<CreateCatalogItemCommandHandler>();
+        services.AddScoped<UpdateCatalogItemCommandHandler>();
+        services.AddScoped<DeleteCatalogItemCommandHandler>();
 
         return services;
     }
