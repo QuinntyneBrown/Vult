@@ -25,17 +25,21 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
 
     public async Task<CatalogItemIngestionResult> IngestImagesAsync(byte[][] images, CancellationToken cancellationToken = default)
     {
-        var result = new CatalogItemIngestionResult
-        {
-            TotalProcessed = images.Length
-        };
-
         if (images == null || images.Length == 0)
         {
-            result.Success = false;
+            var result = new CatalogItemIngestionResult
+            {
+                Success = false,
+                TotalProcessed = images?.Length ?? 0
+            };
             result.Errors.Add("No images provided for ingestion");
             return result;
         }
+
+        var ingestionResult = new CatalogItemIngestionResult
+        {
+            TotalProcessed = images.Length
+        };
 
         _logger.LogInformation("Starting ingestion of {Count} images", images.Length);
 
@@ -52,8 +56,8 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
                 if (imageData == null || imageData.Length == 0)
                 {
                     _logger.LogWarning("Skipping empty image at index {Index}", i);
-                    result.Errors.Add($"Image at index {i} is empty");
-                    result.Failed++;
+                    ingestionResult.Errors.Add($"Image at index {i} is empty");
+                    ingestionResult.Failed++;
                     continue;
                 }
 
@@ -65,8 +69,8 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
                 if (!analysisResult.Success)
                 {
                     _logger.LogError("Failed to analyze image {Index}: {Error}", i, analysisResult.ErrorMessage);
-                    result.Errors.Add($"Image {i}: {analysisResult.ErrorMessage}");
-                    result.Failed++;
+                    ingestionResult.Errors.Add($"Image {i}: {analysisResult.ErrorMessage}");
+                    ingestionResult.Failed++;
                     continue;
                 }
 
@@ -98,14 +102,14 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
                 catalogItem.CatalogItemImages.Add(catalogItemImage);
                 catalogItemsToCreate.Add((catalogItem, new List<byte[]> { imageData }));
 
-                result.SuccessfullyProcessed++;
+                ingestionResult.SuccessfullyProcessed++;
                 _logger.LogInformation("Successfully processed image {Index}: {Brand} {ItemType}", i, catalogItem.BrandName, catalogItem.ItemType);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unexpected error processing image {Index}", i);
-                result.Errors.Add($"Image {i}: Unexpected error - {ex.Message}");
-                result.Failed++;
+                ingestionResult.Errors.Add($"Image {i}: Unexpected error - {ex.Message}");
+                ingestionResult.Failed++;
             }
         }
 
@@ -121,29 +125,29 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
 
                 await _context.SaveChangesAsync(cancellationToken);
                 
-                result.CatalogItems.AddRange(catalogItemsToCreate.Select(x => x.Item));
-                result.Success = true;
+                ingestionResult.CatalogItems.AddRange(catalogItemsToCreate.Select(x => x.Item));
+                ingestionResult.Success = true;
                 
                 _logger.LogInformation(
                     "Ingestion completed. Total: {Total}, Success: {Success}, Failed: {Failed}",
-                    result.TotalProcessed,
-                    result.SuccessfullyProcessed,
-                    result.Failed);
+                    ingestionResult.TotalProcessed,
+                    ingestionResult.SuccessfullyProcessed,
+                    ingestionResult.Failed);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to save catalog items to database");
-                result.Success = false;
-                result.Errors.Add($"Database error: {ex.Message}");
-                return result;
+                ingestionResult.Success = false;
+                ingestionResult.Errors.Add($"Database error: {ex.Message}");
+                return ingestionResult;
             }
         }
         else
         {
-            result.Success = false;
-            result.Errors.Add("No images were successfully processed");
+            ingestionResult.Success = false;
+            ingestionResult.Errors.Add("No images were successfully processed");
         }
 
-        return result;
+        return ingestionResult;
     }
 }
