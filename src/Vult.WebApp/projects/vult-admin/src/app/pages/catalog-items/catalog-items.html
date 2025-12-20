@@ -1,0 +1,37 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
+<div class="master-detail">
+  <div class="master-detail__list">
+    <app-catalog-item-list
+      [catalogItems]="catalogItems()"
+      [selectedItemId]="selectedItem()?.catalogItemId"
+      [isLoading]="isLoading()"
+      [pageNumber]="pageNumber()"
+      [pageSize]="pageSize()"
+      [totalCount]="totalCount()"
+      [totalPages]="totalPages()"
+      (selectItem)="onSelectItem($event)"
+      (create)="onCreate()"
+      (delete)="onDelete($event)"
+      (pageChange)="onPageChange($event)">
+    </app-catalog-item-list>
+  </div>
+
+  <div class="master-detail__detail">
+    @if (showEdit()) {
+      <app-catalog-item-edit
+        [catalogItem]="selectedItem()"
+        [isCreating]="isCreating()"
+        [isSaving]="isSaving()"
+        [errorMessage]="errorMessage()"
+        (save)="onSave($event)"
+        (cancel)="onCancel()">
+      </app-catalog-item-edit>
+    } @else {
+      <div class="master-detail__empty">
+        <mat-icon>inventory_2</mat-icon>
+        <p>Select an item to edit or click "Create" to add a new catalog item</p>
+      </div>
+    }
+  </div>
+</div>

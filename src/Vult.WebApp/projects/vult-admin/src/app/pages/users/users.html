@@ -1,0 +1,37 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
+<div class="master-detail">
+  <div class="master-detail__list">
+    <app-user-list
+      [users]="users()"
+      [selectedUserId]="selectedUser()?.userId"
+      [isLoading]="isLoading()"
+      [pageNumber]="pageNumber()"
+      [pageSize]="pageSize()"
+      [totalCount]="totalCount()"
+      [totalPages]="totalPages()"
+      (selectUser)="onSelectUser($event)"
+      (create)="onCreate()"
+      (delete)="onDelete($event)"
+      (pageChange)="onPageChange($event)">
+    </app-user-list>
+  </div>
+
+  <div class="master-detail__detail">
+    @if (showEdit()) {
+      <app-user-edit
+        [user]="selectedUser()"
+        [isCreating]="isCreating()"
+        [isSaving]="isSaving()"
+        [errorMessage]="errorMessage()"
+        (save)="onSave($event)"
+        (cancel)="onCancel()">
+      </app-user-edit>
+    } @else {
+      <div class="master-detail__empty">
+        <mat-icon>person_outline</mat-icon>
+        <p>Select a user to edit or click "Create" to add a new user</p>
+      </div>
+    }
+  </div>
+</div>

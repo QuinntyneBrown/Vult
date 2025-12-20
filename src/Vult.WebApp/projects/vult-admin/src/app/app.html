@@ -1,0 +1,25 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
+@if (authService.isAuthenticated()) {
+  <mat-toolbar color="primary" class="app__toolbar">
+    <span class="app__title">Vult Admin</span>
+    <span class="app__spacer"></span>
+    <nav class="app__nav">
+      <a mat-button routerLink="/catalog-items" routerLinkActive="app__nav-link--active">
+        <mat-icon>inventory_2</mat-icon>
+        Catalog Items
+      </a>
+      <a mat-button routerLink="/users" routerLinkActive="app__nav-link--active">
+        <mat-icon>people</mat-icon>
+        Users
+      </a>
+    </nav>
+    <button mat-icon-button (click)="logout()" title="Logout">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+}
+
+<main class="app__content">
+  <router-outlet></router-outlet>
+</main>

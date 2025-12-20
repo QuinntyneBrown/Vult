@@ -1,0 +1,46 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--mat-sys-surface-container);
+  padding: var(--spacing-md);
+
+  &__card {
+    width: 100%;
+    max-width: 400px;
+    padding: var(--spacing-lg);
+  }
+
+  &__error {
+    background-color: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+    padding: var(--spacing-md);
+    border-radius: 4px;
+    margin-bottom: var(--spacing-md);
+    font-size: 0.875rem;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  &__form-field {
+    width: 100%;
+  }
+
+  &__button {
+    width: 100%;
+    margin-top: var(--spacing-md);
+  }
+
+  &__spinner {
+    display: inline-block;
+    margin-right: var(--spacing-sm);
+  }
+}
