@@ -1,0 +1,82 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--spacing-md);
+
+  &__card {
+    width: 100%;
+    max-width: 420px;
+    padding: var(--spacing-xl);
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  &__icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: var(--mat-sys-primary);
+    margin-bottom: var(--spacing-md);
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background-color: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+    padding: var(--spacing-md);
+    border-radius: 4px;
+    margin-bottom: var(--spacing-lg);
+    font-size: 0.875rem;
+
+    mat-icon {
+      flex-shrink: 0;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  &__form-field {
+    width: 100%;
+  }
+
+  &__button {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+  }
+
+  &__spinner {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 480px) {
+  .login {
+    padding: var(--spacing-sm);
+
+    &__card {
+      padding: var(--spacing-md);
+    }
+  }
+}

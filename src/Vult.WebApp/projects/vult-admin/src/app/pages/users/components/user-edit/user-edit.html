@@ -1,0 +1,107 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
+<mat-card class="user-edit">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>{{ isCreating() ? 'person_add' : 'edit' }}</mat-icon>
+    <mat-card-title>{{ isCreating() ? 'Create User' : 'Edit User' }}</mat-card-title>
+    <mat-card-subtitle>
+      {{ isCreating() ? 'Add a new user to the system' : 'Modify user details' }}
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (errorMessage()) {
+      <div class="user-edit__error">
+        <mat-icon>error</mat-icon>
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-edit__form">
+      <mat-form-field appearance="outline" class="user-edit__field">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" placeholder="Enter username">
+        <mat-icon matSuffix>person</mat-icon>
+        @if (form.get('username')?.hasError('required')) {
+          <mat-error>Username is required</mat-error>
+        }
+        @if (form.get('username')?.hasError('minlength')) {
+          <mat-error>Username must be at least 3 characters</mat-error>
+        }
+        @if (form.get('username')?.hasError('maxlength')) {
+          <mat-error>Username cannot exceed 100 characters</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="user-edit__field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="Enter email">
+        <mat-icon matSuffix>email</mat-icon>
+        @if (form.get('email')?.hasError('required')) {
+          <mat-error>Email is required</mat-error>
+        }
+        @if (form.get('email')?.hasError('email')) {
+          <mat-error>Please enter a valid email</mat-error>
+        }
+        @if (form.get('email')?.hasError('maxlength')) {
+          <mat-error>Email cannot exceed 255 characters</mat-error>
+        }
+      </mat-form-field>
+
+      @if (isCreating()) {
+        <mat-form-field appearance="outline" class="user-edit__field">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" placeholder="Enter password">
+          <mat-icon matSuffix>lock</mat-icon>
+          @if (form.get('password')?.hasError('required')) {
+            <mat-error>Password is required</mat-error>
+          }
+          @if (form.get('password')?.hasError('minlength')) {
+            <mat-error>Password must be at least 6 characters</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      <div class="user-edit__row">
+        <mat-form-field appearance="outline" class="user-edit__field user-edit__field--half">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" placeholder="Enter first name">
+          @if (form.get('firstName')?.hasError('maxlength')) {
+            <mat-error>First name cannot exceed 100 characters</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="user-edit__field user-edit__field--half">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" placeholder="Enter last name">
+          @if (form.get('lastName')?.hasError('maxlength')) {
+            <mat-error>Last name cannot exceed 100 characters</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      @if (!isCreating()) {
+        <mat-slide-toggle formControlName="isActive" class="user-edit__toggle">
+          Active
+        </mat-slide-toggle>
+      }
+    </form>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isSaving()" type="button">
+      Cancel
+    </button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isSaving()">
+      @if (isSaving()) {
+        <mat-spinner diameter="20" class="user-edit__spinner"></mat-spinner>
+        Saving...
+      } @else {
+        <ng-container>
+          <mat-icon>save</mat-icon>
+          Save
+        </ng-container>
+      }
+    </button>
+  </mat-card-actions>
+</mat-card>

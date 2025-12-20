@@ -1,0 +1,60 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
+<div class="user-list">
+  <div class="user-list__header">
+    <h2 class="user-list__title">Users</h2>
+    <button mat-raised-button color="primary" (click)="onCreate()" type="button">
+      <mat-icon>add</mat-icon>
+      Create
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="user-list__loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <mat-nav-list class="user-list__items">
+      @for (user of users(); track user.userId) {
+        <mat-list-item
+          class="user-list__item"
+          [class.user-list__item--selected]="user.userId === selectedUserId()"
+          (click)="onSelectUser(user)">
+          <mat-icon matListItemIcon>person</mat-icon>
+          <div matListItemTitle class="user-list__item-title">
+            {{ user.username }}
+            @if (!user.isActive) {
+              <mat-chip class="user-list__inactive-chip">Inactive</mat-chip>
+            }
+          </div>
+          <div matListItemLine class="user-list__item-subtitle">{{ user.email }}</div>
+          <button mat-icon-button
+                  color="warn"
+                  matListItemMeta
+                  (click)="onDelete($event, user.userId)"
+                  title="Delete user"
+                  type="button">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      } @empty {
+        <div class="user-list__empty">
+          <mat-icon>people_outline</mat-icon>
+          <p>No users found</p>
+        </div>
+      }
+    </mat-nav-list>
+
+    @if (totalCount() > 0) {
+      <mat-paginator
+        class="user-list__paginator"
+        [length]="totalCount()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageNumber() - 1"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    }
+  }
+</div>

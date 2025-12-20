@@ -1,0 +1,87 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+    flex-shrink: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-2xl);
+    flex: 1;
+  }
+
+  &__items {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  &__item {
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &--selected {
+      background-color: var(--mat-sys-primary-container);
+    }
+
+    &:hover:not(&--selected) {
+      background-color: var(--mat-sys-surface-container);
+    }
+  }
+
+  &__item-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  &__inactive-chip {
+    font-size: 0.75rem;
+    height: 20px;
+    min-height: 20px;
+  }
+
+  &__item-subtitle {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.875rem;
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2xl);
+    color: var(--mat-sys-on-surface-variant);
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      margin-bottom: var(--spacing-md);
+    }
+  }
+
+  &__paginator {
+    flex-shrink: 0;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
+}

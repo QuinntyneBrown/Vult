@@ -1,0 +1,71 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
+<div class="catalog-item-list">
+  <div class="catalog-item-list__header">
+    <h2 class="catalog-item-list__title">Catalog Items</h2>
+    <button mat-raised-button color="primary" (click)="onCreate()" type="button">
+      <mat-icon>add</mat-icon>
+      Create
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="catalog-item-list__loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <mat-nav-list class="catalog-item-list__items">
+      @for (item of catalogItems(); track item.catalogItemId) {
+        <mat-list-item
+          class="catalog-item-list__item"
+          [class.catalog-item-list__item--selected]="item.catalogItemId === selectedItemId()"
+          (click)="onSelectItem(item)">
+          @if (item.catalogItemImages && item.catalogItemImages.length > 0) {
+            <img matListItemAvatar
+                 [src]="'data:image/jpeg;base64,' + item.catalogItemImages[0].imageData"
+                 [alt]="item.description || 'Item image'"
+                 class="catalog-item-list__avatar">
+          } @else {
+            <mat-icon matListItemIcon>image_not_supported</mat-icon>
+          }
+          <div matListItemTitle class="catalog-item-list__item-title">
+            {{ item.brandName || 'Unknown Brand' }}
+            @if (item.itemType !== undefined) {
+              <mat-chip class="catalog-item-list__type-chip">{{ getItemTypeLabel(item.itemType) }}</mat-chip>
+            }
+          </div>
+          <div matListItemLine class="catalog-item-list__item-subtitle">
+            @if (item.size) { Size: {{ item.size }} }
+            @if (item.size && item.estimatedResaleValue) { • }
+            @if (item.estimatedResaleValue) { ${{ item.estimatedResaleValue.toFixed(2) }} }
+          </div>
+          <button mat-icon-button
+                  color="warn"
+                  matListItemMeta
+                  (click)="onDelete($event, item.catalogItemId)"
+                  title="Delete item"
+                  type="button">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      } @empty {
+        <div class="catalog-item-list__empty">
+          <mat-icon>inventory_2</mat-icon>
+          <p>No catalog items found</p>
+        </div>
+      }
+    </mat-nav-list>
+
+    @if (totalCount() > 0) {
+      <mat-paginator
+        class="catalog-item-list__paginator"
+        [length]="totalCount()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageNumber() - 1"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    }
+  }
+</div>

@@ -1,0 +1,12 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+.app {
+  &__header {
+    padding: var(--spacing-md);
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+}
