@@ -479,3 +479,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Angular build artifacts
+.angular/
+dist/
