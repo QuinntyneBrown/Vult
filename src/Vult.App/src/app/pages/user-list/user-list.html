@@ -1,0 +1,161 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved. -->
+<!-- Licensed under the MIT License. See License.txt in the project root for license information. -->
+
+<div class="user-list">
+  <div class="user-list__header">
+    <h1 class="user-list__title">User Management</h1>
+  </div>
+
+  <mat-card class="user-list__filters">
+    <mat-card-content>
+      <div class="user-list__filters-row">
+        <mat-form-field appearance="outline" class="user-list__search">
+          <mat-label>Search users</mat-label>
+          <input matInput
+                 [ngModel]="searchTerm()"
+                 (ngModelChange)="searchTerm.set($event)"
+                 (keyup.enter)="onSearch()"
+                 placeholder="Search by username, email, or name">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="user-list__status-filter">
+          <mat-label>Status</mat-label>
+          <mat-select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event); onStatusFilterChange()">
+            @for (option of statusOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="onSearch()">
+          <mat-icon>search</mat-icon>
+          Search
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  @if (isLoading()) {
+    <div class="user-list__loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading users...</p>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="user-list__error">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage() }}</p>
+      <button mat-button color="primary" (click)="loadUsers()">Retry</button>
+    </div>
+  }
+
+  @if (!isLoading() && !errorMessage()) {
+    <mat-card class="user-list__table-card">
+      <table mat-table [dataSource]="users()" class="user-list__table">
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef>Username</th>
+          <td mat-cell *matCellDef="let user">{{ user.username }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let user">{{ getFullName(user) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let user">
+            <mat-chip [color]="getStatusColor(user.status)">
+              {{ user.status }}
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastLogin">
+          <th mat-header-cell *matHeaderCellDef>Last Login</th>
+          <td mat-cell *matCellDef="let user">{{ formatDate(user.lastLoginDate) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let user">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              @if (user.status === 'Inactive' || user.status === 'Locked') {
+                <button mat-menu-item (click)="activateUser(user)">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>Activate</span>
+                </button>
+              }
+              @if (user.status === 'Active') {
+                <button mat-menu-item (click)="deactivateUser(user)">
+                  <mat-icon>block</mat-icon>
+                  <span>Deactivate</span>
+                </button>
+              }
+              @if (user.status === 'Active') {
+                <button mat-menu-item (click)="lockUser(user)">
+                  <mat-icon>lock</mat-icon>
+                  <span>Lock</span>
+                </button>
+              }
+              @if (user.status === 'Locked') {
+                <button mat-menu-item (click)="unlockUser(user)">
+                  <mat-icon>lock_open</mat-icon>
+                  <span>Unlock</span>
+                </button>
+              }
+              @if (user.status !== 'Deleted') {
+                <button mat-menu-item (click)="deleteUser(user)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              }
+              @if (user.status === 'Deleted' && user.canRecover) {
+                <button mat-menu-item (click)="restoreUser(user)">
+                  <mat-icon>restore</mat-icon>
+                  <span>Restore</span>
+                </button>
+              }
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      @if (users().length === 0) {
+        <div class="user-list__empty">
+          <mat-icon>people</mat-icon>
+          <p>No users found</p>
+        </div>
+      }
+    </mat-card>
+
+    @if (totalPages() > 1) {
+      <div class="user-list__pagination">
+        <button mat-button [disabled]="pageNumber() <= 1" (click)="previousPage()">
+          <mat-icon>chevron_left</mat-icon>
+          Previous
+        </button>
+        <span class="user-list__page-info">
+          Page {{ pageNumber() }} of {{ totalPages() }} ({{ totalItems() }} total)
+        </span>
+        <button mat-button [disabled]="pageNumber() >= totalPages()" (click)="nextPage()">
+          Next
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    }
+  }
+</div>

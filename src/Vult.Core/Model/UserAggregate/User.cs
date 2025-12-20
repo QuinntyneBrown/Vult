@@ -27,7 +27,7 @@ public class User
     [StringLength(100, ErrorMessage = "Last name cannot exceed 100 characters")]
     public string? LastName { get; set; }
 
-    public bool IsActive { get; set; } = true;
+    public UserStatus Status { get; set; } = UserStatus.Active;
 
     public DateTime CreatedDate { get; set; }
 
@@ -35,6 +35,40 @@ public class User
 
     public DateTime? LastLoginDate { get; set; }
 
+    public DateTime? ActivatedAt { get; set; }
+
+    public ActivationMethod ActivationMethod { get; set; } = ActivationMethod.None;
+
+    public DateTime? DeactivatedAt { get; set; }
+
+    [StringLength(500, ErrorMessage = "Deactivation reason cannot exceed 500 characters")]
+    public string? DeactivationReason { get; set; }
+
+    public DateTime? LockedAt { get; set; }
+
+    [StringLength(500, ErrorMessage = "Lock reason cannot exceed 500 characters")]
+    public string? LockReason { get; set; }
+
+    public long? LockDurationTicks { get; set; }
+
+    public int FailedLoginAttempts { get; set; }
+
+    public DateTime? LastFailedLoginAttempt { get; set; }
+
+    public DateTime? DeletedAt { get; set; }
+
+    public DeletionType DeletionType { get; set; } = DeletionType.None;
+
+    [StringLength(500, ErrorMessage = "Deletion reason cannot exceed 500 characters")]
+    public string? DeletionReason { get; set; }
+
     // Navigation properties
     public ICollection<Role> Roles { get; set; } = new List<Role>();
+
+    // Helper properties
+    public bool IsLockExpired => LockedAt.HasValue && LockDurationTicks.HasValue &&
+        DateTime.UtcNow > LockedAt.Value.AddTicks(LockDurationTicks.Value);
+
+    public bool CanRecover => DeletionType == DeletionType.Soft && DeletedAt.HasValue &&
+        DateTime.UtcNow < DeletedAt.Value.AddDays(30);
 }

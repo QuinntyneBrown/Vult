@@ -29,15 +29,25 @@ public class AuthenticationService : IAuthenticationService
             .Include(u => u.Roles)
             .FirstOrDefaultAsync(u => u.Username == username, cancellationToken);
 
-        if (user == null || !user.IsActive)
+        if (user == null || user.Status != UserStatus.Active)
+        {
+            return null;
+        }
+
+        if (user.Status == UserStatus.Locked && !user.IsLockExpired)
         {
             return null;
         }
 
         if (!VerifyPassword(password, user.PasswordHash))
         {
+            user.FailedLoginAttempts++;
+            user.LastFailedLoginAttempt = DateTime.UtcNow;
+            await _context.SaveChangesAsync(cancellationToken);
             return null;
         }
+
+        user.FailedLoginAttempts = 0;
 
         // Update last login date
         user.LastLoginDate = DateTime.UtcNow;
@@ -63,7 +73,9 @@ public class AuthenticationService : IAuthenticationService
             Username = username,
             Email = email,
             PasswordHash = HashPassword(password),
-            IsActive = true,
+            Status = UserStatus.Active,
+            ActivatedAt = DateTime.UtcNow,
+            ActivationMethod = ActivationMethod.AdminManual,
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow
         };
@@ -146,7 +158,7 @@ public class AuthenticationService : IAuthenticationService
             .Include(u => u.Roles)
             .FirstOrDefaultAsync(u => u.UserId == userId.Value, cancellationToken);
 
-        if (user == null || !user.IsActive)
+        if (user == null || user.Status != UserStatus.Active)
         {
             return null;
         }

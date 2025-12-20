@@ -95,7 +95,9 @@ public class SeedService : ISeedService
             PasswordHash = passwordHash,
             FirstName = "System",
             LastName = "Administrator",
-            IsActive = true,
+            Status = UserStatus.Active,
+            ActivatedAt = DateTime.UtcNow,
+            ActivationMethod = ActivationMethod.AdminManual,
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow,
             Roles = new List<Role> { adminRole }

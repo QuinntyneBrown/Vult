@@ -5,6 +5,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards';
 import { Login } from './pages/login/login';
 import { CatalogList } from './pages/catalog-list/catalog-list';
+import { UserList } from './pages/user-list/user-list';
 import { Home } from './pages';
 
 export const routes: Routes = [
@@ -15,11 +16,16 @@ export const routes: Routes = [
   {
     path: 'home',
     component: Home
-  },  
+  },
   {
     path: 'catalog',
     canActivate: [authGuard],
     component: CatalogList
+  },
+  {
+    path: 'users',
+    canActivate: [authGuard],
+    component: UserList
   },
   {
     path: '**',
