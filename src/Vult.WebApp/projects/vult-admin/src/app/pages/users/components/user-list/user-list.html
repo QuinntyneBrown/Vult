@@ -23,8 +23,8 @@
           <mat-icon matListItemIcon>person</mat-icon>
           <div matListItemTitle class="user-list__item-title">
             {{ user.username }}
-            @if (!user.isActive) {
-              <mat-chip class="user-list__inactive-chip">Inactive</mat-chip>
+            @if (user.status !== 'Active') {
+              <mat-chip class="user-list__inactive-chip">{{ user.status }}</mat-chip>
             }
           </div>
           <div matListItemLine class="user-list__item-subtitle">{{ user.email }}</div>

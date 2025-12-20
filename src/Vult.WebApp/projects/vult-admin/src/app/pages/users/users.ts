@@ -7,7 +7,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserList } from './components/user-list/user-list';
 import { UserEdit } from './components/user-edit/user-edit';
 import { UserService } from '../../core/services';
-import { User, PaginatedResponse, CreateUserRequest, UpdateUserRequest } from '../../core/models';
+import {
+  User,
+  CreateUserRequest,
+  UpdateUserRequest,
+  GetUsersQueryResult,
+  GetUserByIdQueryResult,
+  UserCommandResult,
+  DeleteUserDto
+} from '../../core/models';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -54,8 +62,8 @@ export class Users implements OnInit {
     this.errorMessage.set(null);
 
     this.userService.getUsers(this.pageNumber(), this.pageSize()).subscribe({
-      next: (response: PaginatedResponse<User>) => {
-        this.users.set(response.items);
+      next: (response: GetUsersQueryResult) => {
+        this.users.set(response.users);
         this.totalCount.set(response.totalCount);
         this.isLoading.set(false);
       },
@@ -70,8 +78,12 @@ export class Users implements OnInit {
   loadUserForEditing(userId: string): void {
     this.isLoading.set(true);
     this.userService.getUserById(userId).subscribe({
-      next: (user) => {
-        this.selectedUser.set(user);
+      next: (response: GetUserByIdQueryResult) => {
+        if (response.found && response.user) {
+          this.selectedUser.set(response.user);
+        } else {
+          this.errorMessage.set('User not found');
+        }
         this.isCreating.set(false);
         this.isLoading.set(false);
       },
@@ -106,12 +118,16 @@ export class Users implements OnInit {
 
     if (this.isCreating()) {
       this.userService.createUser(data as CreateUserRequest).subscribe({
-        next: (newUser) => {
-          this.users.update(users => [newUser, ...users]);
-          this.selectedUser.set(null);
-          this.isCreating.set(false);
+        next: (result: UserCommandResult) => {
+          if (result.success && result.user) {
+            this.users.update(users => [result.user!, ...users]);
+            this.selectedUser.set(null);
+            this.isCreating.set(false);
+            this.router.navigate(['/users']);
+          } else {
+            this.errorMessage.set(result.errors?.join(', ') || 'Failed to create user');
+          }
           this.isSaving.set(false);
-          this.router.navigate(['/users']);
         },
         error: (error) => {
           this.errorMessage.set(error.error?.message || 'Failed to create user');
@@ -120,13 +136,18 @@ export class Users implements OnInit {
       });
     } else if (this.selectedUser()) {
       this.userService.updateUser(this.selectedUser()!.userId, data as UpdateUserRequest).subscribe({
-        next: (updatedUser) => {
-          this.users.update(users =>
-            users.map(u => u.userId === updatedUser.userId ? updatedUser : u)
-          );
-          this.selectedUser.set(null);
+        next: (result: UserCommandResult) => {
+          if (result.success && result.user) {
+            const updatedUser = result.user;
+            this.users.update(users =>
+              users.map(u => u.userId === updatedUser.userId ? updatedUser : u)
+            );
+            this.selectedUser.set(null);
+            this.router.navigate(['/users']);
+          } else {
+            this.errorMessage.set(result.errors?.join(', ') || 'Failed to update user');
+          }
           this.isSaving.set(false);
-          this.router.navigate(['/users']);
         },
         error: (error) => {
           this.errorMessage.set(error.error?.message || 'Failed to update user');
@@ -141,7 +162,12 @@ export class Users implements OnInit {
       return;
     }
 
-    this.userService.deleteUser(userId).subscribe({
+    const deleteRequest: DeleteUserDto = {
+      reason: 'Deleted by admin',
+      hardDelete: false
+    };
+
+    this.userService.deleteUser(userId, deleteRequest).subscribe({
       next: () => {
         this.users.update(users => users.filter(u => u.userId !== userId));
         if (this.selectedUser()?.userId === userId) {
