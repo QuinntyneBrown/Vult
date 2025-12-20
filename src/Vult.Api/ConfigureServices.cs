@@ -7,7 +7,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Vult.Api.Services;
 using Vult.Core;
-using Vult.Core;
 using Vult.Infrastructure.Data;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -17,9 +16,10 @@ public static class ConfigureServices
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
 
-        services.AddControllers();        
+        services.AddControllers();
         services.AddSignalR();
-        services.AddOpenApi();
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(typeof(ConfigureServices).Assembly);
@@ -39,7 +39,15 @@ public static class ConfigureServices
         services.AddScoped<IAuthorizationService, AuthorizationService>();
 
         // Azure AI services
-        services.AddSingleton<IAzureOpenAIService, AzureOpenAIService>();
+        services.AddSingleton<IAzureOpenAIService>(sp =>
+        {
+            var azureOpenAIEndpoint = configuration["AzureOpenAI:Endpoint"] ?? configuration["AzureOpenAIEndpoint"] ?? "https://api.openai.azure.com";
+            var azureOpenAIKey = configuration["AzureOpenAI:Key"] ?? configuration["AzureOpenAIKey"] ?? "";
+            var azureOpenAIDeployment = configuration["AzureOpenAI:DeploymentName"] ?? configuration["AzureOpenAIDeploymentName"] ?? "gpt-4";
+
+            return new AzureOpenAIService(azureOpenAIEndpoint, azureOpenAIKey, azureOpenAIDeployment);
+        });
+
         services.AddSingleton<IImageAnalysisService, ImageAnalysisService>();
         services.AddScoped<ICatalogItemIngestionService, CatalogItemIngestionService>();
         services.AddScoped<ICatalogItemEvaluationService, CatalogItemEvaluationService>();

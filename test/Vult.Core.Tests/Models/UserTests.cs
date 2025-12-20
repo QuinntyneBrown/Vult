@@ -20,7 +20,7 @@ public class UserTests
         Assert.That(user.Username, Is.EqualTo(string.Empty));
         Assert.That(user.Email, Is.EqualTo(string.Empty));
         Assert.That(user.PasswordHash, Is.EqualTo(string.Empty));
-        Assert.That(user.IsActive, Is.True);
+        Assert.That(user.Status, Is.EqualTo(UserStatus.Active));
         Assert.That(user.Roles, Is.Not.Null);
         Assert.That(user.Roles.Count, Is.EqualTo(0));
     }
@@ -42,7 +42,7 @@ public class UserTests
             PasswordHash = "hashedpassword",
             FirstName = "John",
             LastName = "Doe",
-            IsActive = true,
+            Status = UserStatus.Active,
             CreatedDate = createdDate,
             UpdatedDate = updatedDate
         };
@@ -54,7 +54,7 @@ public class UserTests
         Assert.That(user.PasswordHash, Is.EqualTo("hashedpassword"));
         Assert.That(user.FirstName, Is.EqualTo("John"));
         Assert.That(user.LastName, Is.EqualTo("Doe"));
-        Assert.That(user.IsActive, Is.True);
+        Assert.That(user.Status, Is.EqualTo(UserStatus.Active));
         Assert.That(user.CreatedDate, Is.EqualTo(createdDate));
         Assert.That(user.UpdatedDate, Is.EqualTo(updatedDate));
     }

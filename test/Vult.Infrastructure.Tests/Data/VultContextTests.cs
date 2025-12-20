@@ -278,7 +278,7 @@ public class VultContextTests
             PasswordHash = "hashedpassword123",
             FirstName = "John",
             LastName = "Doe",
-            IsActive = true,
+            Status = UserStatus.Active,
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow
         };
@@ -293,7 +293,7 @@ public class VultContextTests
         Assert.That(savedUser!.Username, Is.EqualTo("testuser"));
         Assert.That(savedUser.Email, Is.EqualTo("test@example.com"));
         Assert.That(savedUser.PasswordHash, Is.EqualTo("hashedpassword123"));
-        Assert.That(savedUser.IsActive, Is.True);
+        Assert.That(savedUser.Status, Is.EqualTo(UserStatus.Active));
     }
 
     [Test]
@@ -332,7 +332,7 @@ public class VultContextTests
             Username = "adminuser",
             Email = "admin@example.com",
             PasswordHash = "hashedpassword",
-            IsActive = true,
+            Status = UserStatus.Active,
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow
         };

@@ -4,7 +4,6 @@
 using Microsoft.EntityFrameworkCore;
 using Vult.Api.Services;
 using Vult.Core;
-using Vult.Core;
 using Vult.Infrastructure.Data;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -13,7 +12,6 @@ public static class ConfigureServices
 {
     public static void AddCliServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddOpenApi();
 
         // MediatR
         services.AddMediatR(configuration =>

@@ -50,7 +50,7 @@ public class AuthenticationServiceTests
         Assert.That(user!.Username, Is.EqualTo("testuser"));
         Assert.That(user.Email, Is.EqualTo("test@example.com"));
         Assert.That(user.PasswordHash, Is.Not.Empty);
-        Assert.That(user.IsActive, Is.True);
+        Assert.That(user.Status, Is.EqualTo(UserStatus.Active));
     }
 
     [Test]
@@ -135,9 +135,9 @@ public class AuthenticationServiceTests
         using var context = new VultContext(_options);
         var service = new AuthenticationService(context, _configuration);
         var user = await service.RegisterAsync("testuser", "test@example.com", "password123");
-        
+
         // Deactivate user
-        user!.IsActive = false;
+        user!.Status = UserStatus.Inactive;
         await context.SaveChangesAsync();
 
         // Act
