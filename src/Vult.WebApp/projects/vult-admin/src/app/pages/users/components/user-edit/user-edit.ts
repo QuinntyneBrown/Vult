@@ -65,11 +65,10 @@ export class UserEdit implements OnInit, OnChanges {
     } else {
       const user = this.user();
       this.form = this.fb.group({
-        username: [user?.username || '', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-        email: [user?.email || '', [Validators.required, Validators.email, Validators.maxLength(255)]],
+        username: [{ value: user?.username || '', disabled: true }],
+        email: [{ value: user?.email || '', disabled: true }],
         firstName: [user?.firstName || '', Validators.maxLength(100)],
-        lastName: [user?.lastName || '', Validators.maxLength(100)],
-        isActive: [user?.isActive ?? true]
+        lastName: [user?.lastName || '', Validators.maxLength(100)]
       });
     }
   }
@@ -91,11 +90,8 @@ export class UserEdit implements OnInit, OnChanges {
       this.save.emit(request);
     } else {
       const request: UpdateUserRequest = {
-        username: this.form.value.username,
-        email: this.form.value.email,
         firstName: this.form.value.firstName || undefined,
-        lastName: this.form.value.lastName || undefined,
-        isActive: this.form.value.isActive
+        lastName: this.form.value.lastName || undefined
       };
       this.save.emit(request);
     }
