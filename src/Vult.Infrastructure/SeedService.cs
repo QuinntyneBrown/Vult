@@ -85,13 +85,13 @@ public class SeedService : ISeedService
             return;
         }
 
-        var passwordHash = HashPassword("Admin123!");
+        var passwordHash = HashPassword("admin");
 
         var adminUser = new User
         {
             UserId = Guid.NewGuid(),
             Username = "admin",
-            Email = "admin@example.com",
+            Email = "admin@gmail.com",
             PasswordHash = passwordHash,
             FirstName = "System",
             LastName = "Administrator",
