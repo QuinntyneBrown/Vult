@@ -4,20 +4,20 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Vult.Infrastructure.Services;
+using Vult.Core;
 
 namespace Vult.Infrastructure.Tests.Services;
 
 [TestFixture]
 public class AzureAIServiceTests
 {
-    private Mock<ILogger<AzureAIService>> _loggerMock = null!;
+    private Mock<ILogger<ImageAnalysisService>> _loggerMock = null!;
     private Mock<IConfiguration> _configurationMock = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _loggerMock = new Mock<ILogger<AzureAIService>>();
+        _loggerMock = new Mock<ILogger<ImageAnalysisService>>();
         _configurationMock = new Mock<IConfiguration>();
     }
 
@@ -29,7 +29,7 @@ public class AzureAIServiceTests
         _configurationMock.Setup(c => c["AzureAI:ApiKey"]).Returns("test-key");
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => new AzureAIService(_configurationMock.Object, _loggerMock.Object));
+        Assert.Throws<InvalidOperationException>(() => new ImageAnalysisService(_configurationMock.Object, _loggerMock.Object));
     }
 
     [Test]
@@ -40,7 +40,7 @@ public class AzureAIServiceTests
         _configurationMock.Setup(c => c["AzureAI:ApiKey"]).Returns((string?)null);
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => new AzureAIService(_configurationMock.Object, _loggerMock.Object));
+        Assert.Throws<InvalidOperationException>(() => new ImageAnalysisService(_configurationMock.Object, _loggerMock.Object));
     }
 
     [Test]
@@ -52,10 +52,10 @@ public class AzureAIServiceTests
         _configurationMock.Setup(c => c["AzureAI:MaxRetries"]).Returns("3");
         _configurationMock.Setup(c => c["AzureAI:RetryDelayMs"]).Returns("1000");
 
-        var service = new AzureAIService(_configurationMock.Object, _loggerMock.Object);
+        var service = new ImageAnalysisService(_configurationMock.Object, _loggerMock.Object);
 
         // Act
-        var result = await service.AnalyzeImageAsync(null!);
+        var result = await service.AnalyzeAsync(null!);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -71,10 +71,10 @@ public class AzureAIServiceTests
         _configurationMock.Setup(c => c["AzureAI:MaxRetries"]).Returns("3");
         _configurationMock.Setup(c => c["AzureAI:RetryDelayMs"]).Returns("1000");
 
-        var service = new AzureAIService(_configurationMock.Object, _loggerMock.Object);
+        var service = new ImageAnalysisService(_configurationMock.Object, _loggerMock.Object);
 
         // Act
-        var result = await service.AnalyzeImageAsync(Array.Empty<byte>());
+        var result = await service.AnalyzeAsync(Array.Empty<byte>());
 
         // Assert
         Assert.That(result.Success, Is.False);

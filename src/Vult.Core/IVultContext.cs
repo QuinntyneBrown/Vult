@@ -2,9 +2,8 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
-using Vult.Core.Models;
 
-namespace Vult.Core.Interfaces;
+namespace Vult.Core;
 
 public interface IVultContext
 {
@@ -12,6 +11,6 @@ public interface IVultContext
     DbSet<CatalogItemImage> CatalogItemImages { get; set; }
     DbSet<User> Users { get; set; }
     DbSet<Role> Roles { get; set; }
-    
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

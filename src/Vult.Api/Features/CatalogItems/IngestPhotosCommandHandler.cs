@@ -4,7 +4,7 @@
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Vult.Api.Hubs;
-using Vult.Core.Interfaces;
+using Vult.Core;
 
 namespace Vult.Api.Features.CatalogItems;
 
@@ -60,7 +60,7 @@ public class IngestCatalogItemPhotosCommandHandler : IRequestHandler<IngestCatal
             }
 
             // Process images using ingestion service
-            var ingestionResult = await _ingestionService.IngestImagesAsync(
+            var ingestionResult = await _ingestionService.IngestAsync(
                 imageByteArrays.ToArray(),
                 cancellationToken);
 

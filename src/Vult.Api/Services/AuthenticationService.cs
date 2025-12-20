@@ -7,8 +7,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Vult.Core.Interfaces;
-using Vult.Core.Models;
+using Vult.Core;
+using Vult.Core;
 
 namespace Vult.Api.Services;
 

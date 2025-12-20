@@ -1,9 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using Vult.Core.Models;
-
-namespace Vult.Core.Interfaces;
+namespace Vult.Core;
 
 public interface ICatalogItemEvaluationService
 {
@@ -22,28 +20,4 @@ public interface ICatalogItemEvaluationService
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Result containing updated catalog items and processing status</returns>
     Task<CatalogItemBatchEvaluationResult> ReEvaluateBatchAsync(Guid[] catalogItemIds, CancellationToken cancellationToken = default);
-}
-
-public class CatalogItemEvaluationResult
-{
-    public CatalogItem? CatalogItem { get; set; }
-    
-    public bool Success { get; set; }
-    
-    public List<string> Errors { get; set; } = new();
-}
-
-public class CatalogItemBatchEvaluationResult
-{
-    public List<CatalogItem> CatalogItems { get; set; } = new();
-    
-    public bool Success { get; set; }
-    
-    public List<string> Errors { get; set; } = new();
-    
-    public int TotalProcessed { get; set; }
-    
-    public int SuccessfullyProcessed { get; set; }
-    
-    public int Failed { get; set; }
 }

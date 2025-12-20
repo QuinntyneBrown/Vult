@@ -5,20 +5,17 @@ using Azure;
 using Azure.AI.Vision.ImageAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Vult.Core.Enums;
-using Vult.Core.Interfaces;
-using Vult.Core.Models;
 
-namespace Vult.Infrastructure.Services;
+namespace Vult.Core;
 
-public class AzureAIService : IAzureAIService
+public class ImageAnalysisService : IImageAnalysisService
 {
-    private readonly ImageAnalysisClient _client;
-    private readonly ILogger<AzureAIService> _logger;
+    private readonly ImageAnalysisClient _imageAnalysisClient;
+    private readonly ILogger<ImageAnalysisService> _logger;
     private readonly int _maxRetries;
     private readonly int _retryDelayMs;
 
-    public AzureAIService(IConfiguration configuration, ILogger<AzureAIService> logger)
+    public ImageAnalysisService(IConfiguration configuration, ILogger<ImageAnalysisService> logger)
     {
         _logger = logger;
         
@@ -28,10 +25,10 @@ public class AzureAIService : IAzureAIService
         _maxRetries = int.TryParse(configuration["AzureAI:MaxRetries"], out var retries) ? retries : 3;
         _retryDelayMs = int.TryParse(configuration["AzureAI:RetryDelayMs"], out var delay) ? delay : 1000;
         
-        _client = new ImageAnalysisClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
+        _imageAnalysisClient = new ImageAnalysisClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
     }
 
-    public async Task<CatalogItemAnalysisResult> AnalyzeImageAsync(byte[] imageData, CancellationToken cancellationToken = default)
+    public async Task<CatalogItemAnalysisResult> AnalyzeAsync(byte[] imageData, CancellationToken cancellationToken = default)
     {
         var result = new CatalogItemAnalysisResult();
         
@@ -52,9 +49,9 @@ public class AzureAIService : IAzureAIService
 
                 var imageSource = BinaryData.FromBytes(imageData);
                 
-                var analysisResult = await _client.AnalyzeAsync(
+                var analysisResult = await _imageAnalysisClient.AnalyzeAsync(
                     imageSource,
-                    VisualFeatures.Tags | VisualFeatures.Objects | VisualFeatures.Caption,
+                    VisualFeatures.Tags | VisualFeatures.Objects | VisualFeatures.Caption | VisualFeatures.Read | VisualFeatures.DenseCaptions,
                     new ImageAnalysisOptions { GenderNeutralCaption = false },
                     cancellationToken);
 

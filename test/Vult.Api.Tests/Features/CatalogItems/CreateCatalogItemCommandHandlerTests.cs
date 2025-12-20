@@ -3,7 +3,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Vult.Api.Features.CatalogItems;
-using Vult.Core.Enums;
+using Vult.Core;
 using Vult.Infrastructure.Data;
 
 namespace Vult.Api.Tests.Features.CatalogItems;

@@ -4,18 +4,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Vult.Core.Enums;
-using Vult.Core.Interfaces;
-using Vult.Core.Models;
+using Vult.Core;
+using Vult.Core;
+using Vult.Core;
+using Vult.Core;
 using Vult.Infrastructure.Data;
-using Vult.Infrastructure.Services;
 
 namespace Vult.Infrastructure.Tests.Services;
 
 [TestFixture]
 public class CatalogItemEvaluationServiceTests
 {
-    private Mock<IAzureAIService> _azureAIServiceMock = null!;
+    private Mock<IImageAnalysisService> _azureAIServiceMock = null!;
     private Mock<ILogger<CatalogItemEvaluationService>> _loggerMock = null!;
     private VultContext _context = null!;
 
@@ -31,7 +31,7 @@ public class CatalogItemEvaluationServiceTests
     [SetUp]
     public void SetUp()
     {
-        _azureAIServiceMock = new Mock<IAzureAIService>();
+        _azureAIServiceMock = new Mock<IImageAnalysisService>();
         _loggerMock = new Mock<ILogger<CatalogItemEvaluationService>>();
         _context = GetInMemoryContext();
     }
@@ -137,7 +137,7 @@ public class CatalogItemEvaluationServiceTests
         };
 
         _azureAIServiceMock
-            .Setup(x => x.AnalyzeImageAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.AnalyzeAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(analysisResult);
 
         // Act
@@ -195,7 +195,7 @@ public class CatalogItemEvaluationServiceTests
         };
 
         _azureAIServiceMock
-            .Setup(x => x.AnalyzeImageAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.AnalyzeAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(analysisResult);
 
         // Act
@@ -293,7 +293,7 @@ public class CatalogItemEvaluationServiceTests
         };
 
         _azureAIServiceMock
-            .Setup(x => x.AnalyzeImageAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.AnalyzeAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(analysisResult);
 
         // Act
@@ -354,7 +354,7 @@ public class CatalogItemEvaluationServiceTests
         };
 
         _azureAIServiceMock
-            .Setup(x => x.AnalyzeImageAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.AnalyzeAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(analysisResult);
 
         var nonExistentId = Guid.NewGuid();

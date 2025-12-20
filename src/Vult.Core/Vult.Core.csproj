@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
+	<PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
+    <PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0"/>	  
   </ItemGroup>
 
 </Project>

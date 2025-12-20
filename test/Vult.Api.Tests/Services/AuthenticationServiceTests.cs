@@ -4,7 +4,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Vult.Api.Services;
-using Vult.Core.Models;
+using Vult.Core;
 using Vult.Infrastructure.Data;
 
 namespace Vult.Api.Tests.Services;

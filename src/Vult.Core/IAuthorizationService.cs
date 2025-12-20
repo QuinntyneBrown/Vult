@@ -1,11 +1,8 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-namespace Vult.Core.Enums;
+namespace Vult.Core;
 
-public enum Gender
+public interface IAuthorizationService
 {
-    Mens,
-    Womens,
-    Unisex
 }

@@ -8,8 +8,8 @@ using Moq;
 using NUnit.Framework;
 using Vult.Api.Features.CatalogItems;
 using Vult.Api.Hubs;
-using Vult.Core.Interfaces;
-using Vult.Core.Models;
+using Vult.Core;
+using Vult.Core;
 
 namespace Vult.Api.Tests.Features.CatalogItems;
 
@@ -87,7 +87,7 @@ public class IngestCatalogItemPhotosCommandHandlerTests
         };
 
         _mockIngestionService
-            .Setup(s => s.IngestImagesAsync(It.IsAny<byte[][]>(), It.IsAny<CancellationToken>()))
+            .Setup(s => s.IngestAsync(It.IsAny<byte[][]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(mockIngestionResult);
 
         // Act
@@ -118,7 +118,7 @@ public class IngestCatalogItemPhotosCommandHandlerTests
         };
 
         _mockIngestionService
-            .Setup(s => s.IngestImagesAsync(It.IsAny<byte[][]>(), It.IsAny<CancellationToken>()))
+            .Setup(s => s.IngestAsync(It.IsAny<byte[][]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(mockIngestionResult);
 
         // Act
@@ -150,7 +150,7 @@ public class IngestCatalogItemPhotosCommandHandlerTests
         };
 
         _mockIngestionService
-            .Setup(s => s.IngestImagesAsync(It.IsAny<byte[][]>(), It.IsAny<CancellationToken>()))
+            .Setup(s => s.IngestAsync(It.IsAny<byte[][]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(mockIngestionResult);
 
         // Act
@@ -183,7 +183,7 @@ public class IngestCatalogItemPhotosCommandHandlerTests
         };
 
         _mockIngestionService
-            .Setup(s => s.IngestImagesAsync(It.IsAny<byte[][]>(), It.IsAny<CancellationToken>()))
+            .Setup(s => s.IngestAsync(It.IsAny<byte[][]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(mockIngestionResult);
 
         // Act

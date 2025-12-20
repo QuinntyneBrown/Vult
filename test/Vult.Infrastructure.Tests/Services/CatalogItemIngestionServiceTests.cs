@@ -4,19 +4,20 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Vult.Core.Enums;
-using Vult.Core.Interfaces;
-using Vult.Core.Models;
+using Vult.Core;
+using Vult.Core;
+using Vult.Core;
+using Vult.Core;
 using Vult.Infrastructure.Data;
-using Vult.Infrastructure.Services;
 
 namespace Vult.Infrastructure.Tests.Services;
 
 [TestFixture]
 public class CatalogItemIngestionServiceTests
 {
-    private Mock<IAzureAIService> _azureAIServiceMock = null!;
+    private Mock<IImageAnalysisService> _imageAnalysusServiceMock = null!;
     private Mock<ILogger<CatalogItemIngestionService>> _loggerMock = null!;
+    private Mock<IAzureOpenAIService> _azureOpenAIServiceMock = null!;
     private VultContext _context = null!;
 
     private VultContext GetInMemoryContext()
@@ -31,7 +32,7 @@ public class CatalogItemIngestionServiceTests
     [SetUp]
     public void SetUp()
     {
-        _azureAIServiceMock = new Mock<IAzureAIService>();
+        _imageAnalysusServiceMock = new Mock<IImageAnalysisService>();
         _loggerMock = new Mock<ILogger<CatalogItemIngestionService>>();
         _context = GetInMemoryContext();
     }
@@ -46,10 +47,10 @@ public class CatalogItemIngestionServiceTests
     public async Task IngestImagesAsync_ShouldReturnError_WhenImagesIsNull()
     {
         // Arrange
-        var service = new CatalogItemIngestionService(_azureAIServiceMock.Object, _context, _loggerMock.Object);
+        var service = new CatalogItemIngestionService(_imageAnalysusServiceMock.Object, _context, _azureOpenAIServiceMock.Object, _loggerMock.Object);
 
         // Act
-        var result = await service.IngestImagesAsync(null!);
+        var result = await service.IngestAsync(null!);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -61,10 +62,10 @@ public class CatalogItemIngestionServiceTests
     public async Task IngestImagesAsync_ShouldReturnError_WhenImagesIsEmpty()
     {
         // Arrange
-        var service = new CatalogItemIngestionService(_azureAIServiceMock.Object, _context, _loggerMock.Object);
+        var service = new CatalogItemIngestionService(_imageAnalysusServiceMock.Object, _context, _azureOpenAIServiceMock.Object, _loggerMock.Object);
 
         // Act
-        var result = await service.IngestImagesAsync(Array.Empty<byte[]>());
+        var result = await service.IngestAsync(Array.Empty<byte[]>());
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -75,7 +76,7 @@ public class CatalogItemIngestionServiceTests
     public async Task IngestImagesAsync_ShouldProcessImagesSuccessfully_WhenValid()
     {
         // Arrange
-        var service = new CatalogItemIngestionService(_azureAIServiceMock.Object, _context, _loggerMock.Object);
+        var service = new CatalogItemIngestionService(_imageAnalysusServiceMock.Object, _context, _azureOpenAIServiceMock.Object, _loggerMock.Object);
         
         var imageData = new byte[] { 1, 2, 3, 4, 5 };
         var images = new[] { imageData };
@@ -93,12 +94,12 @@ public class CatalogItemIngestionServiceTests
             ImageDescription = "A red Nike shoe"
         };
 
-        _azureAIServiceMock
-            .Setup(s => s.AnalyzeImageAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
+        _imageAnalysusServiceMock
+            .Setup(s => s.AnalyzeAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(analysisResult);
 
         // Act
-        var result = await service.IngestImagesAsync(images);
+        var result = await service.IngestAsync(images);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -129,7 +130,7 @@ public class CatalogItemIngestionServiceTests
     public async Task IngestImagesAsync_ShouldHandleMultipleImages()
     {
         // Arrange
-        var service = new CatalogItemIngestionService(_azureAIServiceMock.Object, _context, _loggerMock.Object);
+        var service = new CatalogItemIngestionService(_imageAnalysusServiceMock.Object, _context, _azureOpenAIServiceMock.Object, _loggerMock.Object);
         
         var images = new[]
         {
@@ -176,12 +177,12 @@ public class CatalogItemIngestionServiceTests
         };
 
         var callIndex = 0;
-        _azureAIServiceMock
-            .Setup(s => s.AnalyzeImageAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
+        _imageAnalysusServiceMock
+            .Setup(s => s.AnalyzeAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => analysisResults[callIndex++]);
 
         // Act
-        var result = await service.IngestImagesAsync(images);
+        var result = await service.IngestAsync(images);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -198,7 +199,7 @@ public class CatalogItemIngestionServiceTests
     public async Task IngestImagesAsync_ShouldHandleFailedAnalysis()
     {
         // Arrange
-        var service = new CatalogItemIngestionService(_azureAIServiceMock.Object, _context, _loggerMock.Object);
+        var service = new CatalogItemIngestionService(_imageAnalysusServiceMock.Object, _context, _azureOpenAIServiceMock.Object, _loggerMock.Object);
         
         var images = new[]
         {
@@ -225,12 +226,12 @@ public class CatalogItemIngestionServiceTests
         };
 
         var callIndex = 0;
-        _azureAIServiceMock
-            .Setup(s => s.AnalyzeImageAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
+        _imageAnalysusServiceMock
+            .Setup(s => s.AnalyzeAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => callIndex++ == 0 ? successResult : failureResult);
 
         // Act
-        var result = await service.IngestImagesAsync(images);
+        var result = await service.IngestAsync(images);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -246,7 +247,7 @@ public class CatalogItemIngestionServiceTests
     public async Task IngestImagesAsync_ShouldSkipEmptyImages()
     {
         // Arrange
-        var service = new CatalogItemIngestionService(_azureAIServiceMock.Object, _context, _loggerMock.Object);
+        var service = new CatalogItemIngestionService(_imageAnalysusServiceMock.Object, _context, _azureOpenAIServiceMock.Object, _loggerMock.Object);
         
         var images = new[]
         {
@@ -267,12 +268,12 @@ public class CatalogItemIngestionServiceTests
             Size = "M"
         };
 
-        _azureAIServiceMock
-            .Setup(s => s.AnalyzeImageAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
+        _imageAnalysusServiceMock
+            .Setup(s => s.AnalyzeAsync(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(analysisResult);
 
         // Act
-        var result = await service.IngestImagesAsync(images);
+        var result = await service.IngestAsync(images);
 
         // Assert
         Assert.That(result.TotalProcessed, Is.EqualTo(3));

@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using MediatR;
-using Vult.Core.Enums;
+using Vult.Core;
 
 namespace Vult.Api.Features.CatalogItems;
 

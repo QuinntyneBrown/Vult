@@ -2,29 +2,31 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Microsoft.Extensions.Logging;
-using Vult.Core.Interfaces;
-using Vult.Core.Models;
+using OpenAI.Chat;
 
-namespace Vult.Infrastructure.Services;
+namespace Vult.Core;
 
 public class CatalogItemIngestionService : ICatalogItemIngestionService
 {
-    private readonly IAzureAIService _azureAIService;
+    private readonly IImageAnalysisService _imageAnalysisService;
     private readonly IVultContext _context;
     private readonly ILogger<CatalogItemIngestionService> _logger;
+    private readonly IAzureOpenAIService _azureOpenAIService;
 
     public CatalogItemIngestionService(
-        IAzureAIService azureAIService,
+        IImageAnalysisService azureAIService,
         IVultContext context,
+        IAzureOpenAIService azureOpenAIService,
         ILogger<CatalogItemIngestionService> logger)
     {
-        _azureAIService = azureAIService;
+        _imageAnalysisService = azureAIService;
         _context = context;
         _logger = logger;
+        _azureOpenAIService = azureOpenAIService;
     }
 
-    public async Task<CatalogItemIngestionResult> IngestImagesAsync(byte[][] images, CancellationToken cancellationToken = default)
-    {
+    public async Task<CatalogItemIngestionResult> IngestAsync(byte[][] images, CancellationToken cancellationToken = default)
+    {        
         if (images == null || images.Length == 0)
         {
             var result = new CatalogItemIngestionResult
@@ -33,6 +35,7 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
                 TotalProcessed = images?.Length ?? 0
             };
             result.Errors.Add("No images provided for ingestion");
+
             return result;
         }
 
@@ -43,9 +46,6 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
 
         _logger.LogInformation("Starting ingestion of {Count} images", images.Length);
 
-        // Process each image and create individual catalog items
-        // Note: Currently each image creates a separate catalog item
-        // In production, implement logic to group images of the same item together
         var catalogItemsToCreate = new List<CatalogItem>();
 
         for (var i = 0; i < images.Length; i++)
@@ -64,8 +64,15 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
 
                 _logger.LogInformation("Processing image {Index}/{Total}", i + 1, images.Length);
 
-                // Analyze the image with Azure AI
-                var analysisResult = await _azureAIService.AnalyzeImageAsync(imageData, cancellationToken);
+                var analysisResult = await _imageAnalysisService.AnalyzeAsync(imageData, cancellationToken);
+
+                var messages = new List<ChatMessage>
+                {
+                    new SystemChatMessage("You are a used product retail expert. Base on the image analysis reults provide condition (Excellent/Good/Fair/Poor), estimated MSRP, estimated Value and description for selling the item to a retail customer that focuses on features of the item, benefits of the item and reason to buy the item now. Respond only with a JSON object in this exact format: {\"condition\": \"Good\", \"esimatedMSRP\": 0, \"esimatedValue\": 0, \"description\": \"buy it\"}"),
+                    new UserChatMessage($"Analyze these vehicle images and provide the assessment. Image analysis results: {analysisResult.Description}")
+                };
+
+                var content = await _azureOpenAIService.CompleteChatAsync(messages, cancellationToken);
 
                 if (!analysisResult.Success)
                 {
@@ -75,7 +82,6 @@ public class CatalogItemIngestionService : ICatalogItemIngestionService
                     continue;
                 }
 
-                // Create catalog item from analysis result
                 var catalogItem = new CatalogItem
                 {
                     CatalogItemId = Guid.NewGuid(),

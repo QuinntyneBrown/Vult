@@ -3,19 +3,17 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Vult.Core.Interfaces;
-using Vult.Core.Models;
 
-namespace Vult.Infrastructure.Services;
+namespace Vult.Core;
 
 public class CatalogItemEvaluationService : ICatalogItemEvaluationService
 {
-    private readonly IAzureAIService _azureAIService;
+    private readonly IImageAnalysisService _azureAIService;
     private readonly IVultContext _context;
     private readonly ILogger<CatalogItemEvaluationService> _logger;
 
     public CatalogItemEvaluationService(
-        IAzureAIService azureAIService,
+        IImageAnalysisService azureAIService,
         IVultContext context,
         ILogger<CatalogItemEvaluationService> logger)
     {
@@ -60,7 +58,7 @@ public class CatalogItemEvaluationService : ICatalogItemEvaluationService
                 return result;
             }
             
-            var analysisResult = await _azureAIService.AnalyzeImageAsync(firstImage.ImageData, cancellationToken);
+            var analysisResult = await _azureAIService.AnalyzeAsync(firstImage.ImageData, cancellationToken);
 
             if (!analysisResult.Success)
             {

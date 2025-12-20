@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vult.Api.Features.Auth;
-using Vult.Core.Interfaces;
+using Vult.Core;
 
 namespace Vult.Api.Controllers;
 

@@ -1,0 +1,58 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+using Microsoft.EntityFrameworkCore;
+using Vult.Api.Services;
+using Vult.Core;
+using Vult.Core;
+using Vult.Infrastructure.Data;
+
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class ConfigureServices
+{
+    public static void AddCliServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddOpenApi();
+
+        // MediatR
+        services.AddMediatR(configuration =>
+        {
+            configuration.RegisterServicesFromAssembly(typeof(ConfigureServices).Assembly);
+        });
+
+        // Database
+        services.AddDbContext<VultContext>(options =>
+            options.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("Vult.Api")));
+
+        // IVultContext abstraction
+        services.AddScoped<IVultContext>(provider => provider.GetRequiredService<VultContext>());
+
+        // Seed service
+        services.AddScoped<Vult.Infrastructure.ISeedService, Vult.Infrastructure.SeedService>();
+
+        // Auth services
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IAuthorizationService, AuthorizationService>();
+
+        // Azure AI services
+        services.AddSingleton<IAzureOpenAIService, AzureOpenAIService>();
+        services.AddSingleton<IAzureOpenAIService>(sp =>
+        {
+            
+            return new AzureOpenAIService(
+                configuration["AzureOpenAIEndpoint"],
+                configuration["AzureOpenAIKey"],
+                "gpt-4.1");
+        });
+
+        services.AddSingleton<IImageAnalysisService, ImageAnalysisService>();
+        services.AddScoped<ICatalogItemIngestionService, CatalogItemIngestionService>();
+        services.AddScoped<ICatalogItemEvaluationService, CatalogItemEvaluationService>();
+    }
+
+
+}
+

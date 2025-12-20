@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
-using Vult.Core.Interfaces;
+using Vult.Core;
 
 namespace Vult.Api.Services;
 
@@ -60,7 +60,7 @@ public class AuthorizationService : IAuthorizationService
         if (role == null)
         {
             // Create the role if it doesn't exist
-            role = new Core.Models.Role
+            role = new Role
             {
                 RoleId = Guid.NewGuid(),
                 Name = roleName,

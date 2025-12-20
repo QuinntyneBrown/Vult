@@ -2,8 +2,8 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
-using Vult.Core.Enums;
-using Vult.Core.Models;
+using Vult.Core;
+using Vult.Core;
 using Vult.Infrastructure.Data;
 
 namespace Vult.Infrastructure.Tests.Data;

@@ -3,7 +3,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Vult.Core.Models;
+using Vult.Core;
 
 namespace Vult.Infrastructure.Data.Configurations;
 

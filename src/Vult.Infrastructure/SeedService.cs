@@ -4,8 +4,7 @@
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Vult.Core.Interfaces;
-using Vult.Core.Models;
+using Vult.Core;
 
 namespace Vult.Infrastructure;
 

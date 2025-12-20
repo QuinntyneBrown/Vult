@@ -2,16 +2,13 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Vult.Api.Features.CatalogItems;
 using Vult.Api.Services;
-using Vult.Core.Interfaces;
+using Vult.Core;
+using Vult.Core;
 using Vult.Infrastructure.Data;
-using Vult.Infrastructure.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -19,31 +16,22 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Controllers
-        services.AddControllers();
-        
-        // SignalR
-        services.AddSignalR();
-        
-        // OpenAPI
-        services.AddOpenApi();
 
-        // MediatR
-        services.AddMediatR(cfg =>
+        services.AddControllers();        
+        services.AddSignalR();
+        services.AddOpenApi();
+        services.AddMediatR(configuration =>
         {
-            cfg.RegisterServicesFromAssembly(typeof(ConfigureServices).Assembly);
+            configuration.RegisterServicesFromAssembly(typeof(ConfigureServices).Assembly);
         });
 
-        // Database
         services.AddDbContext<VultContext>(options =>
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly("Vult.Api")));
-
-        // IVultContext abstraction
+        
         services.AddScoped<IVultContext>(provider => provider.GetRequiredService<VultContext>());
 
-        // Seed service
         services.AddScoped<Vult.Infrastructure.ISeedService, Vult.Infrastructure.SeedService>();
 
         // Auth services
@@ -51,7 +39,8 @@ public static class ConfigureServices
         services.AddScoped<IAuthorizationService, AuthorizationService>();
 
         // Azure AI services
-        services.AddSingleton<IAzureAIService, AzureAIService>();
+        services.AddSingleton<IAzureOpenAIService, AzureOpenAIService>();
+        services.AddSingleton<IImageAnalysisService, ImageAnalysisService>();
         services.AddScoped<ICatalogItemIngestionService, CatalogItemIngestionService>();
         services.AddScoped<ICatalogItemEvaluationService, CatalogItemEvaluationService>();
 

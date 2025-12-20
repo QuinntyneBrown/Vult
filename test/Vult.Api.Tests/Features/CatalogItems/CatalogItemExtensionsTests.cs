@@ -2,8 +2,8 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Vult.Api.Features.CatalogItems;
-using Vult.Core.Enums;
-using Vult.Core.Models;
+using Vult.Core;
+using Vult.Core;
 
 namespace Vult.Api.Tests.Features.CatalogItems;
 

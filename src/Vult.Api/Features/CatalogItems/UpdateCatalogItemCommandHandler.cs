@@ -3,7 +3,7 @@
 
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Vult.Core.Interfaces;
+using Vult.Core;
 
 namespace Vult.Api.Features.CatalogItems;
 

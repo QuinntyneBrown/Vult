@@ -8,8 +8,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Vult.Api.Controllers;
 using Vult.Api.Features.CatalogItems;
-using Vult.Core.Enums;
-using Vult.Core.Models;
+using Vult.Core;
+using Vult.Core;
 using Vult.Infrastructure.Data;
 
 namespace Vult.Api.Tests.Controllers;

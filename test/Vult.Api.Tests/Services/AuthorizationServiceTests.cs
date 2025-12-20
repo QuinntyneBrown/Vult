@@ -3,7 +3,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Vult.Api.Services;
-using Vult.Core.Models;
+using Vult.Core;
 using Vult.Infrastructure.Data;
 
 namespace Vult.Api.Tests.Services;

@@ -5,34 +5,24 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards';
 import { Login } from './pages/login/login';
 import { CatalogList } from './pages/catalog-list/catalog-list';
+import { Home } from './pages';
 
 export const routes: Routes = [
   {
-    path: 'auth',
-    children: [
-      {
-        path: 'login',
-        component: Login
-      }
-    ]
+    path: 'login',
+    component: Login
   },
   {
-    path: '',
+    path: 'home',
+    component: Home
+  },  
+  {
+    path: 'catalog',
     canActivate: [authGuard],
-    children: [
-      {
-        path: 'catalog',
-        component: CatalogList
-      },
-      {
-        path: '',
-        redirectTo: 'catalog',
-        pathMatch: 'full'
-      }
-    ]
+    component: CatalogList
   },
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: 'home'
   }
 ];

@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System.ComponentModel.DataAnnotations;
-using Vult.Core.Models;
+using Vult.Core;
 
 namespace Vult.Core.Tests.Models;
 

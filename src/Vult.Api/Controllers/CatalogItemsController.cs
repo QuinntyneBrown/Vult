@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vult.Api.Features.CatalogItems;
+using Vult.Core;
 
 namespace Vult.Api.Controllers;
 
@@ -98,8 +99,8 @@ public class CatalogItemsController : ControllerBase
             PageNumber = pageNumber,
             PageSize = Math.Min(pageSize, 100), // Cap at 100
             BrandName = brandName,
-            ItemType = itemType.HasValue ? (Vult.Core.Enums.ItemType)itemType.Value : null,
-            Gender = gender.HasValue ? (Vult.Core.Enums.Gender)gender.Value : null,
+            ItemType = itemType.HasValue ? (ItemType)itemType.Value : null,
+            Gender = gender.HasValue ? (Gender)gender.Value : null,
             SortBy = sortBy
         };
 
