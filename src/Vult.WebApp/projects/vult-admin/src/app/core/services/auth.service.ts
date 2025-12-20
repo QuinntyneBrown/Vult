@@ -98,9 +98,11 @@ export class AuthService {
         userId: payload.sub || payload.userId,
         username: payload.username || payload.name,
         email: payload.email,
-        isActive: true,
+        status: payload.status || 'Active',
         createdDate: '',
-        updatedDate: ''
+        updatedDate: '',
+        canRecover: false,
+        roles: []
       };
     } catch {
       return null;

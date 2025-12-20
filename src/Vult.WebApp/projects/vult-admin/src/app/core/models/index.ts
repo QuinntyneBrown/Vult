@@ -6,3 +6,4 @@ export * from './login-request';
 export * from './login-response';
 export * from './paginated-response';
 export * from './user';
+export * from './user-invitation';
