@@ -1,7 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap, BehaviorSubject, ReplaySubject, map } from 'rxjs';
@@ -20,8 +20,8 @@ export class AuthService {
   private currentUserSubject = new ReplaySubject<User | null>(1);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  private _isAuthenticated = signal(false);
-  public isAuthenticated = computed(() => this._isAuthenticated());
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -36,7 +36,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.setTokens(response.token, response.refreshToken);
-          this._isAuthenticated.set(true);
+          this.isAuthenticatedSubject.next(true);
           this.loadCurrentUser();
         })
       );
@@ -45,14 +45,14 @@ export class AuthService {
   logout(): void {
     this.clearTokens();
     this.currentUserSubject.next(null);
-    this._isAuthenticated.set(false);
+    this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/login']);
   }
 
   tryToLogin(): void {
     const token = this.getAccessToken();
     if (token) {
-      this._isAuthenticated.set(true);
+      this.isAuthenticatedSubject.next(true);
       this.loadCurrentUser();
     } else {
       this.currentUserSubject.next(null);

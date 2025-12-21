@@ -12,7 +12,13 @@
       "Bash(ping:*)",
       "Bash(curl:*)",
       "Bash(dotnet ef migrations:*)",
-      "Bash(dotnet ef database update:*)"
+      "Bash(dotnet ef database update:*)",
+      "Bash(sqlcmd:*)",
+      "Bash(powershell:*)",
+      "Bash(Remove-Item \"src/Vult.Api/Migrations/*.cs\" -Force)",
+      "Bash(dotnet run:*)",
+      "Bash(npm run e2e:vult-admin:*)",
+      "Bash(npm run:*)"
     ],
     "deny": [],
     "ask": []

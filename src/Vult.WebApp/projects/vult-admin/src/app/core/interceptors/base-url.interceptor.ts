@@ -2,13 +2,15 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 import { HttpInterceptorFn } from '@angular/common/http';
-
-const API_BASE_URL = 'https://localhost:7266';
+import { inject } from '@angular/core';
+import { API_BASE_URL } from '../config/api.config';
 
 export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
+  const apiBaseUrl = inject(API_BASE_URL);
+
   if (!req.url.startsWith('http://') && !req.url.startsWith('https://')) {
     req = req.clone({
-      url: `${API_BASE_URL}${req.url}`
+      url: `${apiBaseUrl}${req.url}`
     });
   }
 

@@ -12,13 +12,16 @@ public class SeedService : ISeedService
 {
     private readonly IVultContext _context;
     private readonly ILogger<SeedService> _logger;
+    private readonly IPasswordHasher _passwordHasher;
 
     public SeedService(
         IVultContext context,
-        ILogger<SeedService> logger)
+        ILogger<SeedService> logger,
+        IPasswordHasher passwordHasher)
     {
         _context = context;
         _logger = logger;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task SeedAsync()
@@ -90,7 +93,8 @@ public class SeedService : ISeedService
         }
 
         var salt = GenerateSalt();
-        var passwordHash = HashPassword("admin", salt);
+
+        var passwordHash = _passwordHasher.HashPassword("admin", salt);
 
         var adminUser = new User
         {
@@ -115,10 +119,4 @@ public class SeedService : ISeedService
         return salt;
     }
 
-    private static string HashPassword(string password, byte[] salt)
-    {
-        using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA256);
-        var hash = pbkdf2.GetBytes(32);
-        return Convert.ToBase64String(hash);
-    }
 }

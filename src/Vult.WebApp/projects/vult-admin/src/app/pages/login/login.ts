@@ -1,7 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { BehaviorSubject } from 'rxjs';
 import { AuthService } from '../../core/services';
 
 @Component({
@@ -33,8 +34,8 @@ import { AuthService } from '../../core/services';
 })
 export class Login implements OnInit {
   loginForm: FormGroup;
-  errorMessage = signal<string | null>(null);
-  isLoading = signal(false);
+  errorMessage$ = new BehaviorSubject<string | null>(null);
+  isLoading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private fb: FormBuilder,
@@ -65,8 +66,8 @@ export class Login implements OnInit {
       return;
     }
 
-    this.isLoading.set(true);
-    this.errorMessage.set(null);
+    this.isLoading$.next(true);
+    this.errorMessage$.next(null);
 
     const { username, password, rememberMe } = this.loginForm.value;
 
@@ -78,12 +79,12 @@ export class Login implements OnInit {
 
     this.authService.login({ username, password }).subscribe({
       next: () => {
-        this.isLoading.set(false);
+        this.isLoading$.next(false);
         this.router.navigate(['/catalog-items']);
       },
       error: (error) => {
-        this.isLoading.set(false);
-        this.errorMessage.set(error.error?.message || 'Login failed. Please check your credentials.');
+        this.isLoading$.next(false);
+        this.errorMessage$.next(error.error?.message || 'Login failed. Please check your credentials.');
       }
     });
   }

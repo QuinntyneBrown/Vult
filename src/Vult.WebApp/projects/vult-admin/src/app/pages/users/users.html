@@ -4,9 +4,9 @@
   <div class="users__container">
     <div class="users__list-section">
       <app-user-list
-        [users]="users()"
-        [selectedUserId]="selectedUser()?.userId || null"
-        [isLoading]="isLoading()"
+        [users]="(users$ | async) ?? []"
+        [selectedUserId]="(selectedUser$ | async)?.userId || null"
+        [isLoading]="(isLoading$ | async) ?? false"
         (selectUser)="onSelectUser($event)"
         (create)="onCreate()"
         (delete)="onDelete($event)"
@@ -14,12 +14,12 @@
     </div>
 
     <div class="users__edit-section">
-      @if (isCreating() || selectedUser()) {
+      @if ((isCreating$ | async) || (selectedUser$ | async)) {
         <app-user-edit
-          [user]="selectedUser()"
-          [isCreating]="isCreating()"
-          [isSaving]="isSaving()"
-          [errorMessage]="errorMessage()"
+          [user]="selectedUser$ | async"
+          [isCreating]="(isCreating$ | async) ?? false"
+          [isSaving]="(isSaving$ | async) ?? false"
+          [errorMessage]="errorMessage$ | async"
           (save)="onSave($event)"
           (cancel)="onCancel()"
         />

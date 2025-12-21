@@ -12,15 +12,15 @@ using Vult.Infrastructure.Data;
 namespace Vult.Api.Migrations
 {
     [DbContext(typeof(VultContext))]
-    [Migration("20251216061634_AddAuthenticationSchema")]
-    partial class AddAuthenticationSchema
+    [Migration("20251221040200_CaptureLatestDbChanges")]
+    partial class CaptureLatestDbChanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.1")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -40,7 +40,7 @@ namespace Vult.Api.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("Vult.Core.Models.CatalogItem", b =>
+            modelBuilder.Entity("Vult.Core.CatalogItem", b =>
                 {
                     b.Property<Guid>("CatalogItemId")
                         .ValueGeneratedOnAdd()
@@ -86,7 +86,7 @@ namespace Vult.Api.Migrations
                     b.ToTable("CatalogItems", (string)null);
                 });
 
-            modelBuilder.Entity("Vult.Core.Models.CatalogItemImage", b =>
+            modelBuilder.Entity("Vult.Core.CatalogItemImage", b =>
                 {
                     b.Property<Guid>("CatalogItemImageId")
                         .ValueGeneratedOnAdd()
@@ -114,26 +114,66 @@ namespace Vult.Api.Migrations
                     b.ToTable("CatalogItemImages", (string)null);
                 });
 
-            modelBuilder.Entity("Vult.Core.Models.Role", b =>
+            modelBuilder.Entity("Vult.Core.InvitationToken", b =>
+                {
+                    b.Property<Guid>("InvitationTokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("Expiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("InvitationTokenId");
+
+                    b.HasIndex("Value")
+                        .IsUnique();
+
+                    b.ToTable("InvitationTokens");
+                });
+
+            modelBuilder.Entity("Vult.Core.Privilege", b =>
+                {
+                    b.Property<Guid>("PrivilegeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AccessRight")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Aggregate")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PrivilegeId");
+
+                    b.HasIndex("RoleId", "Aggregate", "AccessRight")
+                        .IsUnique();
+
+                    b.ToTable("Privileges");
+                });
+
+            modelBuilder.Entity("Vult.Core.Role", b =>
                 {
                     b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("RoleId");
 
@@ -143,52 +183,35 @@ namespace Vult.Api.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Vult.Core.Models.User", b =>
+            modelBuilder.Entity("Vult.Core.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid?>("CurrentProfileId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<Guid?>("DefaultProfileId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<DateTime?>("LastLoginDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<byte[]>("Salt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("UserId");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.HasIndex("Username")
                         .IsUnique();
@@ -198,22 +221,22 @@ namespace Vult.Api.Migrations
 
             modelBuilder.Entity("UserRole", b =>
                 {
-                    b.HasOne("Vult.Core.Models.Role", null)
+                    b.HasOne("Vult.Core.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Vult.Core.Models.User", null)
+                    b.HasOne("Vult.Core.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Vult.Core.Models.CatalogItemImage", b =>
+            modelBuilder.Entity("Vult.Core.CatalogItemImage", b =>
                 {
-                    b.HasOne("Vult.Core.Models.CatalogItem", "CatalogItem")
+                    b.HasOne("Vult.Core.CatalogItem", "CatalogItem")
                         .WithMany("CatalogItemImages")
                         .HasForeignKey("CatalogItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -222,9 +245,25 @@ namespace Vult.Api.Migrations
                     b.Navigation("CatalogItem");
                 });
 
-            modelBuilder.Entity("Vult.Core.Models.CatalogItem", b =>
+            modelBuilder.Entity("Vult.Core.Privilege", b =>
+                {
+                    b.HasOne("Vult.Core.Role", "Role")
+                        .WithMany("Privileges")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Vult.Core.CatalogItem", b =>
                 {
                     b.Navigation("CatalogItemImages");
+                });
+
+            modelBuilder.Entity("Vult.Core.Role", b =>
+                {
+                    b.Navigation("Privileges");
                 });
 #pragma warning restore 612, 618
         }

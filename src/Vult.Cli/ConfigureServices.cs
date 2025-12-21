@@ -31,10 +31,6 @@ public static class ConfigureServices
         // Seed service
         services.AddScoped<Vult.Infrastructure.ISeedService, Vult.Infrastructure.SeedService>();
 
-        // Auth services
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
-        services.AddScoped<IAuthorizationService, AuthorizationService>();
-
         // Azure AI services
         services.AddSingleton<IAzureOpenAIService, AzureOpenAIService>();
         services.AddSingleton<IAzureOpenAIService>(sp =>

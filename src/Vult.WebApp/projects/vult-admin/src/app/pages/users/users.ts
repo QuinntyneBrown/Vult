@@ -1,11 +1,12 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { BehaviorSubject } from 'rxjs';
 import { UserService } from '../../core/services';
 import { User, CreateUserRequest, UpdateUserRequest } from '../../core/models';
 import { UserList } from './components/user-list/user-list';
@@ -25,12 +26,12 @@ import { UserEdit } from './components/user-edit/user-edit';
   styleUrls: ['./users.scss']
 })
 export class Users implements OnInit {
-  users = signal<User[]>([]);
-  selectedUser = signal<User | null>(null);
-  isLoading = signal(false);
-  isSaving = signal(false);
-  isCreating = signal(false);
-  errorMessage = signal<string | null>(null);
+  users$ = new BehaviorSubject<User[]>([]);
+  selectedUser$ = new BehaviorSubject<User | null>(null);
+  isLoading$ = new BehaviorSubject<boolean>(false);
+  isSaving$ = new BehaviorSubject<boolean>(false);
+  isCreating$ = new BehaviorSubject<boolean>(false);
+  errorMessage$ = new BehaviorSubject<string | null>(null);
 
   constructor(
     private userService: UserService,
@@ -46,36 +47,36 @@ export class Users implements OnInit {
       if (userId) {
         this.loadUser(userId);
       } else {
-        this.selectedUser.set(null);
-        this.isCreating.set(false);
+        this.selectedUser$.next(null);
+        this.isCreating$.next(false);
       }
     });
   }
 
   loadUsers(): void {
-    this.isLoading.set(true);
+    this.isLoading$.next(true);
     this.userService.getUsers().subscribe({
       next: (response) => {
-        this.users.set(response.users);
-        this.isLoading.set(false);
+        this.users$.next(response.users);
+        this.isLoading$.next(false);
       },
       error: (error) => {
-        this.errorMessage.set(error.error?.message || 'Failed to load users');
-        this.isLoading.set(false);
+        this.errorMessage$.next(error.error?.message || 'Failed to load users');
+        this.isLoading$.next(false);
       }
     });
   }
 
   loadUser(userId: string): void {
-    this.isLoading.set(true);
+    this.isLoading$.next(true);
     this.userService.getUserById(userId).subscribe({
       next: (user) => {
-        this.selectedUser.set(user);
-        this.isLoading.set(false);
+        this.selectedUser$.next(user);
+        this.isLoading$.next(false);
       },
       error: () => {
         this.router.navigate(['/users']);
-        this.isLoading.set(false);
+        this.isLoading$.next(false);
       }
     });
   }
@@ -85,37 +86,37 @@ export class Users implements OnInit {
   }
 
   onCreate(): void {
-    this.isCreating.set(true);
-    this.selectedUser.set(null);
+    this.isCreating$.next(true);
+    this.selectedUser$.next(null);
   }
 
   onSave(request: CreateUserRequest | UpdateUserRequest): void {
-    this.isSaving.set(true);
-    this.errorMessage.set(null);
+    this.isSaving$.next(true);
+    this.errorMessage$.next(null);
 
-    if (this.isCreating()) {
+    if (this.isCreating$.value) {
       this.userService.createUser(request as CreateUserRequest).subscribe({
         next: (user) => {
           this.loadUsers();
           this.router.navigate(['/users', user.userId]);
-          this.isSaving.set(false);
-          this.isCreating.set(false);
+          this.isSaving$.next(false);
+          this.isCreating$.next(false);
         },
         error: (error) => {
-          this.errorMessage.set(error.error?.message || 'Failed to create user');
-          this.isSaving.set(false);
+          this.errorMessage$.next(error.error?.message || 'Failed to create user');
+          this.isSaving$.next(false);
         }
       });
-    } else if (this.selectedUser()) {
-      this.userService.updateUser(this.selectedUser()!.userId, request as UpdateUserRequest).subscribe({
+    } else if (this.selectedUser$.value) {
+      this.userService.updateUser(this.selectedUser$.value!.userId, request as UpdateUserRequest).subscribe({
         next: (user) => {
           this.loadUsers();
-          this.selectedUser.set(user);
-          this.isSaving.set(false);
+          this.selectedUser$.next(user);
+          this.isSaving$.next(false);
         },
         error: (error) => {
-          this.errorMessage.set(error.error?.message || 'Failed to update user');
-          this.isSaving.set(false);
+          this.errorMessage$.next(error.error?.message || 'Failed to update user');
+          this.isSaving$.next(false);
         }
       });
     }
@@ -129,16 +130,16 @@ export class Users implements OnInit {
           this.router.navigate(['/users']);
         },
         error: (error) => {
-          this.errorMessage.set(error.error?.message || 'Failed to delete user');
+          this.errorMessage$.next(error.error?.message || 'Failed to delete user');
         }
       });
     }
   }
 
   onCancel(): void {
-    this.isCreating.set(false);
-    this.selectedUser.set(null);
-    this.errorMessage.set(null);
+    this.isCreating$.next(false);
+    this.selectedUser$.next(null);
+    this.errorMessage$.next(null);
     this.router.navigate(['/users']);
   }
 }

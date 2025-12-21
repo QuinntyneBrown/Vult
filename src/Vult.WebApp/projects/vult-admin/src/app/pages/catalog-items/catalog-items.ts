@@ -1,9 +1,10 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { CatalogItemList } from './components/catalog-item-list/catalog-item-list';
 import { CatalogItemEdit } from './components/catalog-item-edit/catalog-item-edit';
 import { CatalogItemService } from '../../core/services';
@@ -23,19 +24,23 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./catalog-items.scss']
 })
 export class CatalogItems implements OnInit {
-  catalogItems = signal<CatalogItem[]>([]);
-  selectedItem = signal<CatalogItem | null>(null);
-  isCreating = signal(false);
-  isLoading = signal(false);
-  isSaving = signal(false);
-  errorMessage = signal<string | null>(null);
+  catalogItems$ = new BehaviorSubject<CatalogItem[]>([]);
+  selectedItem$ = new BehaviorSubject<CatalogItem | null>(null);
+  isCreating$ = new BehaviorSubject<boolean>(false);
+  isLoading$ = new BehaviorSubject<boolean>(false);
+  isSaving$ = new BehaviorSubject<boolean>(false);
+  errorMessage$ = new BehaviorSubject<string | null>(null);
 
-  pageNumber = signal(1);
-  pageSize = signal(20);
-  totalCount = signal(0);
-  totalPages = computed(() => Math.ceil(this.totalCount() / this.pageSize()));
+  pageNumber$ = new BehaviorSubject<number>(1);
+  pageSize$ = new BehaviorSubject<number>(20);
+  totalCount$ = new BehaviorSubject<number>(0);
+  totalPages$ = combineLatest([this.totalCount$, this.pageSize$]).pipe(
+    map(([totalCount, pageSize]) => Math.ceil(totalCount / pageSize))
+  );
 
-  showEdit = computed(() => this.selectedItem() !== null || this.isCreating());
+  showEdit$ = combineLatest([this.selectedItem$, this.isCreating$]).pipe(
+    map(([selectedItem, isCreating]) => selectedItem !== null || isCreating)
+  );
 
   constructor(
     private catalogItemService: CatalogItemService,
@@ -55,90 +60,92 @@ export class CatalogItems implements OnInit {
   }
 
   loadCatalogItems(): void {
-    this.isLoading.set(true);
-    this.errorMessage.set(null);
+    this.isLoading$.next(true);
+    this.errorMessage$.next(null);
 
-    this.catalogItemService.getCatalogItems(this.pageNumber(), this.pageSize()).subscribe({
+    this.catalogItemService.getCatalogItems(this.pageNumber$.value, this.pageSize$.value).subscribe({
       next: (response: PaginatedResponse<CatalogItem>) => {
-        this.catalogItems.set(response.items);
-        this.totalCount.set(response.totalCount);
-        this.isLoading.set(false);
+        this.catalogItems$.next(response.items);
+        this.totalCount$.next(response.totalCount);
+        this.isLoading$.next(false);
       },
       error: (error) => {
-        this.errorMessage.set('Failed to load catalog items');
-        this.isLoading.set(false);
+        this.errorMessage$.next('Failed to load catalog items');
+        this.isLoading$.next(false);
         console.error('Error loading catalog items:', error);
       }
     });
   }
 
   loadItemForEditing(catalogItemId: string): void {
-    this.isLoading.set(true);
+    this.isLoading$.next(true);
     this.catalogItemService.getCatalogItemById(catalogItemId).subscribe({
       next: (item) => {
-        this.selectedItem.set(item);
-        this.isCreating.set(false);
-        this.isLoading.set(false);
+        this.selectedItem$.next(item);
+        this.isCreating$.next(false);
+        this.isLoading$.next(false);
       },
       error: (error) => {
-        this.errorMessage.set('Failed to load catalog item');
-        this.isLoading.set(false);
+        this.errorMessage$.next('Failed to load catalog item');
+        this.isLoading$.next(false);
         console.error('Error loading catalog item:', error);
       }
     });
   }
 
   onSelectItem(item: CatalogItem): void {
-    this.selectedItem.set(item);
-    this.isCreating.set(false);
+    this.selectedItem$.next(item);
+    this.isCreating$.next(false);
     this.router.navigate(['/catalog-items', item.catalogItemId]);
   }
 
   onCreate(): void {
-    this.selectedItem.set(null);
-    this.isCreating.set(true);
+    this.selectedItem$.next(null);
+    this.isCreating$.next(true);
   }
 
   onCancel(): void {
-    this.selectedItem.set(null);
-    this.isCreating.set(false);
+    this.selectedItem$.next(null);
+    this.isCreating$.next(false);
     this.router.navigate(['/catalog-items']);
   }
 
   onSave(data: CreateCatalogItemRequest | UpdateCatalogItemRequest): void {
-    this.isSaving.set(true);
-    this.errorMessage.set(null);
+    this.isSaving$.next(true);
+    this.errorMessage$.next(null);
 
-    if (this.isCreating()) {
+    if (this.isCreating$.value) {
       this.catalogItemService.createCatalogItem(data as CreateCatalogItemRequest).subscribe({
         next: (newItem) => {
-          this.catalogItems.update(items => [newItem, ...items]);
-          this.selectedItem.set(null);
-          this.isCreating.set(false);
-          this.isSaving.set(false);
+          const currentItems = this.catalogItems$.value;
+          this.catalogItems$.next([newItem, ...currentItems]);
+          this.selectedItem$.next(null);
+          this.isCreating$.next(false);
+          this.isSaving$.next(false);
           this.router.navigate(['/catalog-items']);
         },
         error: (error) => {
-          this.errorMessage.set(error.error?.message || 'Failed to create catalog item');
-          this.isSaving.set(false);
+          this.errorMessage$.next(error.error?.message || 'Failed to create catalog item');
+          this.isSaving$.next(false);
         }
       });
-    } else if (this.selectedItem()) {
+    } else if (this.selectedItem$.value) {
       this.catalogItemService.updateCatalogItem(
-        this.selectedItem()!.catalogItemId,
+        this.selectedItem$.value!.catalogItemId,
         data as UpdateCatalogItemRequest
       ).subscribe({
         next: (updatedItem) => {
-          this.catalogItems.update(items =>
-            items.map(i => i.catalogItemId === updatedItem.catalogItemId ? updatedItem : i)
+          const currentItems = this.catalogItems$.value;
+          this.catalogItems$.next(
+            currentItems.map(i => i.catalogItemId === updatedItem.catalogItemId ? updatedItem : i)
           );
-          this.selectedItem.set(null);
-          this.isSaving.set(false);
+          this.selectedItem$.next(null);
+          this.isSaving$.next(false);
           this.router.navigate(['/catalog-items']);
         },
         error: (error) => {
-          this.errorMessage.set(error.error?.message || 'Failed to update catalog item');
-          this.isSaving.set(false);
+          this.errorMessage$.next(error.error?.message || 'Failed to update catalog item');
+          this.isSaving$.next(false);
         }
       });
     }
@@ -151,21 +158,22 @@ export class CatalogItems implements OnInit {
 
     this.catalogItemService.deleteCatalogItem(catalogItemId).subscribe({
       next: () => {
-        this.catalogItems.update(items => items.filter(i => i.catalogItemId !== catalogItemId));
-        if (this.selectedItem()?.catalogItemId === catalogItemId) {
-          this.selectedItem.set(null);
+        const currentItems = this.catalogItems$.value;
+        this.catalogItems$.next(currentItems.filter(i => i.catalogItemId !== catalogItemId));
+        if (this.selectedItem$.value?.catalogItemId === catalogItemId) {
+          this.selectedItem$.next(null);
           this.router.navigate(['/catalog-items']);
         }
       },
       error: (error) => {
-        this.errorMessage.set('Failed to delete catalog item');
+        this.errorMessage$.next('Failed to delete catalog item');
         console.error('Error deleting catalog item:', error);
       }
     });
   }
 
   onPageChange(page: number): void {
-    this.pageNumber.set(page);
+    this.pageNumber$.next(page);
     this.loadCatalogItems();
   }
 }

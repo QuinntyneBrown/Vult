@@ -1,7 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, input, output, OnInit, OnChanges, SimpleChanges, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -42,13 +42,13 @@ import {
   styleUrls: ['./catalog-item-edit.scss']
 })
 export class CatalogItemEdit implements OnInit, OnChanges {
-  catalogItem = input<CatalogItem | null>(null);
-  isCreating = input(false);
-  isSaving = input(false);
-  errorMessage = input<string | null>(null);
+  @Input() catalogItem: CatalogItem | null = null;
+  @Input() isCreating: boolean = false;
+  @Input() isSaving: boolean = false;
+  @Input() errorMessage: string | null = null;
 
-  save = output<CreateCatalogItemRequest | UpdateCatalogItemRequest>();
-  cancel = output<void>();
+  @Output() save = new EventEmitter<CreateCatalogItemRequest | UpdateCatalogItemRequest>();
+  @Output() cancel = new EventEmitter<void>();
 
   form!: FormGroup;
   genderOptions = Object.entries(GenderLabels).map(([value, label]) => ({
@@ -73,7 +73,7 @@ export class CatalogItemEdit implements OnInit, OnChanges {
   }
 
   private initForm(): void {
-    const item = this.catalogItem();
+    const item = this.catalogItem;
 
     this.form = this.fb.group({
       brandName: [item?.brandName || '', [Validators.maxLength(200)]],
@@ -86,7 +86,7 @@ export class CatalogItemEdit implements OnInit, OnChanges {
       catalogItemImages: this.fb.array([])
     });
 
-    if (this.isCreating() && item?.catalogItemImages) {
+    if (this.isCreating && item?.catalogItemImages) {
       item.catalogItemImages.forEach(image => this.addImage(image.imageData, image.description));
     }
   }
@@ -128,7 +128,7 @@ export class CatalogItemEdit implements OnInit, OnChanges {
 
     const formValue = this.form.value;
 
-    if (this.isCreating()) {
+    if (this.isCreating) {
       const images: CreateCatalogItemImageRequest[] = formValue.catalogItemImages
         .filter((img: { imageData: string }) => img.imageData)
         .map((img: { imageData: string; description?: string }) => ({

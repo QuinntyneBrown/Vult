@@ -3,13 +3,13 @@
 <div class="master-detail">
   <div class="master-detail__list">
     <app-catalog-item-list
-      [catalogItems]="catalogItems()"
-      [selectedItemId]="selectedItem()?.catalogItemId"
-      [isLoading]="isLoading()"
-      [pageNumber]="pageNumber()"
-      [pageSize]="pageSize()"
-      [totalCount]="totalCount()"
-      [totalPages]="totalPages()"
+      [catalogItems]="(catalogItems$ | async) ?? []"
+      [selectedItemId]="(selectedItem$ | async)?.catalogItemId"
+      [isLoading]="(isLoading$ | async) ?? false"
+      [pageNumber]="(pageNumber$ | async) ?? 1"
+      [pageSize]="(pageSize$ | async) ?? 20"
+      [totalCount]="(totalCount$ | async) ?? 0"
+      [totalPages]="(totalPages$ | async) ?? 0"
       (selectItem)="onSelectItem($event)"
       (create)="onCreate()"
       (delete)="onDelete($event)"
@@ -18,12 +18,12 @@
   </div>
 
   <div class="master-detail__detail">
-    @if (showEdit()) {
+    @if (showEdit$ | async) {
       <app-catalog-item-edit
-        [catalogItem]="selectedItem()"
-        [isCreating]="isCreating()"
-        [isSaving]="isSaving()"
-        [errorMessage]="errorMessage()"
+        [catalogItem]="selectedItem$ | async"
+        [isCreating]="(isCreating$ | async) ?? false"
+        [isSaving]="(isSaving$ | async) ?? false"
+        [errorMessage]="errorMessage$ | async"
         (save)="onSave($event)"
         (cancel)="onCancel()">
       </app-catalog-item-edit>

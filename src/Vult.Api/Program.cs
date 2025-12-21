@@ -1,6 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using Vult.Api.Configuration;
 using Vult.Api.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Vult.Infrastructure.Data;
@@ -20,9 +21,12 @@ if (app.Environment.IsDevelopment())
         try
         {
             var context = services.GetRequiredService<VultContext>();
+
+            // Run migrations to ensure database is up to date
             await context.Database.MigrateAsync();
 
             var seedService = services.GetRequiredService<Vult.Infrastructure.ISeedService>();
+
             await seedService.SeedAsync();
         }
         catch (Exception ex)
@@ -41,7 +45,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("CorsPolicy");
+// Use CORS policy from configuration
+var corsSettings = app.Configuration
+    .GetSection(CorsSettings.SectionName)
+    .Get<CorsSettings>() ?? new CorsSettings();
+app.UseCors(corsSettings.PolicyName);
 
 app.UseAuthentication();
 

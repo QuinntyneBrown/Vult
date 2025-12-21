@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Vult.Api.Authorization;
 using Vult.Api.Behaviours;
+using Vult.Api.Configuration;
 using Vult.Api.Services;
 using Vult.Core;
 using Vult.Infrastructure.Data;
@@ -105,27 +106,13 @@ public static class ConfigureServices
         services.AddAuthorization();
 
         // CORS configuration
-        var allowedOrigins = configuration
-            .GetSection("Cors:AllowedOrigins")
-            .Get<string[]>() ?? Array.Empty<string>();
-
         services.AddCors(options => options.AddPolicy("CorsPolicy",
-            builder =>
-            {
-                if (allowedOrigins.Length > 0)
-                {
-                    builder.WithOrigins(allowedOrigins)
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                }
-                else
-                {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                }
-            }));
+            builder => builder
+            .WithOrigins("http://localhost:4201")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .SetIsOriginAllowed(isOriginAllowed: _ => true)
+            .AllowCredentials()));
 
         return services;
     }
