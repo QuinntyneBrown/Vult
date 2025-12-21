@@ -1,7 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, input, output, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, input, output, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -9,8 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 import { User, CreateUserRequest, UpdateUserRequest } from '../../../../core/models';
 
 @Component({
@@ -24,13 +24,13 @@ import { User, CreateUserRequest, UpdateUserRequest } from '../../../../core/mod
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatSlideToggleModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatChipsModule
   ],
   templateUrl: './user-edit.html',
   styleUrls: ['./user-edit.scss']
 })
-export class UserEdit implements OnInit, OnChanges {
+export class UserEdit implements OnChanges {
   user = input<User | null>(null);
   isCreating = input(false);
   isSaving = input(false);
@@ -39,12 +39,14 @@ export class UserEdit implements OnInit, OnChanges {
   save = output<CreateUserRequest | UpdateUserRequest>();
   cancel = output<void>();
 
-  form!: FormGroup;
+  form: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.initForm();
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      username: ['', [Validators.required]],
+      password: [''],
+      roles: ['']
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -55,22 +57,19 @@ export class UserEdit implements OnInit, OnChanges {
 
   private initForm(): void {
     if (this.isCreating()) {
-      this.form = this.fb.group({
-        username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-        email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        firstName: ['', Validators.maxLength(100)],
-        lastName: ['', Validators.maxLength(100)]
+      this.form.reset();
+      this.form.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
+      this.form.get('username')?.enable();
+    } else if (this.user()) {
+      const user = this.user()!;
+      this.form.patchValue({
+        username: user.username,
+        roles: user.roles.map(r => r.name).join(', ')
       });
-    } else {
-      const user = this.user();
-      this.form = this.fb.group({
-        username: [{ value: user?.username || '', disabled: true }],
-        email: [{ value: user?.email || '', disabled: true }],
-        firstName: [user?.firstName || '', Validators.maxLength(100)],
-        lastName: [user?.lastName || '', Validators.maxLength(100)]
-      });
+      this.form.get('password')?.clearValidators();
+      this.form.get('username')?.disable();
     }
+    this.form.get('password')?.updateValueAndValidity();
   }
 
   onSubmit(): void {
@@ -79,19 +78,19 @@ export class UserEdit implements OnInit, OnChanges {
       return;
     }
 
+    const rolesValue = this.form.get('roles')?.value || '';
+    const roles = rolesValue.split(',').map((r: string) => r.trim()).filter((r: string) => r);
+
     if (this.isCreating()) {
       const request: CreateUserRequest = {
-        username: this.form.value.username,
-        email: this.form.value.email,
-        password: this.form.value.password,
-        firstName: this.form.value.firstName || undefined,
-        lastName: this.form.value.lastName || undefined
+        username: this.form.get('username')?.value,
+        password: this.form.get('password')?.value,
+        roles: roles
       };
       this.save.emit(request);
     } else {
       const request: UpdateUserRequest = {
-        firstName: this.form.value.firstName || undefined,
-        lastName: this.form.value.lastName || undefined
+        roles: roles
       };
       this.save.emit(request);
     }

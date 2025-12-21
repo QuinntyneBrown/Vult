@@ -1,7 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthService } from '../../core/services';
 
 @Component({
@@ -24,12 +25,13 @@ import { AuthService } from '../../core/services';
     MatInputModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatIconModule
+    MatIconModule,
+    MatCheckboxModule
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
 })
-export class Login {
+export class Login implements OnInit {
   loginForm: FormGroup;
   errorMessage = signal<string | null>(null);
   isLoading = signal(false);
@@ -40,9 +42,21 @@ export class Login {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(3)]]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+      rememberMe: [false]
     });
+  }
+
+  ngOnInit(): void {
+    const savedCredentials = this.authService.getSavedCredentials();
+    if (savedCredentials) {
+      this.loginForm.patchValue({
+        username: savedCredentials.username,
+        password: savedCredentials.password,
+        rememberMe: true
+      });
+    }
   }
 
   onSubmit(): void {
@@ -54,7 +68,15 @@ export class Login {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    this.authService.login(this.loginForm.value).subscribe({
+    const { username, password, rememberMe } = this.loginForm.value;
+
+    if (rememberMe) {
+      this.authService.saveCredentials(username, password);
+    } else {
+      this.authService.clearSavedCredentials();
+    }
+
+    this.authService.login({ username, password }).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.router.navigate(['/catalog-items']);

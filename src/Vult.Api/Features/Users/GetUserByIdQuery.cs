@@ -1,17 +1,13 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 using MediatR;
+using Vult.Api.Authorization;
 
 namespace Vult.Api.Features.Users;
 
-public class GetUserByIdQuery : IRequest<GetUserByIdQueryResult>
+[AuthorizeResourceOperation(Operations.Read, AggregateNames.User)]
+public class GetUserByIdQuery : IRequest<UserDto?>
 {
     public Guid UserId { get; set; }
-}
-
-public class GetUserByIdQueryResult
-{
-    public UserDto? User { get; set; }
-    public bool Found { get; set; }
 }

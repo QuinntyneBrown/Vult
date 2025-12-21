@@ -3,12 +3,11 @@
 
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatChipsModule } from '@angular/material/chips';
 import { User } from '../../../../core/models';
 
 @Component({
@@ -16,29 +15,23 @@ import { User } from '../../../../core/models';
   standalone: true,
   imports: [
     CommonModule,
+    MatCardModule,
     MatListModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule,
-    MatChipsModule
+    MatProgressSpinnerModule
   ],
   templateUrl: './user-list.html',
   styleUrls: ['./user-list.scss']
 })
 export class UserList {
-  users = input.required<User[]>();
-  selectedUserId = input<string | undefined>();
+  users = input<User[]>([]);
+  selectedUserId = input<string | null>(null);
   isLoading = input(false);
-  pageNumber = input(1);
-  pageSize = input(20);
-  totalCount = input(0);
-  totalPages = input(1);
 
   selectUser = output<User>();
   create = output<void>();
-  delete = output<string>();
-  pageChange = output<number>();
+  delete = output<User>();
 
   onSelectUser(user: User): void {
     this.selectUser.emit(user);
@@ -48,12 +41,8 @@ export class UserList {
     this.create.emit();
   }
 
-  onDelete(event: Event, userId: string): void {
+  onDelete(event: Event, user: User): void {
     event.stopPropagation();
-    this.delete.emit(userId);
-  }
-
-  onPageChange(event: PageEvent): void {
-    this.pageChange.emit(event.pageIndex + 1);
+    this.delete.emit(user);
   }
 }

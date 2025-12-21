@@ -25,13 +25,13 @@ public class SeedService : ISeedService
     {
         _logger.LogInformation("Starting database seeding...");
 
-        await SeedRolesAsync();
+        await SeedRolesAndPrivilegesAsync();
         await SeedUsersAsync();
 
         _logger.LogInformation("Database seeding completed successfully.");
     }
 
-    private async Task SeedRolesAsync()
+    private async Task SeedRolesAndPrivilegesAsync()
     {
         if (await _context.Roles.AnyAsync())
         {
@@ -39,32 +39,36 @@ public class SeedService : ISeedService
             return;
         }
 
-        _logger.LogInformation("Seeding roles...");
+        _logger.LogInformation("Seeding roles and privileges...");
 
-        var adminRole = new Role
+        var systemAdministratorRole = new Role
         {
             RoleId = Guid.NewGuid(),
-            Name = "Administrator",
-            Description = "System administrator with full access",
-            CreatedDate = DateTime.UtcNow,
-            UpdatedDate = DateTime.UtcNow
+            Name = "SystemAdministrator"
         };
 
-        var userRole = new Role
+        // Add all privileges for SystemAdministrator
+        var aggregates = new[] { "User", "Role", "CatalogItem", "InvitationToken" };
+        var accessRights = new[] { AccessRight.Create, AccessRight.Read, AccessRight.Write, AccessRight.Delete };
+
+        foreach (var aggregate in aggregates)
         {
-            RoleId = Guid.NewGuid(),
-            Name = "User",
-            Description = "Standard user with basic access",
-            CreatedDate = DateTime.UtcNow,
-            UpdatedDate = DateTime.UtcNow
-        };
+            foreach (var accessRight in accessRights)
+            {
+                systemAdministratorRole.Privileges.Add(new Privilege
+                {
+                    PrivilegeId = Guid.NewGuid(),
+                    Aggregate = aggregate,
+                    AccessRight = accessRight
+                });
+            }
+        }
 
-        _context.Roles.Add(adminRole);
-        _context.Roles.Add(userRole);
+        _context.Roles.Add(systemAdministratorRole);
 
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation("Roles seeded successfully.");
+        _logger.LogInformation("Roles and privileges seeded successfully.");
     }
 
     private async Task SeedUsersAsync()
@@ -77,51 +81,44 @@ public class SeedService : ISeedService
 
         _logger.LogInformation("Seeding default admin user...");
 
-        var adminRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Administrator");
+        var adminRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "SystemAdministrator");
 
         if (adminRole == null)
         {
-            _logger.LogWarning("Administrator role not found, cannot create admin user.");
+            _logger.LogWarning("SystemAdministrator role not found, cannot create admin user.");
             return;
         }
 
-        var passwordHash = HashPassword("admin");
+        var salt = GenerateSalt();
+        var passwordHash = HashPassword("admin", salt);
 
         var adminUser = new User
         {
             UserId = Guid.NewGuid(),
             Username = "admin",
-            Email = "admin@gmail.com",
-            PasswordHash = passwordHash,
-            FirstName = "System",
-            LastName = "Administrator",
-            Status = UserStatus.Active,
-            ActivatedAt = DateTime.UtcNow,
-            ActivationMethod = ActivationMethod.AdminManual,
-            CreatedDate = DateTime.UtcNow,
-            UpdatedDate = DateTime.UtcNow,
+            Password = passwordHash,
+            Salt = salt,
             Roles = new List<Role> { adminRole }
         };
 
         _context.Users.Add(adminUser);
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation("Admin user seeded successfully.");
+        _logger.LogInformation("Admin user seeded successfully (username: admin, password: admin).");
     }
 
-    private string HashPassword(string password)
+    private static byte[] GenerateSalt()
     {
-        // Use PBKDF2 with SHA256 (same as AuthenticationService)
-        using var rng = RandomNumberGenerator.Create();
         var salt = new byte[16];
+        using var rng = RandomNumberGenerator.Create();
         rng.GetBytes(salt);
+        return salt;
+    }
 
-        var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 10000, HashAlgorithmName.SHA256, 32);
-
-        var hashBytes = new byte[48];
-        Array.Copy(salt, 0, hashBytes, 0, 16);
-        Array.Copy(hash, 0, hashBytes, 16, 32);
-
-        return Convert.ToBase64String(hashBytes);
+    private static string HashPassword(string password, byte[] salt)
+    {
+        using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA256);
+        var hash = pbkdf2.GetBytes(32);
+        return Convert.ToBase64String(hash);
     }
 }

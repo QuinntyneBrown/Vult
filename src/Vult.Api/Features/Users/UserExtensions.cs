@@ -1,5 +1,5 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 using Vult.Core;
 
@@ -9,35 +9,12 @@ public static class UserExtensions
 {
     public static UserDto ToDto(this User user)
     {
-        DateTime? lockExpiresAt = null;
-        if (user.LockedAt.HasValue && user.LockDurationTicks.HasValue)
-        {
-            lockExpiresAt = user.LockedAt.Value.AddTicks(user.LockDurationTicks.Value);
-        }
-
         return new UserDto
         {
             UserId = user.UserId,
             Username = user.Username,
-            Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Status = user.Status.ToString(),
-            CreatedDate = user.CreatedDate,
-            UpdatedDate = user.UpdatedDate,
-            LastLoginDate = user.LastLoginDate,
-            ActivatedAt = user.ActivatedAt,
-            ActivationMethod = user.ActivationMethod.ToString(),
-            DeactivatedAt = user.DeactivatedAt,
-            DeactivationReason = user.DeactivationReason,
-            LockedAt = user.LockedAt,
-            LockReason = user.LockReason,
-            LockExpiresAt = lockExpiresAt,
-            DeletedAt = user.DeletedAt,
-            DeletionType = user.DeletionType.ToString(),
-            DeletionReason = user.DeletionReason,
-            CanRecover = user.CanRecover,
-            Roles = user.Roles?.Select(r => r.ToDto()).ToList() ?? new()
+            DefaultProfileId = user.DefaultProfileId,
+            Roles = user.Roles.Select(r => r.ToDto()).ToList()
         };
     }
 
@@ -47,22 +24,18 @@ public static class UserExtensions
         {
             RoleId = role.RoleId,
             Name = role.Name,
-            Description = role.Description
+            Privileges = role.Privileges.Select(p => p.ToDto()).ToList()
         };
     }
 
-    public static void UpdateFromDto(this User user, UpdateUserDto dto)
+    public static PrivilegeDto ToDto(this Privilege privilege)
     {
-        if (dto.FirstName != null)
+        return new PrivilegeDto
         {
-            user.FirstName = dto.FirstName;
-        }
-
-        if (dto.LastName != null)
-        {
-            user.LastName = dto.LastName;
-        }
-
-        user.UpdatedDate = DateTime.UtcNow;
+            PrivilegeId = privilege.PrivilegeId,
+            RoleId = privilege.RoleId,
+            Aggregate = privilege.Aggregate,
+            AccessRight = privilege.AccessRight
+        };
     }
 }

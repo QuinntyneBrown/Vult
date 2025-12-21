@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 export interface LoginResponse {
-  accessToken: string;
-  refreshToken?: string;
+  token: string;
+  refreshToken: string;
+  userId: string;
 }

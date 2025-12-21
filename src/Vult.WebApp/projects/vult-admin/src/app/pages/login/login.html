@@ -46,10 +46,11 @@
           @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
             <mat-error>Password is required</mat-error>
           }
-          @if (loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched) {
-            <mat-error>Password must be at least 6 characters</mat-error>
-          }
         </mat-form-field>
+
+        <mat-checkbox formControlName="rememberMe" class="login__remember-me">
+          Remember me
+        </mat-checkbox>
 
         <button
           mat-raised-button
