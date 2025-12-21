@@ -44,6 +44,7 @@ export class UserEdit implements OnChanges {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       username: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       password: [''],
       roles: ['']
     });
@@ -60,14 +61,17 @@ export class UserEdit implements OnChanges {
       this.form.reset();
       this.form.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
       this.form.get('username')?.enable();
+      this.form.get('email')?.enable();
     } else if (this.user()) {
       const user = this.user()!;
       this.form.patchValue({
         username: user.username,
+        email: (user as any).email || '',
         roles: user.roles.map(r => r.name).join(', ')
       });
       this.form.get('password')?.clearValidators();
       this.form.get('username')?.disable();
+      this.form.get('email')?.disable();
     }
     this.form.get('password')?.updateValueAndValidity();
   }

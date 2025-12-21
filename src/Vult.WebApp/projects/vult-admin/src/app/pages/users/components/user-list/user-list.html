@@ -2,9 +2,10 @@
      Licensed under the MIT License. See License.txt in the project root for license information. -->
 <mat-card class="user-list">
   <mat-card-header>
-    <mat-card-title>Users</mat-card-title>
-    <button mat-icon-button color="primary" (click)="onCreate()">
+    <mat-card-title><h2>Users</h2></mat-card-title>
+    <button mat-raised-button color="primary" (click)="onCreate()">
       <mat-icon>add</mat-icon>
+      Create
     </button>
   </mat-card-header>
 
@@ -23,8 +24,11 @@
             <mat-icon matListItemIcon>person</mat-icon>
             <span matListItemTitle>{{ user.username }}</span>
             <span matListItemLine>
-              @for (role of user.roles; track role.roleId; let last = $last) {
+              @for (role of user.roles ?? []; track role.roleId; let last = $last) {
                 {{ role.name }}{{ last ? '' : ', ' }}
+              }
+              @if (user.isActive === false) {
+                <mat-chip>Inactive</mat-chip>
               }
             </span>
             <button
