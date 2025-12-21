@@ -1,60 +1,47 @@
 <!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
      Licensed under the MIT License. See License.txt in the project root for license information. -->
-<div class="user-list">
-  <div class="user-list__header">
-    <h2 class="user-list__title">Users</h2>
-    <button mat-raised-button color="primary" (click)="onCreate()" type="button">
+<mat-card class="user-list">
+  <mat-card-header>
+    <mat-card-title>Users</mat-card-title>
+    <button mat-icon-button color="primary" (click)="onCreate()">
       <mat-icon>add</mat-icon>
-      Create
     </button>
-  </div>
+  </mat-card-header>
 
-  @if (isLoading()) {
-    <div class="user-list__loading">
-      <mat-spinner diameter="40"></mat-spinner>
-    </div>
-  } @else {
-    <mat-nav-list class="user-list__items">
-      @for (user of users(); track user.userId) {
-        <mat-list-item
-          class="user-list__item"
-          [class.user-list__item--selected]="user.userId === selectedUserId()"
-          (click)="onSelectUser(user)">
-          <mat-icon matListItemIcon>person</mat-icon>
-          <div matListItemTitle class="user-list__item-title">
-            {{ user.username }}
-            @if (user.status !== 'Active') {
-              <mat-chip class="user-list__inactive-chip">{{ user.status }}</mat-chip>
-            }
+  <mat-card-content>
+    @if (isLoading()) {
+      <div class="user-list__loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else {
+      <mat-nav-list>
+        @for (user of users(); track user.userId) {
+          <mat-list-item
+            [class.selected]="selectedUserId() === user.userId"
+            (click)="onSelectUser(user)"
+          >
+            <mat-icon matListItemIcon>person</mat-icon>
+            <span matListItemTitle>{{ user.username }}</span>
+            <span matListItemLine>
+              @for (role of user.roles; track role.roleId; let last = $last) {
+                {{ role.name }}{{ last ? '' : ', ' }}
+              }
+            </span>
+            <button
+              mat-icon-button
+              color="warn"
+              matListItemMeta
+              (click)="onDelete($event, user)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+        } @empty {
+          <div class="user-list__empty">
+            <p>No users found</p>
           </div>
-          <div matListItemLine class="user-list__item-subtitle">{{ user.email }}</div>
-          <button mat-icon-button
-                  color="warn"
-                  matListItemMeta
-                  (click)="onDelete($event, user.userId)"
-                  title="Delete user"
-                  type="button">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </mat-list-item>
-      } @empty {
-        <div class="user-list__empty">
-          <mat-icon>people_outline</mat-icon>
-          <p>No users found</p>
-        </div>
-      }
-    </mat-nav-list>
-
-    @if (totalCount() > 0) {
-      <mat-paginator
-        class="user-list__paginator"
-        [length]="totalCount()"
-        [pageSize]="pageSize()"
-        [pageIndex]="pageNumber() - 1"
-        [pageSizeOptions]="[10, 20, 50]"
-        (page)="onPageChange($event)"
-        showFirstLastButtons>
-      </mat-paginator>
+        }
+      </mat-nav-list>
     }
-  }
-</div>
+  </mat-card-content>
+</mat-card>

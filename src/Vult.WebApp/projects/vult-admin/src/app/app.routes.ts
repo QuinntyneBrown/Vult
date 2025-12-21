@@ -10,16 +10,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login').then(m => m.Login)
   },
   {
-    path: 'users',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/users/users').then(m => m.Users)
-  },
-  {
-    path: 'users/:userId',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/users/users').then(m => m.Users)
-  },
-  {
     path: 'catalog-items',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/catalog-items/catalog-items').then(m => m.CatalogItems)
@@ -28,6 +18,16 @@ export const routes: Routes = [
     path: 'catalog-items/:catalogItemId',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/catalog-items/catalog-items').then(m => m.CatalogItems)
+  },
+  {
+    path: 'users',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/users/users').then(m => m.Users)
+  },
+  {
+    path: 'users/:userId',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/users/users').then(m => m.Users)
   },
   {
     path: '',

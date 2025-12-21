@@ -4,13 +4,14 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from '../services';
-import { catchError, switchMap, throwError } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
 
-  if (token && !req.url.includes('/auth/login')) {
+  // Skip adding auth header for login endpoint
+  if (token && !req.url.includes('/user/token')) {
     req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
@@ -20,22 +21,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(req).pipe(
     catchError(error => {
-      if (error.status === 401 && !req.url.includes('/auth/refresh')) {
-        return authService.refreshToken().pipe(
-          switchMap(() => {
-            const newToken = authService.getAccessToken();
-            const clonedReq = req.clone({
-              setHeaders: {
-                Authorization: `Bearer ${newToken}`
-              }
-            });
-            return next(clonedReq);
-          }),
-          catchError(refreshError => {
-            authService.logout();
-            return throwError(() => refreshError);
-          })
-        );
+      // Handle 401 Unauthorized - logout and redirect to login
+      if (error.status === 401 && !req.url.includes('/user/token')) {
+        authService.logout();
       }
       return throwError(() => error);
     })

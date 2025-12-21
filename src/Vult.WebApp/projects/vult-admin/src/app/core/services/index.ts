@@ -4,5 +4,5 @@
 export * from './auth.service';
 export * from './catalog-item.service';
 export * from './local-storage.service';
+export * from './navigation.service';
 export * from './user.service';
-export * from './user-invitation.service';

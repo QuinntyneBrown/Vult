@@ -1,18 +1,13 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
 using MediatR;
+using Vult.Api.Authorization;
 
 namespace Vult.Api.Features.Users;
 
-public class DeleteUserCommand : IRequest<DeleteUserCommandResult>
+[AuthorizeResourceOperation(Operations.Delete, AggregateNames.User)]
+public class DeleteUserCommand : IRequest<bool>
 {
     public Guid UserId { get; set; }
-    public DeleteUserDto Data { get; set; } = null!;
-}
-
-public class DeleteUserCommandResult
-{
-    public bool Success { get; set; }
-    public List<string> Errors { get; set; } = new();
 }

@@ -2,88 +2,59 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {
-  UserDto,
-  RoleDto,
-  CreateUserRequest,
-  UpdateUserRequest,
-  ActivateUserDto,
-  DeactivateUserDto,
-  LockUserDto,
-  DeleteUserDto,
-  GetUsersQueryResult,
-  GetUserByIdQueryResult,
-  GetUserRolesQueryResult,
-  UserCommandResult,
-  DeleteUserCommandResult
-} from '../models';
+import { User, CreateUserRequest, UpdateUserRequest } from '../models';
+
+export interface GetUsersResponse {
+  users: User[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private readonly API_URL = '/api';
+  private readonly API_URL = '/api/user';
 
   constructor(private http: HttpClient) {}
 
-  getUsers(
-    pageNumber: number = 1,
-    pageSize: number = 10,
-    includeDeleted: boolean = false
-  ): Observable<GetUsersQueryResult> {
-    const params = new HttpParams()
-      .set('pageNumber', pageNumber.toString())
-      .set('pageSize', pageSize.toString())
-      .set('includeDeleted', includeDeleted.toString());
-
-    return this.http.get<GetUsersQueryResult>(`${this.API_URL}/users`, { params });
+  getUsers(): Observable<GetUsersResponse> {
+    return this.http.get<GetUsersResponse>(this.API_URL);
   }
 
-  getUserById(userId: string): Observable<GetUserByIdQueryResult> {
-    return this.http.get<GetUserByIdQueryResult>(`${this.API_URL}/users/${userId}`);
+  getUserById(userId: string): Observable<User> {
+    return this.http.get<User>(`${this.API_URL}/${userId}`);
   }
 
-  getUserRoles(userId: string): Observable<GetUserRolesQueryResult> {
-    return this.http.get<GetUserRolesQueryResult>(`${this.API_URL}/users/${userId}/roles`);
+  getCurrent(): Observable<User> {
+    return this.http.get<User>(`${this.API_URL}/current`);
   }
 
-  createUser(request: CreateUserRequest): Observable<UserCommandResult> {
-    return this.http.post<UserCommandResult>(`${this.API_URL}/users`, request);
+  checkUsernameExists(username: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.API_URL}/exists/${encodeURIComponent(username)}`);
   }
 
-  updateUser(userId: string, request: UpdateUserRequest): Observable<UserCommandResult> {
-    return this.http.put<UserCommandResult>(`${this.API_URL}/users/${userId}`, request);
+  createUser(request: CreateUserRequest): Observable<User> {
+    return this.http.post<User>(this.API_URL, request);
   }
 
-  deleteUser(userId: string, request: DeleteUserDto): Observable<DeleteUserCommandResult> {
-    return this.http.delete<DeleteUserCommandResult>(`${this.API_URL}/users/${userId}`, {
-      body: request
+  updateUser(userId: string, request: UpdateUserRequest): Observable<User> {
+    return this.http.put<User>(`${this.API_URL}/${userId}`, request);
+  }
+
+  deleteUser(userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${userId}`);
+  }
+
+  updatePassword(userId: string, password: string): Observable<void> {
+    return this.http.put<void>(`${this.API_URL}/${userId}/password`, { password });
+  }
+
+  changePassword(oldPassword: string, newPassword: string, confirmationPassword: string): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}/change-password`, {
+      oldPassword,
+      newPassword,
+      confirmationPassword
     });
-  }
-
-  activateUser(userId: string, request: ActivateUserDto): Observable<UserCommandResult> {
-    return this.http.post<UserCommandResult>(`${this.API_URL}/users/${userId}/activate`, request);
-  }
-
-  deactivateUser(userId: string, request: DeactivateUserDto): Observable<UserCommandResult> {
-    return this.http.post<UserCommandResult>(`${this.API_URL}/users/${userId}/deactivate`, request);
-  }
-
-  lockUser(userId: string, request: LockUserDto): Observable<UserCommandResult> {
-    return this.http.post<UserCommandResult>(`${this.API_URL}/users/${userId}/lock`, request);
-  }
-
-  unlockUser(userId: string): Observable<UserCommandResult> {
-    return this.http.post<UserCommandResult>(`${this.API_URL}/users/${userId}/unlock`, {});
-  }
-
-  restoreUser(userId: string): Observable<UserCommandResult> {
-    return this.http.post<UserCommandResult>(`${this.API_URL}/users/${userId}/restore`, {});
-  }
-
-  getRoles(): Observable<RoleDto[]> {
-    return this.http.get<RoleDto[]>(`${this.API_URL}/roles`);
   }
 }

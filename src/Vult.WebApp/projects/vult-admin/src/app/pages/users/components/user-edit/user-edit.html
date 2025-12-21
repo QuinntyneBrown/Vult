@@ -2,11 +2,9 @@
      Licensed under the MIT License. See License.txt in the project root for license information. -->
 <mat-card class="user-edit">
   <mat-card-header>
-    <mat-icon mat-card-avatar>{{ isCreating() ? 'person_add' : 'edit' }}</mat-icon>
-    <mat-card-title>{{ isCreating() ? 'Create User' : 'Edit User' }}</mat-card-title>
-    <mat-card-subtitle>
-      {{ isCreating() ? 'Add a new user to the system' : 'Modify user details' }}
-    </mat-card-subtitle>
+    <mat-card-title>
+      {{ isCreating() ? 'Create User' : 'Edit User' }}
+    </mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
@@ -17,91 +15,50 @@
       </div>
     }
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-edit__form">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="outline" class="user-edit__field">
         <mat-label>Username</mat-label>
-        <input matInput formControlName="username" placeholder="Enter username">
-        <mat-icon matSuffix>person</mat-icon>
-        @if (form.get('username')?.hasError('required')) {
+        <input matInput formControlName="username" placeholder="Enter username" />
+        @if (form.get('username')?.hasError('required') && form.get('username')?.touched) {
           <mat-error>Username is required</mat-error>
-        }
-        @if (form.get('username')?.hasError('minlength')) {
-          <mat-error>Username must be at least 3 characters</mat-error>
-        }
-        @if (form.get('username')?.hasError('maxlength')) {
-          <mat-error>Username cannot exceed 100 characters</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="user-edit__field">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" placeholder="Enter email">
-        <mat-icon matSuffix>email</mat-icon>
-        @if (form.get('email')?.hasError('required')) {
-          <mat-error>Email is required</mat-error>
-        }
-        @if (form.get('email')?.hasError('email')) {
-          <mat-error>Please enter a valid email</mat-error>
-        }
-        @if (form.get('email')?.hasError('maxlength')) {
-          <mat-error>Email cannot exceed 255 characters</mat-error>
         }
       </mat-form-field>
 
       @if (isCreating()) {
         <mat-form-field appearance="outline" class="user-edit__field">
           <mat-label>Password</mat-label>
-          <input matInput formControlName="password" type="password" placeholder="Enter password">
-          <mat-icon matSuffix>lock</mat-icon>
-          @if (form.get('password')?.hasError('required')) {
+          <input matInput type="password" formControlName="password" placeholder="Enter password" />
+          @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
             <mat-error>Password is required</mat-error>
           }
-          @if (form.get('password')?.hasError('minlength')) {
+          @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
             <mat-error>Password must be at least 6 characters</mat-error>
           }
         </mat-form-field>
       }
 
-      <div class="user-edit__row">
-        <mat-form-field appearance="outline" class="user-edit__field user-edit__field--half">
-          <mat-label>First Name</mat-label>
-          <input matInput formControlName="firstName" placeholder="Enter first name">
-          @if (form.get('firstName')?.hasError('maxlength')) {
-            <mat-error>First name cannot exceed 100 characters</mat-error>
-          }
-        </mat-form-field>
+      <mat-form-field appearance="outline" class="user-edit__field">
+        <mat-label>Roles</mat-label>
+        <input matInput formControlName="roles" placeholder="Enter roles (comma-separated)" />
+        <mat-hint>e.g., SystemAdministrator, User</mat-hint>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="user-edit__field user-edit__field--half">
-          <mat-label>Last Name</mat-label>
-          <input matInput formControlName="lastName" placeholder="Enter last name">
-          @if (form.get('lastName')?.hasError('maxlength')) {
-            <mat-error>Last name cannot exceed 100 characters</mat-error>
+      <div class="user-edit__actions">
+        <button mat-button type="button" (click)="onCancel()">Cancel</button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="isSaving()"
+        >
+          @if (isSaving()) {
+            <mat-spinner diameter="20"></mat-spinner>
+            Saving...
+          } @else {
+            {{ isCreating() ? 'Create' : 'Save' }}
           }
-        </mat-form-field>
+        </button>
       </div>
-
-      @if (!isCreating()) {
-        <mat-slide-toggle formControlName="isActive" class="user-edit__toggle">
-          Active
-        </mat-slide-toggle>
-      }
     </form>
   </mat-card-content>
-
-  <mat-card-actions align="end">
-    <button mat-button (click)="onCancel()" [disabled]="isSaving()" type="button">
-      Cancel
-    </button>
-    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isSaving()">
-      @if (isSaving()) {
-        <mat-spinner diameter="20" class="user-edit__spinner"></mat-spinner>
-        Saving...
-      } @else {
-        <ng-container>
-          <mat-icon>save</mat-icon>
-          Save
-        </ng-container>
-      }
-    </button>
-  </mat-card-actions>
 </mat-card>

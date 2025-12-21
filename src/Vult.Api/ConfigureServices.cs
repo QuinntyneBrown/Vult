@@ -2,9 +2,12 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Vult.Api.Authorization;
+using Vult.Api.Behaviours;
 using Vult.Api.Services;
 using Vult.Core;
 using Vult.Infrastructure.Data;
@@ -20,23 +23,27 @@ public static class ConfigureServices
         services.AddSignalR();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        services.AddMediatR(configuration =>
+        services.AddHttpContextAccessor();
+
+        services.AddMediatR(config =>
         {
-            configuration.RegisterServicesFromAssembly(typeof(ConfigureServices).Assembly);
+            config.RegisterServicesFromAssembly(typeof(ConfigureServices).Assembly);
+            config.AddOpenBehavior(typeof(ResourceOperationAuthorizationBehavior<,>));
         });
 
         services.AddDbContext<VultContext>(options =>
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly("Vult.Api")));
-        
+
         services.AddScoped<IVultContext>(provider => provider.GetRequiredService<VultContext>());
 
         services.AddScoped<Vult.Infrastructure.ISeedService, Vult.Infrastructure.SeedService>();
 
-        // Auth services
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
-        services.AddScoped<IAuthorizationService, AuthorizationService>();
+        // Identity services
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAuthorizationHandler, ResourceOperationAuthorizationHandler>();
 
         // Azure AI services
         services.AddSingleton<IAzureOpenAIService>(sp =>
