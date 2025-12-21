@@ -59,6 +59,7 @@
 - the system shall use the latest version of Angular
 - the system shall use the latest version of Angular Material for all UI elements
 - the frontned shall NOT use ngrx
+- the frontned shall NOT use signals
 - the frontned shall NOT add a "Component" prefix to Angular component class names
     Do
     Header
