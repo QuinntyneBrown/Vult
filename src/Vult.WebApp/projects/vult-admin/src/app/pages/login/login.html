@@ -4,7 +4,7 @@
   <mat-card class="login__card">
     <mat-card-header class="login__header">
       <mat-icon class="login__icon">admin_panel_settings</mat-icon>
-      <mat-card-title>Vult Admin</mat-card-title>
+      <mat-card-title><h1 class="login__title">Vult Admin</h1></mat-card-title>
       <mat-card-subtitle>Sign in to manage your catalog</mat-card-subtitle>
     </mat-card-header>
 
@@ -45,6 +45,9 @@
           <mat-icon matSuffix>lock</mat-icon>
           @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
             <mat-error>Password is required</mat-error>
+          }
+          @if (loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched) {
+            <mat-error>Password must be at least 6 characters</mat-error>
           }
         </mat-form-field>
 

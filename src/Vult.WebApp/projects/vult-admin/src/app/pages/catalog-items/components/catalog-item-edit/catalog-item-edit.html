@@ -2,18 +2,18 @@
      Licensed under the MIT License. See License.txt in the project root for license information. -->
 <mat-card class="catalog-item-edit">
   <mat-card-header>
-    <mat-icon mat-card-avatar>{{ isCreating() ? 'add_box' : 'edit' }}</mat-icon>
-    <mat-card-title>{{ isCreating() ? 'Create Catalog Item' : 'Edit Catalog Item' }}</mat-card-title>
+    <mat-icon mat-card-avatar>{{ isCreating ? 'add_box' : 'edit' }}</mat-icon>
+    <mat-card-title><h2>{{ isCreating ? 'Create Catalog Item' : 'Edit Catalog Item' }}</h2></mat-card-title>
     <mat-card-subtitle>
-      {{ isCreating() ? 'Add a new item to your catalog' : 'Modify item details' }}
+      {{ isCreating ? 'Add a new item to your catalog' : 'Modify item details' }}
     </mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
-    @if (errorMessage()) {
+    @if (errorMessage) {
       <div class="catalog-item-edit__error">
         <mat-icon>error</mat-icon>
-        {{ errorMessage() }}
+        {{ errorMessage }}
       </div>
     }
 
@@ -91,7 +91,7 @@
         </mat-form-field>
       </div>
 
-      @if (isCreating()) {
+      @if (isCreating) {
         <mat-expansion-panel class="catalog-item-edit__images-panel">
           <mat-expansion-panel-header>
             <mat-panel-title>
@@ -137,11 +137,11 @@
         </mat-expansion-panel>
       }
 
-      @if (!isCreating() && catalogItem()?.catalogItemImages?.length) {
+      @if (!isCreating && catalogItem?.catalogItemImages?.length) {
         <div class="catalog-item-edit__existing-images">
           <h4>Current Images</h4>
           <div class="catalog-item-edit__image-grid">
-            @for (image of catalogItem()!.catalogItemImages; track image.catalogItemImageId) {
+            @for (image of catalogItem!.catalogItemImages; track image.catalogItemImageId) {
               <div class="catalog-item-edit__existing-image">
                 <img [src]="'data:image/jpeg;base64,' + image.imageData" [alt]="image.description || 'Catalog image'">
               </div>
@@ -153,11 +153,11 @@
   </mat-card-content>
 
   <mat-card-actions align="end">
-    <button mat-button (click)="onCancel()" [disabled]="isSaving()" type="button">
+    <button mat-button (click)="onCancel()" [disabled]="isSaving" type="button">
       Cancel
     </button>
-    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isSaving()">
-      @if (isSaving()) {
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isSaving">
+      @if (isSaving) {
         <mat-spinner diameter="20" class="catalog-item-edit__spinner"></mat-spinner>
         Saving...
       } @else {

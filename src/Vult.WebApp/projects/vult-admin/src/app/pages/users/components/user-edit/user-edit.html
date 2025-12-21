@@ -3,7 +3,7 @@
 <mat-card class="user-edit">
   <mat-card-header>
     <mat-card-title>
-      {{ isCreating() ? 'Create User' : 'Edit User' }}
+      <h2>{{ isCreating() ? 'Create User' : 'Edit User' }}</h2>
     </mat-card-title>
   </mat-card-header>
 
@@ -21,6 +21,17 @@
         <input matInput formControlName="username" placeholder="Enter username" />
         @if (form.get('username')?.hasError('required') && form.get('username')?.touched) {
           <mat-error>Username is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="user-edit__field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="Enter email" type="email" />
+        @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+          <mat-error>Email is required</mat-error>
+        }
+        @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+          <mat-error>Invalid email format</mat-error>
         }
       </mat-form-field>
 
@@ -55,7 +66,7 @@
             <mat-spinner diameter="20"></mat-spinner>
             Saving...
           } @else {
-            {{ isCreating() ? 'Create' : 'Save' }}
+            Save
           }
         </button>
       </div>

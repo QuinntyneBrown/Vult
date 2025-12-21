@@ -4,7 +4,7 @@
 import { test, expect } from '@playwright/test';
 
 const mockUsers = {
-  items: [
+  users: [
     {
       userId: '1',
       username: 'john.doe',
@@ -12,6 +12,7 @@ const mockUsers = {
       firstName: 'John',
       lastName: 'Doe',
       isActive: true,
+      roles: [{ roleId: '1', name: 'Admin', privileges: [] }],
       createdDate: '2024-01-01T00:00:00Z',
       updatedDate: '2024-01-01T00:00:00Z'
     },
@@ -22,14 +23,11 @@ const mockUsers = {
       firstName: 'Jane',
       lastName: 'Smith',
       isActive: false,
+      roles: [{ roleId: '2', name: 'User', privileges: [] }],
       createdDate: '2024-01-02T00:00:00Z',
       updatedDate: '2024-01-02T00:00:00Z'
     }
-  ],
-  totalCount: 2,
-  pageNumber: 1,
-  pageSize: 20,
-  totalPages: 1
+  ]
 };
 
 test.describe('Admin Users Page', () => {
@@ -43,7 +41,7 @@ test.describe('Admin Users Page', () => {
   });
 
   test('should display users list', async ({ page }) => {
-    await page.route('**/api/users**', async (route) => {
+    await page.route('**/api/user**', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -59,7 +57,7 @@ test.describe('Admin Users Page', () => {
   });
 
   test('should show inactive chip for inactive users', async ({ page }) => {
-    await page.route('**/api/users**', async (route) => {
+    await page.route('**/api/user**', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -73,7 +71,7 @@ test.describe('Admin Users Page', () => {
   });
 
   test('should show create form when clicking Create button', async ({ page }) => {
-    await page.route('**/api/users**', async (route) => {
+    await page.route('**/api/user**', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -92,12 +90,12 @@ test.describe('Admin Users Page', () => {
   });
 
   test('should show edit form when selecting a user', async ({ page }) => {
-    await page.route('**/api/users**', async (route) => {
+    await page.route('**/api/user**', async (route) => {
       if (route.request().url().includes('/1')) {
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify(mockUsers.items[0])
+          body: JSON.stringify(mockUsers.users[0])
         });
       } else {
         await route.fulfill({
@@ -118,12 +116,12 @@ test.describe('Admin Users Page', () => {
   });
 
   test('should support deep linking to user edit', async ({ page }) => {
-    await page.route('**/api/users**', async (route) => {
+    await page.route('**/api/user**', async (route) => {
       if (route.request().url().includes('/1')) {
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify(mockUsers.items[0])
+          body: JSON.stringify(mockUsers.users[0])
         });
       } else {
         await route.fulfill({
@@ -141,7 +139,7 @@ test.describe('Admin Users Page', () => {
   });
 
   test('should validate user form', async ({ page }) => {
-    await page.route('**/api/users**', async (route) => {
+    await page.route('**/api/user**', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',

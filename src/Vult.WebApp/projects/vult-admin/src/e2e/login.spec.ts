@@ -30,12 +30,12 @@ test.describe('Admin Login Page', () => {
   });
 
   test('should redirect to catalog-items on successful login', async ({ page }) => {
-    await page.route('**/api/auth/login', async (route) => {
+    await page.route('**/api/user/token', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE1MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE1MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
           refreshToken: 'refresh-token'
         })
       });
@@ -49,7 +49,7 @@ test.describe('Admin Login Page', () => {
   });
 
   test('should show error on invalid credentials', async ({ page }) => {
-    await page.route('**/api/auth/login', async (route) => {
+    await page.route('**/api/user/token', async (route) => {
       await route.fulfill({
         status: 401,
         contentType: 'application/json',
