@@ -7,3 +7,4 @@ export * from './local-storage.service';
 export * from './navigation.service';
 export * from './user.service';
 export * from './role.service';
+export * from './invitation-token.service';

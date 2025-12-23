@@ -38,14 +38,18 @@ export const Aggregates = {
   styleUrl: './app.scss'
 })
 export class App {
-  // Privilege check observables for conditional UI rendering
+  // Privilege check observables for conditional UI rendering (REQ-FE-AUTHZ-004)
   canAccessCatalogItems$: Observable<boolean>;
   canAccessUsers$: Observable<boolean>;
+  canAccessRoles$: Observable<boolean>;
+  canAccessInvitationTokens$: Observable<boolean>;
 
   constructor(public authService: AuthService) {
     // Set up privilege-based observables for navigation items
     this.canAccessCatalogItems$ = this.authService.hasReadWritePrivileges$(Aggregates.CatalogItem);
     this.canAccessUsers$ = this.authService.hasReadWritePrivileges$(Aggregates.User);
+    this.canAccessRoles$ = this.authService.hasReadWritePrivileges$(Aggregates.Role);
+    this.canAccessInvitationTokens$ = this.authService.hasReadWritePrivileges$(Aggregates.InvitationToken);
   }
 
   logout(): void {

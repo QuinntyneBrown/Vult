@@ -30,6 +30,31 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/users/users').then(m => m.Users)
   },
   {
+    path: 'roles',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/roles/roles').then(m => m.Roles)
+  },
+  {
+    path: 'roles/:roleId',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/roles/roles').then(m => m.Roles)
+  },
+  {
+    path: 'invitation-tokens',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/invitation-tokens/invitation-tokens').then(m => m.InvitationTokens)
+  },
+  {
+    path: 'invitation-tokens/:invitationTokenId',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/invitation-tokens/invitation-tokens').then(m => m.InvitationTokens)
+  },
+  {
+    path: 'change-password',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/change-password/change-password').then(m => m.ChangePassword)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'

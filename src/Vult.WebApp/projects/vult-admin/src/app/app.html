@@ -5,19 +5,39 @@
     <span class="app__title">Vult Admin</span>
     <span class="app__spacer"></span>
     <nav class="app__nav">
+      <!-- Catalog Items - REQ-FE-AUTHZ-004 -->
       @if (canAccessCatalogItems$ | async) {
         <a mat-button routerLink="/catalog-items" routerLinkActive="app__nav-link--active">
           <mat-icon>inventory_2</mat-icon>
           Catalog Items
         </a>
       }
+      <!-- Users - REQ-FE-AUTHZ-004 -->
       @if (canAccessUsers$ | async) {
         <a mat-button routerLink="/users" routerLinkActive="app__nav-link--active">
           <mat-icon>people</mat-icon>
           Users
         </a>
       }
+      <!-- Roles - REQ-FE-AUTHZ-004 -->
+      @if (canAccessRoles$ | async) {
+        <a mat-button routerLink="/roles" routerLinkActive="app__nav-link--active">
+          <mat-icon>security</mat-icon>
+          Roles
+        </a>
+      }
+      <!-- Invitation Tokens - REQ-FE-AUTHZ-004 -->
+      @if (canAccessInvitationTokens$ | async) {
+        <a mat-button routerLink="/invitation-tokens" routerLinkActive="app__nav-link--active">
+          <mat-icon>vpn_key</mat-icon>
+          Tokens
+        </a>
+      }
     </nav>
+    <!-- Profile actions - REQ-FE-PWD-001, REQ-FE-PROFILE-001 -->
+    <a mat-icon-button routerLink="/change-password" title="Change Password">
+      <mat-icon>key</mat-icon>
+    </a>
     <button mat-icon-button (click)="logout()" title="Logout">
       <mat-icon>logout</mat-icon>
     </button>

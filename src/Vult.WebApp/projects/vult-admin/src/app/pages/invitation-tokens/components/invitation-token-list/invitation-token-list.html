@@ -1,0 +1,53 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
+<mat-card class="invitation-token-list">
+  <mat-card-header>
+    <mat-card-title><h2>Invitation Tokens</h2></mat-card-title>
+    <button mat-raised-button color="primary" (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+      Create
+    </button>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (isLoading()) {
+      <div class="invitation-token-list__loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else {
+      <mat-nav-list>
+        @for (token of invitationTokens(); track token.invitationTokenId) {
+          <mat-list-item
+            [class.selected]="selectedTokenId() === token.invitationTokenId"
+            (click)="onSelectToken(token)"
+          >
+            <mat-icon matListItemIcon>vpn_key</mat-icon>
+            <span matListItemTitle>{{ token.value | slice:0:20 }}{{ token.value.length > 20 ? '...' : '' }}</span>
+            <span matListItemLine>
+              @if (token.expiry) {
+                Expires: {{ token.expiry | date:'short' }}
+              } @else {
+                No expiration
+              }
+              @if (isExpired(token)) {
+                <mat-chip color="warn">Expired</mat-chip>
+              }
+            </span>
+            <button
+              mat-icon-button
+              color="warn"
+              matListItemMeta
+              (click)="onDelete($event, token)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+        } @empty {
+          <div class="invitation-token-list__empty">
+            <p>No invitation tokens found</p>
+          </div>
+        }
+      </mat-nav-list>
+    }
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,41 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+.invitation-token-edit {
+  mat-card-header {
+    margin-bottom: 1rem;
+
+    mat-card-title h2 {
+      margin: 0;
+    }
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--mat-sys-error-container, #f9dedc);
+    color: var(--mat-sys-on-error-container, #410e0b);
+    border-radius: 4px;
+
+    mat-icon {
+      color: var(--mat-sys-error, #b3261e);
+    }
+  }
+
+  &__field {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--mat-divider-color, rgba(0, 0, 0, 0.12));
+  }
+}
