@@ -1,0 +1,43 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+.role-list {
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    mat-card-title {
+      margin: 0;
+
+      h2 {
+        margin: 0;
+      }
+    }
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--mat-card-subtitle-text-color, rgba(0, 0, 0, 0.54));
+  }
+
+  mat-list-item {
+    cursor: pointer;
+
+    &.selected {
+      background-color: var(--mat-list-item-hover-state-layer-color, rgba(0, 0, 0, 0.04));
+    }
+
+    &:hover {
+      background-color: var(--mat-list-item-hover-state-layer-color, rgba(0, 0, 0, 0.04));
+    }
+  }
+}

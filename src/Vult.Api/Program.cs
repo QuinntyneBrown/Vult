@@ -3,6 +3,7 @@
 
 using Vult.Api.Configuration;
 using Vult.Api.Hubs;
+using Vult.Api.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Vult.Infrastructure.Data;
 
@@ -52,6 +53,9 @@ var corsSettings = app.Configuration
 app.UseCors(corsSettings.PolicyName);
 
 app.UseAuthentication();
+
+// Request logging middleware with user context (REQ-LOG-001)
+app.UseRequestLogging();
 
 app.UseAuthorization();
 

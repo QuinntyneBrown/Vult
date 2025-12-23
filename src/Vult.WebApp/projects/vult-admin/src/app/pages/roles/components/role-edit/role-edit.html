@@ -1,0 +1,83 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
+<mat-card class="role-edit">
+  <mat-card-header>
+    <mat-card-title>
+      <h2>{{ isCreating() ? 'Create Role' : 'Edit Role' }}</h2>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (errorMessage()) {
+      <div class="role-edit__error">
+        <mat-icon>error</mat-icon>
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="role-edit__field">
+        <mat-label>Role Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter role name" />
+        @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+          <mat-error>Role name is required</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="role-edit__privileges">
+        <div class="role-edit__privileges-header">
+          <h3>Privileges</h3>
+          <button mat-button type="button" color="primary" (click)="addPrivilege()">
+            <mat-icon>add</mat-icon>
+            Add Privilege
+          </button>
+        </div>
+
+        @for (privilege of privilegesFormArray.controls; track $index; let i = $index) {
+          <div class="role-edit__privilege-row" [formGroupName]="i">
+            <mat-form-field appearance="outline" class="role-edit__privilege-field">
+              <mat-label>Aggregate</mat-label>
+              <mat-select formControlName="aggregate">
+                @for (aggregate of aggregates; track aggregate) {
+                  <mat-option [value]="aggregate">{{ aggregate }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="role-edit__privilege-field">
+              <mat-label>Access Right</mat-label>
+              <mat-select formControlName="accessRight">
+                @for (ar of accessRights; track ar.value) {
+                  <mat-option [value]="ar.value">{{ ar.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-icon-button type="button" color="warn" (click)="removePrivilege(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        } @empty {
+          <p class="role-edit__no-privileges">No privileges defined. Click "Add Privilege" to add one.</p>
+        }
+      </div>
+
+      <div class="role-edit__actions">
+        <button mat-button type="button" (click)="onCancel()">Cancel</button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="isSaving()"
+        >
+          @if (isSaving()) {
+            <mat-spinner diameter="20"></mat-spinner>
+            Saving...
+          } @else {
+            Save
+          }
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

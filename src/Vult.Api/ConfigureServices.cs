@@ -105,14 +105,47 @@ public static class ConfigureServices
 
         services.AddAuthorization();
 
-        // CORS configuration
-        services.AddCors(options => options.AddPolicy("CorsPolicy",
-            builder => builder
-            .WithOrigins("http://localhost:4201")
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .SetIsOriginAllowed(isOriginAllowed: _ => true)
-            .AllowCredentials()));
+        // CORS configuration from settings
+        var corsSettings = configuration.GetSection(CorsSettings.SectionName)
+            .Get<CorsSettings>() ?? new CorsSettings();
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy(corsSettings.PolicyName, builder =>
+            {
+                if (corsSettings.AllowedOrigins.Length > 0)
+                {
+                    builder.WithOrigins(corsSettings.AllowedOrigins);
+                }
+                else
+                {
+                    builder.SetIsOriginAllowed(_ => true);
+                }
+
+                if (corsSettings.AllowedMethods.Length > 0)
+                {
+                    builder.WithMethods(corsSettings.AllowedMethods);
+                }
+                else
+                {
+                    builder.AllowAnyMethod();
+                }
+
+                if (corsSettings.AllowedHeaders.Length > 0)
+                {
+                    builder.WithHeaders(corsSettings.AllowedHeaders);
+                }
+                else
+                {
+                    builder.AllowAnyHeader();
+                }
+
+                if (corsSettings.AllowCredentials)
+                {
+                    builder.AllowCredentials();
+                }
+            });
+        });
 
         return services;
     }

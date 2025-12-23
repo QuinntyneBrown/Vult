@@ -1,0 +1,75 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+.role-edit {
+  mat-card-header {
+    margin-bottom: 1rem;
+
+    mat-card-title h2 {
+      margin: 0;
+    }
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--mat-sys-error-container, #f9dedc);
+    color: var(--mat-sys-on-error-container, #410e0b);
+    border-radius: 4px;
+
+    mat-icon {
+      color: var(--mat-sys-error, #b3261e);
+    }
+  }
+
+  &__field {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  &__privileges {
+    margin-bottom: 1rem;
+  }
+
+  &__privileges-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  &__privilege-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+  }
+
+  &__privilege-field {
+    flex: 1;
+  }
+
+  &__no-privileges {
+    text-align: center;
+    color: var(--mat-card-subtitle-text-color, rgba(0, 0, 0, 0.54));
+    padding: 1rem;
+    background-color: var(--mat-card-background-color, #fafafa);
+    border-radius: 4px;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--mat-divider-color, rgba(0, 0, 0, 0.12));
+  }
+}

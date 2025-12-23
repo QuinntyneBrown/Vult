@@ -1,0 +1,46 @@
+<!-- Copyright (c) Quinntyne Brown. All Rights Reserved.
+     Licensed under the MIT License. See License.txt in the project root for license information. -->
+<mat-card class="role-list">
+  <mat-card-header>
+    <mat-card-title><h2>Roles</h2></mat-card-title>
+    <button mat-raised-button color="primary" (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+      Create
+    </button>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (isLoading()) {
+      <div class="role-list__loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else {
+      <mat-nav-list>
+        @for (role of roles(); track role.roleId) {
+          <mat-list-item
+            [class.selected]="selectedRoleId() === role.roleId"
+            (click)="onSelectRole(role)"
+          >
+            <mat-icon matListItemIcon>security</mat-icon>
+            <span matListItemTitle>{{ role.name }}</span>
+            <span matListItemLine>
+              {{ role.privileges?.length || 0 }} privileges
+            </span>
+            <button
+              mat-icon-button
+              color="warn"
+              matListItemMeta
+              (click)="onDelete($event, role)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+        } @empty {
+          <div class="role-list__empty">
+            <p>No roles found</p>
+          </div>
+        }
+      </mat-nav-list>
+    }
+  </mat-card-content>
+</mat-card>
