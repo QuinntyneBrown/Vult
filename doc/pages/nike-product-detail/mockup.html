@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Product Detail Page - Mockup</title>
+    <style>
+        /* =====================================================
+           CSS RESET & BASE STYLES
+           ===================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Color Palette */
+            --color-primary: #111111;
+            --color-secondary: #757575;
+            --color-success: #128a09;
+            --color-error: #d43f21;
+            --color-white: #ffffff;
+            --color-black: #111111;
+            --color-gray-100: #f5f5f5;
+            --color-gray-200: #e5e5e5;
+            --color-gray-300: #cccccc;
+            --color-gray-400: #757575;
+            --color-border: #e5e5e5;
+            --color-border-active: #111111;
+
+            /* Typography */
+            --font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-base: 16px;
+            --font-size-lg: 20px;
+            --font-size-xl: 24px;
+            --font-size-2xl: 28px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-bold: 700;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.5;
+
+            /* Spacing (8px grid) */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 200ms ease;
+            --transition-slow: 300ms ease;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-normal);
+            color: var(--color-primary);
+            background-color: var(--color-white);
+        }
+
+        /* =====================================================
+           HEADER COMPONENT
+           ===================================================== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .header-container {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: var(--space-4) var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            text-decoration: none;
+            color: var(--color-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-4);
+        }
+
+        .header-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity var(--transition-fast);
+        }
+
+        .header-icon:hover {
+            opacity: 1;
+        }
+
+        /* =====================================================
+           MAIN LAYOUT
+           ===================================================== */
+        .product-page {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: var(--space-6);
+        }
+
+        .product-container {
+            display: grid;
+            gap: var(--space-8);
+        }
+
+        @media (min-width: 960px) {
+            .product-container {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--space-12);
+            }
+        }
+
+        /* =====================================================
+           IMAGE GALLERY COMPONENT
+           ===================================================== */
+        .image-gallery {
+            position: relative;
+        }
+
+        .gallery-layout {
+            display: flex;
+            gap: var(--space-4);
+        }
+
+        .thumbnail-strip {
+            display: none;
+            flex-direction: column;
+            gap: var(--space-2);
+            width: 60px;
+            flex-shrink: 0;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        @media (min-width: 960px) {
+            .thumbnail-strip {
+                display: flex;
+            }
+        }
+
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-md);
+            border: 2px solid transparent;
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color var(--transition-fast);
+            background-color: var(--color-gray-100);
+        }
+
+        .thumbnail:hover {
+            border-color: var(--color-gray-300);
+        }
+
+        .thumbnail.active {
+            border-color: var(--color-border-active);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .main-image-container {
+            flex: 1;
+            position: relative;
+            aspect-ratio: 1 / 1.25;
+            background-color: var(--color-gray-100);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Mobile Image Indicators */
+        .image-indicators {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-4) 0;
+        }
+
+        @media (min-width: 960px) {
+            .image-indicators {
+                display: none;
+            }
+        }
+
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-gray-300);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+
+        .indicator-dot.active {
+            background-color: var(--color-primary);
+        }
+
+        /* =====================================================
+           PRODUCT INFO SECTION
+           ===================================================== */
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        /* Product Header */
+        .product-header {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .product-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-medium);
+            line-height: var(--line-height-tight);
+        }
+
+        .product-subtitle {
+            font-size: var(--font-size-base);
+            color: var(--color-secondary);
+        }
+
+        /* Price Display */
+        .price-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: var(--space-3);
+            margin-top: var(--space-2);
+        }
+
+        .price-current {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .price-original {
+            font-size: var(--font-size-base);
+            color: var(--color-secondary);
+            text-decoration: line-through;
+        }
+
+        .price-discount {
+            font-size: var(--font-size-base);
+            color: var(--color-success);
+            font-weight: var(--font-weight-medium);
+        }
+
+        /* =====================================================
+           COLOR SELECTOR COMPONENT
+           ===================================================== */
+        .color-selector {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .color-label {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .color-swatches {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .color-swatch {
+            width: 70px;
+            height: 70px;
+            border-radius: var(--radius-sm);
+            border: 2px solid transparent;
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color var(--transition-fast);
+            background-color: var(--color-gray-100);
+        }
+
+        @media (max-width: 599px) {
+            .color-swatch {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        .color-swatch:hover {
+            border-color: var(--color-gray-300);
+        }
+
+        .color-swatch.active {
+            border-color: var(--color-border-active);
+        }
+
+        .color-swatch img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* =====================================================
+           SIZE SELECTOR COMPONENT
+           ===================================================== */
+        .size-selector {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .size-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .size-label {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .size-guide-link {
+            font-size: var(--font-size-sm);
+            color: var(--color-secondary);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .size-guide-link:hover {
+            color: var(--color-primary);
+        }
+
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: var(--space-2);
+        }
+
+        .size-button {
+            height: 48px;
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-sm);
+            background: var(--color-white);
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .size-button:hover:not(:disabled) {
+            border-color: var(--color-primary);
+        }
+
+        .size-button.active {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
+        .size-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* =====================================================
+           ACTION BUTTONS COMPONENT
+           ===================================================== */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .btn {
+            height: 56px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2d2d2d;
+        }
+
+        .btn-primary:active {
+            background: #000000;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--color-white);
+            color: var(--color-primary);
+            border: 1px solid var(--color-gray-300);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-primary);
+        }
+
+        .heart-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* =====================================================
+           ACCORDION COMPONENT
+           ===================================================== */
+        .accordion {
+            border-top: 1px solid var(--color-border);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .accordion-header {
+            width: 100%;
+            padding: var(--space-5) 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .accordion-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform var(--transition-normal);
+        }
+
+        .accordion-item.open .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height var(--transition-normal);
+        }
+
+        .accordion-item.open .accordion-content {
+            max-height: 500px;
+        }
+
+        .accordion-body {
+            padding-bottom: var(--space-5);
+        }
+
+        .accordion-body p {
+            margin-bottom: var(--space-4);
+            color: var(--color-secondary);
+        }
+
+        .accordion-body ul {
+            list-style: disc;
+            padding-left: var(--space-5);
+            color: var(--color-secondary);
+        }
+
+        .accordion-body li {
+            margin-bottom: var(--space-2);
+        }
+
+        .product-meta {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-1);
+            margin-top: var(--space-4);
+            font-size: var(--font-size-sm);
+        }
+
+        /* =====================================================
+           FOCUS STATES (Accessibility)
+           ===================================================== */
+        *:focus-visible {
+            outline: 2px solid #0077ff;
+            outline-offset: 2px;
+        }
+
+        /* =====================================================
+           UTILITY CLASSES
+           ===================================================== */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">NIKE</a>
+            <nav class="header-actions">
+                <svg class="header-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                </svg>
+                <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/>
+                </svg>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="product-page">
+        <div class="product-container">
+            <!-- Image Gallery -->
+            <section class="image-gallery" aria-label="Product images">
+                <div class="gallery-layout">
+                    <!-- Thumbnail Strip (Desktop) -->
+                    <div class="thumbnail-strip" role="tablist" aria-label="Product image thumbnails">
+                        <button class="thumbnail active" role="tab" aria-selected="true">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23999999' width='100' height='100'/%3E%3Crect fill='%23666666' x='20' y='15' width='60' height='70' rx='5'/%3E%3C/svg%3E" alt="Front view">
+                        </button>
+                        <button class="thumbnail" role="tab" aria-selected="false">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23888888' width='100' height='100'/%3E%3Crect fill='%23555555' x='20' y='15' width='60' height='70' rx='5'/%3E%3C/svg%3E" alt="Back view">
+                        </button>
+                        <button class="thumbnail" role="tab" aria-selected="false">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23777777' width='100' height='100'/%3E%3Crect fill='%23444444' x='20' y='15' width='60' height='70' rx='5'/%3E%3C/svg%3E" alt="Side view">
+                        </button>
+                        <button class="thumbnail" role="tab" aria-selected="false">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23666666' width='100' height='100'/%3E%3Crect fill='%23333333' x='20' y='15' width='60' height='70' rx='5'/%3E%3C/svg%3E" alt="Detail view">
+                        </button>
+                        <button class="thumbnail" role="tab" aria-selected="false">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23555555' width='100' height='100'/%3E%3Crect fill='%23222222' x='20' y='15' width='60' height='70' rx='5'/%3E%3C/svg%3E" alt="Model view">
+                        </button>
+                    </div>
+
+                    <!-- Main Image -->
+                    <div class="main-image-container" role="tabpanel">
+                        <img class="main-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect fill='%23f5f5f5' width='400' height='500'/%3E%3Crect fill='%23999999' x='100' y='50' width='200' height='400' rx='10'/%3E%3Crect fill='%23666666' x='120' y='70' width='160' height='100' rx='5'/%3E%3Crect fill='%23888888' x='120' y='180' width='160' height='250' rx='5'/%3E%3Ccircle fill='%23555555' cx='200' cy='100' r='20'/%3E%3C/svg%3E" alt="Nike Tech Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket - Front View">
+                    </div>
+                </div>
+
+                <!-- Mobile Image Indicators -->
+                <div class="image-indicators" role="tablist">
+                    <button class="indicator-dot active" role="tab" aria-selected="true" aria-label="Image 1"></button>
+                    <button class="indicator-dot" role="tab" aria-selected="false" aria-label="Image 2"></button>
+                    <button class="indicator-dot" role="tab" aria-selected="false" aria-label="Image 3"></button>
+                    <button class="indicator-dot" role="tab" aria-selected="false" aria-label="Image 4"></button>
+                    <button class="indicator-dot" role="tab" aria-selected="false" aria-label="Image 5"></button>
+                </div>
+            </section>
+
+            <!-- Product Information -->
+            <section class="product-info">
+                <!-- Product Header -->
+                <header class="product-header">
+                    <h1 class="product-title">Nike Tech</h1>
+                    <p class="product-subtitle">Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket</p>
+                    <div class="price-section">
+                        <span class="price-current">$160</span>
+                        <span class="price-original">$200</span>
+                        <span class="price-discount">20% off</span>
+                    </div>
+                </header>
+
+                <!-- Color Selector -->
+                <div class="color-selector">
+                    <span class="color-label">Color: <strong>Smoke Grey/Black</strong></span>
+                    <div class="color-swatches" role="radiogroup" aria-label="Select color">
+                        <button class="color-swatch active" role="radio" aria-checked="true" aria-label="Smoke Grey/Black">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 70'%3E%3Crect fill='%23999999' width='70' height='70'/%3E%3Crect fill='%23666666' x='15' y='10' width='40' height='50' rx='3'/%3E%3C/svg%3E" alt="">
+                        </button>
+                        <button class="color-swatch" role="radio" aria-checked="false" aria-label="Black/White">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 70'%3E%3Crect fill='%23222222' width='70' height='70'/%3E%3Crect fill='%23ffffff' x='15' y='10' width='40' height='50' rx='3'/%3E%3C/svg%3E" alt="">
+                        </button>
+                        <button class="color-swatch" role="radio" aria-checked="false" aria-label="Navy Blue">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 70'%3E%3Crect fill='%231a365d' width='70' height='70'/%3E%3Crect fill='%232c5282' x='15' y='10' width='40' height='50' rx='3'/%3E%3C/svg%3E" alt="">
+                        </button>
+                        <button class="color-swatch" role="radio" aria-checked="false" aria-label="Olive Green">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 70'%3E%3Crect fill='%23556b2f' width='70' height='70'/%3E%3Crect fill='%236b8e23' x='15' y='10' width='40' height='50' rx='3'/%3E%3C/svg%3E" alt="">
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Size Selector -->
+                <div class="size-selector">
+                    <div class="size-header">
+                        <span class="size-label">Select Size</span>
+                        <a href="#" class="size-guide-link">Size Guide</a>
+                    </div>
+                    <div class="size-grid" role="radiogroup" aria-label="Select size">
+                        <button class="size-button" role="radio" aria-checked="false">S</button>
+                        <button class="size-button active" role="radio" aria-checked="true">M</button>
+                        <button class="size-button" role="radio" aria-checked="false">L</button>
+                        <button class="size-button" role="radio" aria-checked="false">XL</button>
+                        <button class="size-button" role="radio" aria-checked="false">XXL</button>
+                        <button class="size-button" role="radio" aria-checked="false" disabled>3XL</button>
+                        <button class="size-button" role="radio" aria-checked="false">4XL</button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary" type="button">
+                        Add to Bag
+                    </button>
+                    <button class="btn btn-secondary" type="button">
+                        Favorite
+                        <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Accordion Sections -->
+                <div class="accordion">
+                    <!-- Product Description (Open by default) -->
+                    <div class="accordion-item open">
+                        <button class="accordion-header" aria-expanded="true">
+                            <span>Product Description</span>
+                            <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p>The Nike Tech Windrunner updates the iconic silhouette with lightweight, Dri-FIT woven fabric that helps keep you dry and comfortable. The color-block design adds visual interest, while the loose fit allows for easy layering.</p>
+                                <div class="product-meta">
+                                    <span>Shown: Smoke Grey/Black</span>
+                                    <span>Style: IH8461-072</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Benefits -->
+                    <div class="accordion-item">
+                        <button class="accordion-header" aria-expanded="false">
+                            <span>Benefits</span>
+                            <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>Dri-FIT technology moves sweat away from your skin for quicker evaporation, helping you stay dry and comfortable.</li>
+                                    <li>Color-block design adds visual interest to your everyday style.</li>
+                                    <li>Loose fit provides ample room for layering and unrestricted movement.</li>
+                                    <li>Full-length zipper allows for easy on and off.</li>
+                                    <li>Hood with adjustable drawcord for customizable coverage.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="accordion-item">
+                        <button class="accordion-header" aria-expanded="false">
+                            <span>Product Details</span>
+                            <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>Body: 100% polyester</li>
+                                    <li>Panel: 100% polyester</li>
+                                    <li>Lining: 100% polyester</li>
+                                    <li>Machine wash</li>
+                                    <li>Imported</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping & Returns -->
+                    <div class="accordion-item">
+                        <button class="accordion-header" aria-expanded="false">
+                            <span>Shipping & Returns</span>
+                            <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p><strong>Free Shipping</strong> on orders over $50. Delivery in 3-5 business days.</p>
+                                <p><strong>Free Returns</strong> within 60 days of purchase. Items must be unworn and in original condition with tags attached.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- JavaScript for Interactive Elements -->
+    <script>
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const isOpen = item.classList.contains('open');
+
+                // Toggle current item
+                item.classList.toggle('open');
+                header.setAttribute('aria-expanded', !isOpen);
+            });
+        });
+
+        // Thumbnail selection
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                document.querySelectorAll('.thumbnail').forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                thumb.classList.add('active');
+                thumb.setAttribute('aria-selected', 'true');
+            });
+        });
+
+        // Mobile indicator selection
+        document.querySelectorAll('.indicator-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                document.querySelectorAll('.indicator-dot').forEach(d => {
+                    d.classList.remove('active');
+                    d.setAttribute('aria-selected', 'false');
+                });
+                dot.classList.add('active');
+                dot.setAttribute('aria-selected', 'true');
+            });
+        });
+
+        // Color swatch selection
+        document.querySelectorAll('.color-swatch').forEach(swatch => {
+            swatch.addEventListener('click', () => {
+                document.querySelectorAll('.color-swatch').forEach(s => {
+                    s.classList.remove('active');
+                    s.setAttribute('aria-checked', 'false');
+                });
+                swatch.classList.add('active');
+                swatch.setAttribute('aria-checked', 'true');
+            });
+        });
+
+        // Size button selection
+        document.querySelectorAll('.size-button:not(:disabled)').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.size-button').forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-checked', 'false');
+                });
+                btn.classList.add('active');
+                btn.setAttribute('aria-checked', 'true');
+            });
+        });
+    </script>
+</body>
+</html>
