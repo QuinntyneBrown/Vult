@@ -1,58 +1,55 @@
-<div class="catalog-list">
-  <header class="catalog-list__header">
-    <h1 class="catalog-list__title">Catalog Items</h1>
-    <button mat-raised-button color="primary" (click)="toggleUpload()" type="button">
-      <mat-icon>{{ showUpload() ? 'expand_less' : 'cloud_upload' }}</mat-icon>
-      {{ showUpload() ? 'Hide Upload' : 'Upload Photos' }}
-    </button>
-  </header>
+<ng-container *ngIf="viewModel$ | async as vm">
+  <div class="catalog-list">
+    <header class="catalog-list__header">
+      <h1 class="catalog-list__title">Catalog Items</h1>
+      <button mat-raised-button color="primary" (click)="toggleUpload()" type="button">
+        <mat-icon>{{ vm.showUpload ? 'expand_less' : 'cloud_upload' }}</mat-icon>
+        {{ vm.showUpload ? 'Hide Upload' : 'Upload Photos' }}
+      </button>
+    </header>
 
-  @if (showUpload()) {
-    <div class="catalog-list__upload-section">
-      <app-catalog-item-images-upload (uploadComplete)="onUploadComplete($event)"></app-catalog-item-images-upload>
-    </div>
-  }
+    <ng-container *ngIf="vm.showUpload">
+      <div class="catalog-list__upload-section">
+        <app-catalog-item-images-upload (uploadComplete)="onUploadComplete($event)"></app-catalog-item-images-upload>
+      </div>
+    </ng-container>
 
-  @if (errorMessage()) {
-    <mat-card class="catalog-list__error-card">
-      <mat-card-content>
-        <mat-icon color="warn">error</mat-icon>
-        {{ errorMessage() }}
-      </mat-card-content>
-    </mat-card>
-  }
+    <ng-container *ngIf="vm.errorMessage">
+      <mat-card class="catalog-list__error-card">
+        <mat-card-content>
+          <mat-icon color="warn">error</mat-icon>
+          {{ vm.errorMessage }}
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
 
-  @if (isLoading()) {
-    <div class="catalog-list__loading">
-      <mat-spinner></mat-spinner>
-      <p>Loading catalog items...</p>
-    </div>
-  }
+    <ng-container *ngIf="vm.isLoading">
+      <div class="catalog-list__loading">
+        <mat-spinner></mat-spinner>
+        <p>Loading catalog items...</p>
+      </div>
+    </ng-container>
 
-  @if (!isLoading() && catalogItems().length > 0) {
-    <div class="catalog-list__grid">
-      @for (item of catalogItems(); track item.catalogItemId) {
-        <mat-card class="catalog-list__item">
-          @if (item.catalogItemImages && item.catalogItemImages.length > 0) {
+    <ng-container *ngIf="!vm.isLoading && vm.catalogItems.length > 0">
+      <div class="catalog-list__grid">
+        <mat-card class="catalog-list__item" *ngFor="let item of vm.catalogItems; trackBy: trackByCatalogItemId">
+          <ng-container *ngIf="item.catalogItemImages && item.catalogItemImages.length > 0; else noImage">
             <img mat-card-image
                  [src]="'data:image/jpeg;base64,' + item.catalogItemImages[0].imageData"
                  [alt]="item.description || 'Catalog item'">
-          } @else {
+          </ng-container>
+          <ng-template #noImage>
             <div class="catalog-list__placeholder">
               <mat-icon>image_not_supported</mat-icon>
               <p>No Image</p>
             </div>
-          }
+          </ng-template>
           <mat-card-content>
             <mat-card-title>{{ item.brandName || 'Unknown Brand' }}</mat-card-title>
             <mat-card-subtitle>{{ item.description || 'No description' }}</mat-card-subtitle>
             <div class="catalog-list__item-meta">
-              @if (item.size) {
-                <mat-chip>Size: {{ item.size }}</mat-chip>
-              }
-              @if (item.estimatedResaleValue) {
-                <mat-chip color="primary">${{ item.estimatedResaleValue.toFixed(2) }}</mat-chip>
-              }
+              <mat-chip *ngIf="item.size">Size: {{ item.size }}</mat-chip>
+              <mat-chip *ngIf="item.estimatedResaleValue" color="primary">${{ item.estimatedResaleValue.toFixed(2) }}</mat-chip>
             </div>
           </mat-card-content>
           <mat-card-actions>
@@ -64,39 +61,39 @@
             </button>
           </mat-card-actions>
         </mat-card>
-      }
-    </div>
-  }
+      </div>
+    </ng-container>
 
-  @if (!isLoading() && catalogItems().length === 0) {
-    <div class="catalog-list__empty-state">
-      <mat-icon class="catalog-list__empty-icon">inventory_2</mat-icon>
-      <h2>No catalog items yet</h2>
-      <p>Upload photos to get started</p>
-      <button mat-raised-button color="primary" (click)="showUpload.set(true)" type="button">
-        <mat-icon>cloud_upload</mat-icon>
-        Upload Photos
-      </button>
-    </div>
-  }
+    <ng-container *ngIf="!vm.isLoading && vm.catalogItems.length === 0">
+      <div class="catalog-list__empty-state">
+        <mat-icon class="catalog-list__empty-icon">inventory_2</mat-icon>
+        <h2>No catalog items yet</h2>
+        <p>Upload photos to get started</p>
+        <button mat-raised-button color="primary" (click)="showUploadPanel()" type="button">
+          <mat-icon>cloud_upload</mat-icon>
+          Upload Photos
+        </button>
+      </div>
+    </ng-container>
 
-  @if (!isLoading() && catalogItems().length > 0) {
-    <div class="catalog-list__pagination">
-      <button mat-raised-button
-              (click)="previousPage()"
-              [disabled]="pageNumber() === 1"
-              type="button">
-        <mat-icon>chevron_left</mat-icon>
-        Previous
-      </button>
-      <span class="catalog-list__page-info">Page {{ pageNumber() }}</span>
-      <button mat-raised-button
-              (click)="nextPage()"
-              [disabled]="catalogItems().length < pageSize()"
-              type="button">
-        Next
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-    </div>
-  }
-</div>
+    <ng-container *ngIf="!vm.isLoading && vm.catalogItems.length > 0">
+      <div class="catalog-list__pagination">
+        <button mat-raised-button
+                (click)="previousPage()"
+                [disabled]="vm.pageNumber === 1"
+                type="button">
+          <mat-icon>chevron_left</mat-icon>
+          Previous
+        </button>
+        <span class="catalog-list__page-info">Page {{ vm.pageNumber }}</span>
+        <button mat-raised-button
+                (click)="nextPage()"
+                [disabled]="vm.catalogItems.length < vm.pageSize"
+                type="button">
+          Next
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>
