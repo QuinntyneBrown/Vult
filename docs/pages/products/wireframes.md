@@ -57,7 +57,7 @@ This document contains wireframe diagrams for the Products Page (PLP) at various
 ├──────────────────────┴──────────────────────────────────────────────────────────┤
 │                              [Loading More...]                                  │
 ├─────────────────────────────────────────────────────────────────────────────────┤
-│  Footer: Links | Help | About | Terms | Privacy                    © Nike 2024 │
+│  Footer: Links | Help | About | Terms | Privacy                   © Brand 2024 │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -105,7 +105,7 @@ This document contains wireframe diagrams for the Products Page (PLP) at various
 │                  [Loading More...]                    │
 │                                                       │
 ├───────────────────────────────────────────────────────┤
-│  Footer                                    © Nike     │
+│  Footer                                    © Brand    │
 └───────────────────────────────────────────────────────┘
 ```
 

@@ -70,7 +70,7 @@
 ```
 ┌────────────────────────────────────┐
 │                                    │
-│  Nike Tech              (subtitle) │
+│  Brand Name             (subtitle) │
 │                                    │
 │  Men's Dri-FIT Woven      (title)  │
 │  Color-Block Windrunner            │
