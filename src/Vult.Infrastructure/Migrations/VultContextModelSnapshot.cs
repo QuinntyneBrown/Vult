@@ -37,80 +37,6 @@ namespace Vult.Infrastructure.Migrations
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("Vult.Core.CatalogItem", b =>
-                {
-                    b.Property<Guid>("CatalogItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("BrandName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<decimal>("EstimatedMSRP")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("EstimatedResaleValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ItemType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Size")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("CatalogItemId");
-
-                    b.ToTable("CatalogItems", (string)null);
-                });
-
-            modelBuilder.Entity("Vult.Core.CatalogItemImage", b =>
-                {
-                    b.Property<Guid>("CatalogItemImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CatalogItemId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<byte[]>("ImageData")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("CatalogItemImageId");
-
-                    b.HasIndex("CatalogItemId");
-
-                    b.ToTable("CatalogItemImages", (string)null);
-                });
-
             modelBuilder.Entity("Vult.Core.InvitationToken", b =>
                 {
                     b.Property<Guid>("InvitationTokenId")
@@ -159,6 +85,80 @@ namespace Vult.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Privileges");
+                });
+
+            modelBuilder.Entity("Vult.Core.Product", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BrandName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<decimal>("EstimatedMSRP")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("EstimatedResaleValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("Vult.Core.ProductImage", b =>
+                {
+                    b.Property<Guid>("ProductImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<byte[]>("ImageData")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ProductImageId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("Vult.Core.Role", b =>
@@ -231,17 +231,6 @@ namespace Vult.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Vult.Core.CatalogItemImage", b =>
-                {
-                    b.HasOne("Vult.Core.CatalogItem", "CatalogItem")
-                        .WithMany("CatalogItemImages")
-                        .HasForeignKey("CatalogItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CatalogItem");
-                });
-
             modelBuilder.Entity("Vult.Core.Privilege", b =>
                 {
                     b.HasOne("Vult.Core.Role", "Role")
@@ -253,9 +242,20 @@ namespace Vult.Infrastructure.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Vult.Core.CatalogItem", b =>
+            modelBuilder.Entity("Vult.Core.ProductImage", b =>
                 {
-                    b.Navigation("CatalogItemImages");
+                    b.HasOne("Vult.Core.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Vult.Core.Product", b =>
+                {
+                    b.Navigation("ProductImages");
                 });
 
             modelBuilder.Entity("Vult.Core.Role", b =>

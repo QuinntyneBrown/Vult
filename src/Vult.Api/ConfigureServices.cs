@@ -57,8 +57,8 @@ public static class ConfigureServices
         });
 
         services.AddSingleton<IImageAnalysisService, ImageAnalysisService>();
-        services.AddScoped<ICatalogItemIngestionService, CatalogItemIngestionService>();
-        services.AddScoped<ICatalogItemEvaluationService, CatalogItemEvaluationService>();
+        services.AddScoped<IProductIngestionService, ProductIngestionService>();
+        services.AddScoped<IProductEvaluationService, ProductEvaluationService>();
 
         // JWT configuration
         var jwtKey = configuration["Jwt:Key"] ?? "DefaultSecretKey12345678901234567890";

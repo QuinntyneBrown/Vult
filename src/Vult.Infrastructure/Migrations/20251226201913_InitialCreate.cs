@@ -6,31 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vult.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "CatalogItems",
-                columns: table => new
-                {
-                    CatalogItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EstimatedMSRP = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    EstimatedResaleValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Size = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    BrandName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ItemType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CatalogItems", x => x.CatalogItemId);
-                });
-
             migrationBuilder.CreateTable(
                 name: "InvitationTokens",
                 columns: table => new
@@ -43,6 +23,26 @@ namespace Vult.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InvitationTokens", x => x.InvitationTokenId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EstimatedMSRP = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    EstimatedResaleValue = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Size = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    BrandName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ItemType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.ProductId);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,23 +75,23 @@ namespace Vult.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CatalogItemImages",
+                name: "ProductImages",
                 columns: table => new
                 {
-                    CatalogItemImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CatalogItemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CatalogItemImages", x => x.CatalogItemImageId);
+                    table.PrimaryKey("PK_ProductImages", x => x.ProductImageId);
                     table.ForeignKey(
-                        name: "FK_CatalogItemImages_CatalogItems_CatalogItemId",
-                        column: x => x.CatalogItemId,
-                        principalTable: "CatalogItems",
-                        principalColumn: "CatalogItemId",
+                        name: "FK_ProductImages_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -140,11 +140,6 @@ namespace Vult.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CatalogItemImages_CatalogItemId",
-                table: "CatalogItemImages",
-                column: "CatalogItemId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_InvitationTokens_Value",
                 table: "InvitationTokens",
                 column: "Value",
@@ -155,6 +150,11 @@ namespace Vult.Infrastructure.Migrations
                 table: "Privileges",
                 columns: new[] { "RoleId", "Aggregate", "AccessRight" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductImages_ProductId",
+                table: "ProductImages",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_Name",
@@ -178,19 +178,19 @@ namespace Vult.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CatalogItemImages");
-
-            migrationBuilder.DropTable(
                 name: "InvitationTokens");
 
             migrationBuilder.DropTable(
                 name: "Privileges");
 
             migrationBuilder.DropTable(
+                name: "ProductImages");
+
+            migrationBuilder.DropTable(
                 name: "UserRole");
 
             migrationBuilder.DropTable(
-                name: "CatalogItems");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Roles");

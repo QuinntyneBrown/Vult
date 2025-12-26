@@ -6,10 +6,10 @@ namespace Vult.Core;
 public interface IImageAnalysisService
 {
     /// <summary>
-    /// Analyzes an image and extracts catalog item information
+    /// Analyzes an image and extracts product information
     /// </summary>
     /// <param name="imageData">The image data as byte array</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>CatalogItemAnalysisResult containing extracted item information</returns>
-    Task<CatalogItemAnalysisResult> AnalyzeAsync(byte[] imageData, CancellationToken cancellationToken = default);
+    /// <returns>ProductAnalysisResult containing extracted item information</returns>
+    Task<ProductAnalysisResult> AnalyzeAsync(byte[] imageData, CancellationToken cancellationToken = default);
 }

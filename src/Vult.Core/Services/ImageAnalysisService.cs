@@ -28,9 +28,9 @@ public class ImageAnalysisService : IImageAnalysisService
         _imageAnalysisClient = new ImageAnalysisClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
     }
 
-    public async Task<CatalogItemAnalysisResult> AnalyzeAsync(byte[] imageData, CancellationToken cancellationToken = default)
+    public async Task<ProductAnalysisResult> AnalyzeAsync(byte[] imageData, CancellationToken cancellationToken = default)
     {
-        var result = new CatalogItemAnalysisResult();
+        var result = new ProductAnalysisResult();
         
         if (imageData == null || imageData.Length == 0)
         {
@@ -89,7 +89,7 @@ public class ImageAnalysisService : IImageAnalysisService
         return result;
     }
 
-    private void ParseAnalysisResult(Azure.AI.Vision.ImageAnalysis.ImageAnalysisResult azureResult, CatalogItemAnalysisResult result)
+    private void ParseAnalysisResult(Azure.AI.Vision.ImageAnalysis.ImageAnalysisResult azureResult, ProductAnalysisResult result)
     {
         // Extract caption/description
         if (azureResult.Caption != null)
