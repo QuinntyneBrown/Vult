@@ -35,7 +35,7 @@ const salePrice: ProductPrice = {
 export const Default: Story = {
   args: {
     title: "Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket",
-    subtitle: 'Nike Tech',
+    subtitle: 'Tech Collection',
     colorName: 'Black/White',
     price: regularPrice,
     isMemberExclusive: false,
@@ -46,7 +46,7 @@ export const Default: Story = {
 export const OnSale: Story = {
   args: {
     title: "Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket",
-    subtitle: 'Nike Tech',
+    subtitle: 'Tech Collection',
     colorName: 'Black/White',
     price: salePrice,
     isMemberExclusive: false,
@@ -57,11 +57,11 @@ export const OnSale: Story = {
 export const MemberExclusive: Story = {
   args: {
     title: "Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket",
-    subtitle: 'Nike Tech',
+    subtitle: 'Tech Collection',
     colorName: 'Black/White',
     price: regularPrice,
     isMemberExclusive: true,
-    promotionalMessage: 'Nike Members get free shipping'
+    promotionalMessage: 'Members get free shipping'
   }
 };
 
@@ -83,7 +83,7 @@ export const WithoutSubtitle: Story = {
 export const LongTitle: Story = {
   args: {
     title: "Men's Dri-FIT ADV TechKnit Ultra Short-Sleeve Running Top with Advanced Moisture-Wicking Technology",
-    subtitle: 'Nike Running',
+    subtitle: 'Running Collection',
     colorName: 'Obsidian/Reflective Silver',
     price: regularPrice,
     isMemberExclusive: false,

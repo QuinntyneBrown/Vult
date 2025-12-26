@@ -35,7 +35,7 @@ const suggestions: SearchSuggestion[] = [
   { id: '2', text: 'running shoes', type: 'recent' },
   { id: '3', text: 'jordan', type: 'trending' },
   { id: '4', text: 'dunks', type: 'trending' },
-  { id: '5', text: 'Nike Air Max 90', type: 'product', imageUrl: 'https://placehold.co/56x56', category: "Men's Shoes", price: 130 },
+  { id: '5', text: 'Air Max 90', type: 'product', imageUrl: 'https://placehold.co/56x56', category: "Men's Shoes", price: 130 },
 ];
 
 export const WithSuggestions: Story = {

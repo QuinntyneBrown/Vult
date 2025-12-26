@@ -13,7 +13,7 @@ type Story = StoryObj<ProductGridComponent>;
 
 const sampleProducts: ProductCardData[] = Array.from({ length: 8 }, (_, i) => ({
   id: String(i + 1),
-  name: `Nike Air Max ${90 + i * 10}`,
+  name: `Air Max ${90 + i * 10}`,
   category: "Men's Shoes",
   colorCount: 3 + i,
   price: 130 + i * 10,

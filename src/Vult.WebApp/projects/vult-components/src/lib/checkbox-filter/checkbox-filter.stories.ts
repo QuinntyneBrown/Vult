@@ -11,7 +11,7 @@ export default meta;
 type Story = StoryObj<CheckboxFilterComponent>;
 
 const brandOptions: CheckboxOption[] = [
-  { id: 'nike', label: 'Nike', count: 234 },
+  { id: 'adidas', label: 'Adidas', count: 234 },
   { id: 'jordan', label: 'Jordan', count: 89 },
   { id: 'converse', label: 'Converse', count: 45 },
   { id: 'hurley', label: 'Hurley', count: 23 },

@@ -14,7 +14,7 @@ const slides: CarouselSlide[] = [
   {
     id: 1,
     imageUrl: 'https://placehold.co/1440x600/333333/ffffff?text=Slide+1',
-    altText: 'Nike Air Max Collection',
+    altText: 'Air Max Collection',
     title: 'Air Max Collection',
     subtitle: 'Discover the latest Air Max styles',
     ctaText: 'Shop Now',

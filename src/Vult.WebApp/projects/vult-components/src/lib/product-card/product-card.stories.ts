@@ -12,7 +12,7 @@ type Story = StoryObj<ProductCardComponent>;
 
 const defaultProduct: ProductCardData = {
   id: '1',
-  name: 'Nike Air Max 90',
+  name: 'Air Max 90',
   category: "Men's Shoes",
   colorCount: 5,
   price: 130,
@@ -80,7 +80,7 @@ export const LongProductName: Story = {
   args: {
     product: {
       ...defaultProduct,
-      name: 'Nike Air Max 90 Premium Limited Edition Anniversary Collection',
+      name: 'Air Max 90 Premium Limited Edition Anniversary Collection',
     },
   },
 };
