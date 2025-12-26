@@ -7,6 +7,6 @@ public static class AggregateNames
 {
     public const string User = "User";
     public const string Role = "Role";
-    public const string CatalogItem = "CatalogItem";
+    public const string Product = "Product";
     public const string InvitationToken = "InvitationToken";
 }

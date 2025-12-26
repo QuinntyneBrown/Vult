@@ -7,8 +7,8 @@ namespace Vult.Core;
 
 public interface IVultContext
 {
-    DbSet<CatalogItem> CatalogItems { get; set; }
-    DbSet<CatalogItemImage> CatalogItemImages { get; set; }
+    DbSet<Product> Products { get; set; }
+    DbSet<ProductImage> ProductImages { get; set; }
     DbSet<User> Users { get; set; }
     DbSet<Role> Roles { get; set; }
     DbSet<Privilege> Privileges { get; set; }
