@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using MediatR;
-using Vult.Api.Authorization;
+using Vult.Core.Authorization;
 
 namespace Vult.Api.Features.InvitationTokens;
 
