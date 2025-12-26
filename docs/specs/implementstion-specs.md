@@ -110,45 +110,45 @@ Id
 ## 3. Core Project Requirements
 
 ### 3.1 Project Identity
-**REQ-CORE-001**: The Core project SHALL be named `ContractingPlatform.Core`.
+**REQ-CORE-001**: The Core project SHALL be named `Vult.Core`.
 
 ### 3.2 Aggregate Organization
-**REQ-CORE-002**: Aggregates SHALL be placed in the `ContractingPlatform.Core\Model` folder.
+**REQ-CORE-002**: Aggregates SHALL be placed in the `Vult.Core\Model` folder.
 
-**REQ-CORE-003**: Each aggregate SHALL have a dedicated folder in `ContractingPlatform.Core\Model` named `ContractingPlatform.Core\Model\{Aggregate}Aggregate`.
+**REQ-CORE-003**: Each aggregate SHALL have a dedicated folder in `Vult.Core\Model` named `Vult.Core\Model\{Aggregate}Aggregate`.
 
 ### 3.3 Persistence Interface
-**REQ-CORE-004**: The Core project SHALL contain an interface named `IContractingPlatformContext` with DbSet properties for each entity in the system. This interface represents the persistence surface. The implementation of this interface SHALL be located in the Infrastructure project.
+**REQ-CORE-004**: The Core project SHALL contain an interface named `IVultContext` with DbSet properties for each entity in the system. This interface represents the persistence surface. The implementation of this interface SHALL be located in the Infrastructure project.
 
-**REQ-CORE-005**: **CRITICAL** - All data access operations throughout the system SHALL use the `IContractingPlatformContext` interface directly. No repository pattern or abstraction layer SHALL be introduced between business logic and the context interface.
+**REQ-CORE-005**: **CRITICAL** - All data access operations throughout the system SHALL use the `IVultContext` interface directly. No repository pattern or abstraction layer SHALL be introduced between business logic and the context interface.
 
 ### 3.4 Service Layer
 **REQ-CORE-006**: **CRITICAL** - Backend services SHALL be located in a folder named `Services` within the project where they are implemented.
 
-**REQ-CORE-007**: **CRITICAL** - Backend services SHALL be implemented in `ContractingPlatform.Core\Services` whenever possible. This is the **PREFERRED** approach. Business logic, domain services, and application services SHALL reside in the Core project's Services folder unless they have specific infrastructure dependencies that necessitate placement in the Infrastructure project.
+**REQ-CORE-007**: **CRITICAL** - Backend services SHALL be implemented in `Vult.Core\Services` whenever possible. This is the **PREFERRED** approach. Business logic, domain services, and application services SHALL reside in the Core project's Services folder unless they have specific infrastructure dependencies that necessitate placement in the Infrastructure project.
 
-**REQ-CORE-008**: When infrastructure dependencies require a service to be implemented outside the Core project, the service SHALL be placed in `ContractingPlatform.Infrastructure\Services`.
+**REQ-CORE-008**: When infrastructure dependencies require a service to be implemented outside the Core project, the service SHALL be placed in `Vult.Infrastructure\Services`.
 
-**REQ-CORE-009**: The `ContractingPlatform.Core\Services` folder SHALL contain service interfaces and classes with core business logic for the system.
+**REQ-CORE-009**: The `Vult.Core\Services` folder SHALL contain service interfaces and classes with core business logic for the system.
 
-**REQ-CORE-010**: Service implementations in `ContractingPlatform.Core\Services` SHALL include but are not limited to: Authentication services, Email services, Azure AI Integration services, and other domain-specific business logic services.
+**REQ-CORE-010**: Service implementations in `Vult.Core\Services` SHALL include but are not limited to: Authentication services, Email services, Azure AI Integration services, and other domain-specific business logic services.
 
 ### 3.5 Aggregate Folder Structure
-**REQ-CORE-011**: Aggregate folders SHALL be named `ContractingPlatform.Core\Model\{Aggregate}Aggregate`.
+**REQ-CORE-011**: Aggregate folders SHALL be named `Vult.Core\Model\{Aggregate}Aggregate`.
 
-**REQ-CORE-012**: The aggregate folder `ContractingPlatform.Core\Model\{Aggregate}Aggregate` SHALL contain all related Entities, Enums, Events, AggregateRoot, and other domain objects.
+**REQ-CORE-012**: The aggregate folder `Vult.Core\Model\{Aggregate}Aggregate` SHALL contain all related Entities, Enums, Events, AggregateRoot, and other domain objects.
 
-**REQ-CORE-013**: Each type within `ContractingPlatform.Core\Model\{Aggregate}Aggregate` SHALL have its own subfolder (e.g., Events folder, Enums folder).
+**REQ-CORE-013**: Each type within `Vult.Core\Model\{Aggregate}Aggregate` SHALL have its own subfolder (e.g., Events folder, Enums folder).
 
 ---
 
 ## 4. Infrastructure Project Requirements
 
 ### 4.1 Project Identity
-**REQ-INFRA-001**: The Infrastructure project SHALL be named `ContractingPlatform.Infrastructure`.
+**REQ-INFRA-001**: The Infrastructure project SHALL be named `Vult.Infrastructure`.
 
 ### 4.2 Context Implementation
-**REQ-INFRA-002**: The Infrastructure project SHALL contain the implementation of `IContractingPlatformContext`. The implementation class SHALL be named `ContractingPlatformContext`.
+**REQ-INFRA-002**: The Infrastructure project SHALL contain the implementation of `IVultContext`. The implementation class SHALL be named `VultContext`.
 
 ### 4.3 Entity Framework Components
 **REQ-INFRA-003**: The Infrastructure project SHALL contain Entity Framework migrations.
@@ -162,7 +162,7 @@ Id
 ## 5. API Project Requirements
 
 ### 5.1 Project Identity
-**REQ-API-001**: The API project SHALL be named `ContractingPlatform.Api`.
+**REQ-API-001**: The API project SHALL be named `Vult.Api`.
 
 ### 5.2 Feature Organization
 **REQ-API-002**: The API project SHALL have a folder named `Features` containing all Commands and Queries (using MediatR) grouped in folders by Bounded Context.
@@ -183,13 +183,13 @@ Id
 ## 6. Frontend Requirements
 
 ### 6.1 Project Identity
-**REQ-FE-001**: The frontend SHALL be named `ContractingPlatform.WebApp` (located at `src\ContractingPlatform.WebApp`).
+**REQ-FE-001**: The frontend SHALL be named `Vult.WebApp` (located at `src\Vult.WebApp`).
 
 **REQ-FE-002**: The frontend SHALL be configured as an Angular workspace with projects.
 
-**REQ-FE-003**: The frontend project SHALL be named `ContractingPlatform` if it is not an admin frontend.
+**REQ-FE-003**: The frontend project SHALL be named `Vult` if it is not an admin frontend.
 
-**REQ-FE-004**: The frontend project SHALL be named `ContractingPlatform-admin` if it is an admin frontend.
+**REQ-FE-004**: The frontend project SHALL be named `Vult-admin` if it is an admin frontend.
 
 ### 6.2 Technology Stack
 **REQ-FE-005**: The system SHALL use the latest stable version of Angular.
@@ -240,7 +240,7 @@ header.component.ts
 ```
 
 ### 6.5 Folder Structure
-**REQ-FE-014**: The e2e folder SHALL be located at `src/ContractingPlatform.WebApp/projects/ContractingPlatform/src/e2e`.
+**REQ-FE-014**: The e2e folder SHALL be located at `src/Vult.WebApp/projects/Vult/src/e2e`.
 
 **REQ-FE-015**: The frontend SHALL contain a folder named `pages` for components that can appear in the `<router-outlet>`.
 
