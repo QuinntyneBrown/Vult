@@ -1,7 +1,7 @@
 # Footer Component
 
 ## Overview
-The footer component is a comprehensive site-wide navigation element placed at the bottom of every page. It provides access to important links, resources, legal information, and social media connections. The Nike footer maintains brand consistency while offering multiple ways for users to find information and engage with the brand.
+The footer component is a comprehensive site-wide navigation element placed at the bottom of every page. It provides access to important links, resources, legal information, and social media connections. The footer maintains brand consistency while offering multiple ways for users to find information and engage with the brand.
 
 ## Requirements
 
@@ -25,8 +25,8 @@ The footer component is a comprehensive site-wide navigation element placed at t
    - Contact Us page
    - FAQ/Help center
 
-3. **About Nike Section**
-   - About Nike company info
+3. **About Vult Section**
+   - About Vult company info
    - News section
    - Careers page
    - Investors information
@@ -48,7 +48,7 @@ The footer component is a comprehensive site-wide navigation element placed at t
    - Cookie Settings
 
 6. **Visual Elements**
-   - Nike brand identity
+   - Brand identity
    - Consistent styling
    - Responsive layout
 
@@ -109,7 +109,7 @@ The footer component is a comprehensive site-wide navigation element placed at t
 - **Given** the footer renders
 - **When** viewed in any region
 - **Then** the current year copyright displays
-- **And** "Nike, Inc. All Rights Reserved" shows
+- **And** "Vult, Inc. All Rights Reserved" shows
 
 ## Dependencies
 - Store locator service

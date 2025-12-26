@@ -212,7 +212,7 @@ Total row height: 8px + 24px (line) + 8px = 40px
 ```html
 <label class="checkbox-filter">
     <input type="checkbox" class="checkbox-filter__input" />
-    <span class="checkbox-filter__label">Nike</span>
+    <span class="checkbox-filter__label">Brand</span>
     <span class="checkbox-filter__count" aria-hidden="true">(124)</span>
 </label>
 ```

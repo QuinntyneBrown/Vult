@@ -1,7 +1,7 @@
 # Search Bar Component
 
 ## Overview
-The search bar is an input component that enables users to search for products, content, and information across the Nike website. It features a clean, minimal design with an icon, placeholder text, and expandable behavior, providing quick access to search functionality.
+The search bar is an input component that enables users to search for products, content, and information across the website. It features a clean, minimal design with an icon, placeholder text, and expandable behavior, providing quick access to search functionality.
 
 ## Requirements
 

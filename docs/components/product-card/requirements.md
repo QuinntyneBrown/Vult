@@ -1,7 +1,7 @@
 # Product Card Component
 
 ## Overview
-A versatile product display card used throughout the Nike e-commerce experience to showcase individual products. The card presents product imagery, pricing, and essential details in a compact, scannable format optimized for both browsing and conversion.
+A versatile product display card used throughout the e-commerce experience to showcase individual products. The card presents product imagery, pricing, and essential details in a compact, scannable format optimized for both browsing and conversion.
 
 ## Requirements
 

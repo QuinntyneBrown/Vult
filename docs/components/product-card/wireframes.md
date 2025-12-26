@@ -21,7 +21,7 @@
 │                                     │
 ├─────────────────────────────────────┤
 │                                     │
-│  Nike Air Max 270                   │ ← Product Name (16px, bold)
+│  Air Max 270                        │ ← Product Name (16px, bold)
 │  Women's Shoes                      │ ← Category (14px, gray)
 │  3 Colors                           │ ← Color count (14px, gray)
 │                                     │
@@ -52,7 +52,7 @@ Info padding: 12px
 │                                     │
 ├─────────────────────────────────────┤
 │                                     │
-│  Nike React Infinity Run            │
+│  React Infinity Run                 │
 │  Men's Running Shoe                 │
 │  2 Colors                           │
 │                                     │
@@ -102,7 +102,7 @@ Info padding: 12px
 │                                     │
 ├─────────────────────────────────────┤
 │                                     │
-│  Nike Air Max 270                   │
+│  Air Max 270                        │
 │  Women's Shoes                      │
 │  3 Colors                           │
 │                                     │
@@ -150,7 +150,7 @@ Info padding: 12px
 │                                     │
 ├─────────────────────────────────────┤
 │                                     │
-│  Nike Dunk Low                      │
+│  Dunk Low                           │
 │  Men's Shoes                        │
 │  1 Color                            │
 │                                     │
@@ -175,7 +175,7 @@ Info padding: 12px
 │                                     │
 ├─────────────────────────────────────┤
 │                                     │
-│  Nike Air Force 1 '07               │
+│  Air Force 1 '07                    │
 │  Men's Shoes                        │
 │                                     │
 │  ● ● ● ●  +5                        │ ← Color swatches (4 shown + more)

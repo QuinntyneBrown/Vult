@@ -80,7 +80,7 @@ Cursor: not-allowed
 ```
 ┌─────────────────────────────────┐
 │                                 │
-│  □  Nike                 (124)  │
+│  □  Brand                (124)  │
 │      ▲                    ▲     │
 │      │                    │     │
 │      Label         Count (gray) │
@@ -97,15 +97,15 @@ Count: 14px, #757575
 │  Brand                       ▲  │
 │ ────────────────────────────── │
 │                                 │
-│  ☑  Nike                 (124)  │
+│  ☑  Brand                (124)  │
 │                                 │
 │  □  Jordan                (56)  │
 │                                 │
-│  ☑  Nike Sportswear       (89)  │
+│  ☑  Sportswear            (89)  │
 │                                 │
 │  □  ACG                   (23)  │
 │                                 │
-│  □  NikeLab               (12)  │
+│  □  Lab                   (12)  │
 │                                 │
 │  + 12 More                      │
 │                                 │

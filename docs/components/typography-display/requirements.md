@@ -1,7 +1,7 @@
 # Typography Display Component
 
 ## Overview
-The typography display component encompasses the complete typographic system used across the Nike website. This includes display headlines for hero sections, title hierarchies for content organization, body text for readability, and utility text styles. The system ensures consistent visual hierarchy and brand expression throughout the digital experience.
+The typography display component encompasses the complete typographic system used across the website. This includes display headlines for hero sections, title hierarchies for content organization, body text for readability, and utility text styles. The system ensures consistent visual hierarchy and brand expression throughout the digital experience.
 
 ## Requirements
 
