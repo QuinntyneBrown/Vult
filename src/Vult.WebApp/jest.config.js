@@ -9,7 +9,8 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@vult/(.*)$': '<rootDir>/projects/vult/src/app/$1',
-    '^@vult-admin/(.*)$': '<rootDir>/projects/vult-admin/src/app/$1'
+    '^@vult-admin/(.*)$': '<rootDir>/projects/vult-admin/src/app/$1',
+    '^vult-components$': '<rootDir>/projects/vult-components/src/public-api.ts'
   },
   collectCoverageFrom: [
     'projects/**/src/app/**/*.ts',

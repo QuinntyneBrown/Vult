@@ -1,0 +1,293 @@
+// Copyright (c) Quinntyne Brown. All Rights Reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+// =====================================================
+// CSS CUSTOM PROPERTIES (Design Tokens)
+// =====================================================
+
+:host {
+  --color-primary: #111111;
+  --color-secondary: #757575;
+  --color-white: #ffffff;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e5e5e5;
+  --color-gray-300: #cccccc;
+  --color-border: #e5e5e5;
+
+  --font-family-primary: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  --transition-fast: 150ms ease;
+
+  display: block;
+  font-family: var(--font-family-primary);
+}
+
+// =====================================================
+// MAIN PAGE LAYOUT
+// =====================================================
+
+.product-page {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: var(--space-6);
+  min-height: 100vh;
+
+  @media (min-width: 960px) {
+    padding: var(--space-12);
+  }
+}
+
+.product-container {
+  display: grid;
+  gap: var(--space-8);
+
+  @media (min-width: 960px) {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: start;
+  }
+}
+
+// =====================================================
+// IMAGE GALLERY SECTION
+// =====================================================
+
+.product-gallery-section {
+  position: relative;
+
+  @media (min-width: 960px) {
+    position: sticky;
+    top: var(--space-6);
+  }
+}
+
+// =====================================================
+// PRODUCT INFO SECTION
+// =====================================================
+
+.product-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+// =====================================================
+// SECTION LABELS
+// =====================================================
+
+.section-label {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  margin: 0 0 var(--space-3);
+
+  strong {
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+// =====================================================
+// COLOR SELECTOR SECTION
+// =====================================================
+
+.color-selector-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  // Override default color swatch styles for PDP
+  ::ng-deep {
+    .color-swatches {
+      gap: var(--space-2);
+    }
+
+    .color-swatch {
+      width: 70px;
+      height: 70px;
+      border-radius: 4px;
+
+      @media (max-width: 599px) {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  }
+}
+
+// =====================================================
+// SIZE SELECTOR SECTION
+// =====================================================
+
+.size-selector-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.size-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .section-label {
+    margin: 0;
+  }
+}
+
+.size-guide-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #0077ff;
+    outline-offset: 2px;
+  }
+}
+
+// Override size selector for PDP layout
+::ng-deep {
+  .size-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+}
+
+// =====================================================
+// ACTION BUTTONS SECTION
+// =====================================================
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+// =====================================================
+// ACCORDION SECTION
+// =====================================================
+
+.accordion-section {
+  margin-top: var(--space-2);
+}
+
+// =====================================================
+// LOADING STATE & SKELETONS
+// =====================================================
+
+.product-page__loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-8);
+}
+
+.product-page__skeleton-container {
+  display: grid;
+  gap: var(--space-8);
+  width: 100%;
+  max-width: 1200px;
+
+  @media (min-width: 960px) {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+  }
+}
+
+.product-page__skeleton-image {
+  aspect-ratio: 1 / 1.25;
+  background: linear-gradient(90deg, var(--color-gray-100) 25%, #e0e0e0 50%, var(--color-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.product-page__skeleton-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+}
+
+.skeleton-line {
+  background: linear-gradient(90deg, var(--color-gray-100) 25%, #e0e0e0 50%, var(--color-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 4px;
+
+  &--title {
+    height: 28px;
+    width: 60%;
+  }
+
+  &--subtitle {
+    height: 20px;
+    width: 80%;
+  }
+
+  &--price {
+    height: 24px;
+    width: 30%;
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// =====================================================
+// ACCESSIBILITY
+// =====================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .product-page__skeleton-image,
+  .skeleton-line {
+    animation: none;
+    background: var(--color-gray-100);
+  }
+}
+
+// =====================================================
+// PRODUCT META (inside accordion content)
+// =====================================================
+
+::ng-deep {
+  .product-meta {
+    margin-top: var(--space-4);
+    font-size: var(--font-size-sm);
+    color: var(--color-primary);
+
+    p {
+      margin: 0 0 var(--space-2);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

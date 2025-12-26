@@ -1,0 +1,116 @@
+<main class="product-page" data-testid="product-detail-page">
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="product-page__loading" data-testid="loading-state">
+      <div class="product-page__skeleton-container">
+        <div class="product-page__skeleton-image"></div>
+        <div class="product-page__skeleton-info">
+          <div class="skeleton-line skeleton-line--title"></div>
+          <div class="skeleton-line skeleton-line--subtitle"></div>
+          <div class="skeleton-line skeleton-line--price"></div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="product-container" data-testid="product-container">
+      <!-- Image Gallery Section -->
+      <section class="product-gallery-section" aria-label="Product images">
+        <lib-product-image-gallery
+          [images]="product().images"
+          [enableZoom]="true"
+          [loading]="isLoading()"
+          [selectedImageIndex]="selectedImageIndex()"
+          ariaLabel="Product image gallery"
+          (imageChange)="onImageChange($event)"
+          (imageClick)="onImageClick($event)"
+          data-testid="product-image-gallery"
+        ></lib-product-image-gallery>
+      </section>
+
+      <!-- Product Info Section -->
+      <section class="product-info-section" aria-label="Product information">
+        <!-- Product Header -->
+        <lib-product-info-section
+          [title]="product().title"
+          [subtitle]="product().subtitle"
+          [price]="product().price"
+          [colorName]="selectedColorName()"
+          [isMemberExclusive]="product().isMemberExclusive || false"
+          [promotionalMessage]="product().promotionalMessage || ''"
+          data-testid="product-info"
+        ></lib-product-info-section>
+
+        <!-- Color Selector -->
+        <div class="color-selector-section" data-testid="color-selector-section">
+          <p class="section-label">
+            Color: <strong>{{ selectedColorName() }}</strong>
+          </p>
+          <lib-color-swatch-selector
+            [colors]="product().colors"
+            [selectedColorId]="selectedColorId()"
+            ariaLabel="Select product color"
+            (colorSelect)="onColorSelect($event)"
+            data-testid="color-swatch-selector"
+          ></lib-color-swatch-selector>
+        </div>
+
+        <!-- Size Selector -->
+        <div class="size-selector-section" data-testid="size-selector-section">
+          <div class="size-selector-header">
+            <span class="section-label">Select Size</span>
+            <button
+              type="button"
+              class="size-guide-link"
+              (click)="onSizeGuideClick()"
+              data-testid="size-guide-link"
+            >
+              Size Guide
+            </button>
+          </div>
+          <lib-size-selector
+            [sizes]="product().sizes"
+            [multiSelect]="false"
+            [showStrikethrough]="true"
+            [selectedSizeIds]="selectedSizeIds()"
+            ariaLabel="Select product size"
+            (selectionChange)="onSizeSelectionChange($event)"
+            data-testid="size-selector"
+          ></lib-size-selector>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons" data-testid="action-buttons">
+          <lib-add-to-bag-button
+            [disabled]="isAddToBagDisabled()"
+            [state]="addToBagState()"
+            [errorMessage]="addToBagError()"
+            [fullWidth]="true"
+            ariaLabel="Add to shopping bag"
+            (addToBag)="onAddToBag()"
+            data-testid="add-to-bag-button"
+          ></lib-add-to-bag-button>
+
+          <lib-favorites-button
+            [isFavorited]="isFavorited()"
+            [loading]="isFavoriteLoading()"
+            variant="full-width"
+            (favoriteToggle)="onFavoriteToggle($event)"
+            data-testid="favorites-button"
+          ></lib-favorites-button>
+        </div>
+
+        <!-- Product Details Accordion -->
+        <div class="accordion-section" data-testid="accordion-section">
+          <lib-product-details-accordion
+            [sections]="product().accordionSections"
+            [mode]="'multiple'"
+            [initialExpandedIds]="expandedAccordionIds()"
+            ariaLabel="Product details"
+            (sectionToggle)="onAccordionSectionToggle($event)"
+            data-testid="product-accordion"
+          ></lib-product-details-accordion>
+        </div>
+      </section>
+    </div>
+  }
+</main>
