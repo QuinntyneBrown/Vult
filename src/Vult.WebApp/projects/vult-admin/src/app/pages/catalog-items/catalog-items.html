@@ -1,35 +1,38 @@
-<div class="master-detail">
-  <div class="master-detail__list">
-    <app-catalog-item-list
-      [catalogItems]="(catalogItems$ | async) ?? []"
-      [selectedItemId]="(selectedItem$ | async)?.catalogItemId"
-      [isLoading]="(isLoading$ | async) ?? false"
-      [pageNumber]="(pageNumber$ | async) ?? 1"
-      [pageSize]="(pageSize$ | async) ?? 20"
-      [totalCount]="(totalCount$ | async) ?? 0"
-      [totalPages]="(totalPages$ | async) ?? 0"
-      (selectItem)="onSelectItem($event)"
-      (create)="onCreate()"
-      (delete)="onDelete($event)"
-      (pageChange)="onPageChange($event)">
-    </app-catalog-item-list>
-  </div>
+<ng-container *ngIf="viewModel$ | async as vm">
+  <div class="master-detail">
+    <div class="master-detail__list">
+      <app-catalog-item-list
+        [catalogItems]="vm.catalogItems"
+        [selectedItemId]="vm.selectedItem?.catalogItemId"
+        [isLoading]="vm.isLoading"
+        [pageNumber]="vm.pageNumber"
+        [pageSize]="vm.pageSize"
+        [totalCount]="vm.totalCount"
+        [totalPages]="vm.totalPages"
+        (selectItem)="onSelectItem($event)"
+        (create)="onCreate()"
+        (delete)="onDelete($event)"
+        (pageChange)="onPageChange($event)">
+      </app-catalog-item-list>
+    </div>
 
-  <div class="master-detail__detail">
-    @if (showEdit$ | async) {
-      <app-catalog-item-edit
-        [catalogItem]="selectedItem$ | async"
-        [isCreating]="(isCreating$ | async) ?? false"
-        [isSaving]="(isSaving$ | async) ?? false"
-        [errorMessage]="errorMessage$ | async"
-        (save)="onSave($event)"
-        (cancel)="onCancel()">
-      </app-catalog-item-edit>
-    } @else {
-      <div class="master-detail__empty">
-        <mat-icon>inventory_2</mat-icon>
-        <p>Select an item to edit or click "Create" to add a new catalog item</p>
-      </div>
-    }
+    <div class="master-detail__detail">
+      <ng-container *ngIf="vm.showEdit; else emptyState">
+        <app-catalog-item-edit
+          [catalogItem]="vm.selectedItem"
+          [isCreating]="vm.isCreating"
+          [isSaving]="vm.isSaving"
+          [errorMessage]="vm.errorMessage"
+          (save)="onSave($event)"
+          (cancel)="onCancel()">
+        </app-catalog-item-edit>
+      </ng-container>
+      <ng-template #emptyState>
+        <div class="master-detail__empty">
+          <mat-icon>inventory_2</mat-icon>
+          <p>Select an item to edit or click "Create" to add a new catalog item</p>
+        </div>
+      </ng-template>
+    </div>
   </div>
-</div>
+</ng-container>
