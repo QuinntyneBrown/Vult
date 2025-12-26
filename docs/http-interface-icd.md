@@ -18,15 +18,13 @@ This document provides a comprehensive technical specification of all HTTP endpo
 ### Key Directory Structure
 ```
 Vult.Api/
-├── Controllers/              # HTTP Controller endpoints (3 controllers)
+├── Controllers/              # HTTP Controller endpoints (2 controllers)
 │   ├── UserController.cs
-│   ├── ProductsController.cs
-│   └── InvitationTokenController.cs
+│   └── ProductsController.cs
 ├── Features/                 # Feature modules (Commands/Queries/Handlers)
 │   ├── Auth/
 │   ├── Users/
-│   ├── Products/
-│   └── InvitationTokens/
+│   └── Products/
 ├── Behaviours/              # MediatR pipeline behaviors
 │   └── ResourceOperationAuthorizationBehavior.cs
 ├── Hubs/                    # SignalR hubs
@@ -71,18 +69,6 @@ Vult.Api/
 | POST | CreateProduct | `/api/products` | Required | Create new product |
 | PUT | UpdateProduct | `/api/products/{id}` | Required | Update product details |
 | DELETE | DeleteProduct | `/api/products/{id}` | Required | Delete product |
-
-### 2.3 InvitationTokenController
-**Route Base**: `/api/invitation-token`
-**Location**: `src/Vult.Api/Controllers/InvitationTokenController.cs`
-
-| Method | Endpoint | Route | Auth | Description |
-|--------|----------|-------|------|-------------|
-| GET | GetAll | `/api/invitation-token` | Required | Get all invitation tokens |
-| GET | GetById | `/api/invitation-token/{id:guid}` | Required | Get token by ID |
-| POST | Create | `/api/invitation-token` | Required | Create new invitation token |
-| PUT | UpdateExpiry | `/api/invitation-token/{id:guid}/expiry` | Required | Update token expiry date |
-| DELETE | Delete | `/api/invitation-token/{id:guid}` | Required | Delete invitation token |
 
 ---
 
@@ -342,44 +328,6 @@ Vult.Api/
 - `Create` = 3
 - `Delete` = 4
 
-#### InvitationTokenType
-**Location**: `src/Vult.Core/Model/InvitationTokenAggregate/Enums/InvitationTokenType.cs`
-- `Standard` = 1
-
-### 3.5 Invitation Token DTOs
-
-#### InvitationTokenDto
-**Location**: `src/Vult.Api/Features/InvitationTokens/InvitationTokenDto.cs`
-
-```json
-{
-    "invitationTokenId": "guid",
-    "value": "string (token value)",
-    "expiry": "datetime | null",
-    "type": 1
-}
-```
-
-#### CreateInvitationTokenCommand
-**Location**: `src/Vult.Api/Features/InvitationTokens/CreateInvitationTokenCommand.cs`
-
-```json
-{
-    "expiry": "datetime (optional)",
-    "type": 1
-}
-```
-
-#### UpdateInvitationTokenExpiryCommand
-**Location**: `src/Vult.Api/Features/InvitationTokens/UpdateInvitationTokenExpiryCommand.cs`
-
-```json
-{
-    "invitationTokenId": "guid (set from URL)",
-    "expiry": "datetime | null"
-}
-```
-
 ---
 
 ## 4. AUTHENTICATION AND AUTHORIZATION
@@ -465,7 +413,6 @@ Implemented as MediatR Pipeline Behavior that:
 - `User`
 - `Role`
 - `Product`
-- `InvitationToken`
 
 #### Privilege Format
 Privileges are stored as claims in the format: `{Operation}{Resource}`
@@ -473,7 +420,6 @@ Privileges are stored as claims in the format: `{Operation}{Resource}`
 **Examples**:
 - `ReadUser` - Permission to read user data
 - `CreateProduct` - Permission to create products
-- `WriteInvitationToken` - Permission to modify invitation tokens
 - `DeleteUser` - Permission to delete users
 
 ### 4.3 Protected Endpoints
@@ -491,7 +437,6 @@ Endpoints requiring `[Authorize]` attribute (JWT token required):
 - `POST /api/products`
 - `PUT /api/products/{id}`
 - `DELETE /api/products/{id}`
-- All InvitationToken endpoints
 - All SignalR hub connections
 
 ### 4.4 Allowed Anonymous Endpoints
@@ -607,7 +552,6 @@ Endpoints with `[AllowAnonymous]` attribute (no token required):
 #### Not Found Errors
 - User ID not found
 - Product ID not found
-- Invitation token not found
 
 ---
 
@@ -1123,105 +1067,6 @@ true
 
 ---
 
-### 7.4 Invitation Token Endpoints
-
-#### GET /api/invitation-token
-**Summary**: Get all invitation tokens
-**Authentication**: Required
-**Authorization**: Read permission on InvitationToken aggregate
-
-**Success Response** (200 OK):
-```json
-{
-    "invitationTokens": [
-        {
-            "invitationTokenId": "guid",
-            "value": "token-string",
-            "expiry": "2025-12-31T23:59:59Z",
-            "type": 1
-        }
-    ]
-}
-```
-
----
-
-#### GET /api/invitation-token/{id:guid}
-**Summary**: Get invitation token by ID
-**Authentication**: Required
-**Authorization**: Read permission on InvitationToken aggregate
-
-**Path Parameters**:
-- `id` (guid): Token ID
-
-**Success Response** (200 OK): InvitationTokenDto
-**Error Response** (404 Not Found):
-```json
-{}
-```
-
----
-
-#### POST /api/invitation-token
-**Summary**: Create new invitation token
-**Authentication**: Required
-**Authorization**: Create permission on InvitationToken aggregate
-
-**Request Body**:
-```json
-{
-    "expiry": "2025-12-31T23:59:59Z (optional)",
-    "type": 1
-}
-```
-
-**Success Response** (201 Created): InvitationTokenDto
-
----
-
-#### PUT /api/invitation-token/{id:guid}/expiry
-**Summary**: Update token expiry date
-**Authentication**: Required
-**Authorization**: Write permission on InvitationToken aggregate
-
-**Path Parameters**:
-- `id` (guid): Token ID
-
-**Request Body**:
-```json
-{
-    "expiry": "2025-12-31T23:59:59Z or null"
-}
-```
-
-**Success Response** (200 OK): InvitationTokenDto
-**Error Response** (404 Not Found):
-```json
-{}
-```
-
----
-
-#### DELETE /api/invitation-token/{id:guid}
-**Summary**: Delete invitation token
-**Authentication**: Required
-**Authorization**: Delete permission on InvitationToken aggregate
-
-**Path Parameters**:
-- `id` (guid): Token ID
-
-**Success Response** (204 No Content):
-```
-(empty)
-```
-
-**Error Response** (404 Not Found):
-```json
-{}
-```
-
----
-
 ## 8. SIGNALR HUB SPECIFICATION
 
 ### 8.1 Ingestion Hub
@@ -1356,11 +1201,9 @@ true
 | Service Configuration | `src/Vult.Api/ConfigureServices.cs` |
 | User Controller | `src/Vult.Api/Controllers/UserController.cs` |
 | Products Controller | `src/Vult.Api/Controllers/ProductsController.cs` |
-| InvitationToken Controller | `src/Vult.Api/Controllers/InvitationTokenController.cs` |
 | Auth Features | `src/Vult.Api/Features/Auth/` |
 | User Features | `src/Vult.Api/Features/Users/` |
 | Product Features | `src/Vult.Api/Features/Products/` |
-| InvitationToken Features | `src/Vult.Api/Features/InvitationTokens/` |
 | Authorization Behavior | `src/Vult.Api/Behaviours/ResourceOperationAuthorizationBehavior.cs` |
 | SignalR Hub | `src/Vult.Api/Hubs/IngestionHub.cs` |
 | CORS Configuration | `src/Vult.Api/Configuration/CorsSettings.cs` |
@@ -1374,8 +1217,8 @@ true
 **Framework**: ASP.NET Core
 **Last Updated**: 2025-12-26
 **Frameworks Supported**: .NET 10.0, .NET 8.0
-**Total Endpoints**: 21
-**Total Controllers**: 3
+**Total Endpoints**: 16
+**Total Controllers**: 2
 **Authentication Method**: JWT Bearer Token
 **Database**: SQL Server
 

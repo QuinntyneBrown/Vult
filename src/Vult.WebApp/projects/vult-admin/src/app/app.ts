@@ -16,8 +16,7 @@ import { AuthService } from './core/services';
 export const Aggregates = {
   User: 'User',
   Role: 'Role',
-  Product: 'Product',
-  InvitationToken: 'InvitationToken'
+  Product: 'Product'
 } as const;
 
 @Component({

@@ -739,104 +739,7 @@ foreach (var role in user.Roles)
 
 ---
 
-## 6. Invitation System Requirements
-
-### REQ-INV-001: Invitation Token Entity
-
-**Requirement:** The system shall support invitation tokens for user registration with type classification and optional expiration.
-
-
-**Acceptance Criteria:**
-- [ ] Each invitation token has a unique identifier
-- [ ] Token value is unique and secure
-- [ ] Tokens can have optional expiration dates
-- [ ] Tokens are classified by invitation type
-- [ ] Expired tokens are invalid for registration
-- [ ] Token expiry can be updated
-
-**Invitation Token Schema:**
-
-| Property | Type | Constraints | Description |
-|----------|------|-------------|-------------|
-| InvitationTokenId | Guid | Primary Key | Unique identifier |
-| Value | string | Required, Unique | Token value |
-| Expiry | DateTime? | Nullable | Expiration date/time |
-| Type | InvitationTokenType | Required | Token type classification |
-
----
-
-### REQ-INV-002: Invitation Token Types
-
-**Requirement:** The system shall support multiple invitation token types corresponding to different user roles and registration paths.
-
-
-**Acceptance Criteria:**
-- [ ] Token type determines initial role assignment
-
-**Invitation Types:**
-
-| Type | Value | Default Role | Description |
-|------|-------|--------------|-------------|
-| TBD | 1 | TBD | TBD |
-
----
-
-### REQ-INV-003: Invitation Token Management
-
-**Requirement:** The system shall provide CRUD operations for managing invitation tokens.
-
-
-**Acceptance Criteria:**
-- [ ] Authorized users can create invitation tokens
-- [ ] Invitation tokens can be retrieved individually or as list
-- [ ] Invitation tokens support pagination
-- [ ] Token expiry can be updated
-- [ ] Tokens can be deleted/invalidated
-- [ ] All operations require appropriate authorization
-
-**API Endpoints:**
-
-| Method | Endpoint | Authorization | Description |
-|--------|----------|---------------|-------------|
-| POST | /api/invitation-token | Create on InvitationToken | Create new token |
-| GET | /api/invitation-token | Read on InvitationToken | Get all tokens |
-| GET | /api/invitation-token/{id} | Read on InvitationToken | Get specific token |
-| GET | /api/invitation-token/page | Read on InvitationToken | Get paginated tokens |
-| PUT | /api/invitation-token/{id}/expiry | Write on InvitationToken | Update expiry |
-| DELETE | /api/invitation-token/{id} | Delete on InvitationToken | Remove token |
-
----
-
-### REQ-INV-004: Invitation Token Validation
-
-**Requirement:** The system shall validate invitation tokens before allowing registration and verify token existence, expiration, and type.
-
-
-**Acceptance Criteria:**
-- [ ] Token value must exist in database
-- [ ] Token must not be expired (if expiry is set)
-- [ ] Token type must be valid
-- [ ] Validation result is communicated via domain event
-- [ ] Invalid tokens cannot be used for registration
-
-**Validation Rules:**
-
-```csharp
-// Token must exist
-var token = await repository.GetByValue(tokenValue);
-if (token == null) return Invalid;
-
-// Token must not be expired
-if (token.Expiry.HasValue && token.Expiry.Value < DateTime.UtcNow)
-    return Expired;
-
-// Token is valid
-return Valid;
-```
-
----
-
-## 7. Security Infrastructure Requirements
+## 6. Security Infrastructure Requirements
 
 ### REQ-SEC-001: Authentication Middleware
 
@@ -906,7 +809,7 @@ services.AddCors(options =>
 
 ---
 
-## 8. Audit & Logging Requirements
+## 7. Audit & Logging Requirements
 
 ### REQ-LOG-001: Request Logging with User Context
 
@@ -949,7 +852,7 @@ HTTP GET /api/user/current (a1b2c3d4-e5f6-7890-abcd-ef1234567890) responded 200 
 
 ---
 
-## 9. Configuration & Environment Requirements
+## 8. Configuration & Environment Requirements
 
 ### REQ-CFG-001: Environment-Specific Configuration
 
@@ -1009,7 +912,7 @@ HTTP GET /api/user/current (a1b2c3d4-e5f6-7890-abcd-ef1234567890) responded 200 
 
 ---
 
-## 10. Testing Requirements
+## 9. Testing Requirements
 
 ### REQ-TEST-001: Unit Test Coverage
 
@@ -1054,13 +957,6 @@ The following domain events are raised during identity operations:
 |-------|---------|---------|
 | CreateUser | User creation request | Initiate user creation |
 | CreatedUser | User created | Confirm user creation |
-
-### Invitation Events
-
-| Event | Trigger | Purpose |
-|-------|---------|---------|
-| ValidateInvitationToken | Registration attempt | Validate token |
-| ValidatedInvitationToken | Validation complete | Provide validation result |
 
 ---
 
