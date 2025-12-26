@@ -154,6 +154,32 @@
           "defaultConfiguration": "development"
         }
       }
+    },
+    "vult-components": {
+      "projectType": "library",
+      "root": "projects/vult-components",
+      "sourceRoot": "projects/vult-components/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/vult-components/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/vult-components/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/vult-components/tsconfig.spec.json"
+          }
+        }
+      }
     }
   }
 }

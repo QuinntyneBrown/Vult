@@ -53,6 +53,9 @@
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.0.0",
     "jest-preset-angular": "^16.0.0",
-    "typescript": "~5.9.2"
+    "jsdom": "^27.1.0",
+    "ng-packagr": "^21.0.0",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
   }
 }

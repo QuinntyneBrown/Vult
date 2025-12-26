@@ -13,12 +13,24 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
-    "paths": {}
+    "paths": {
+      "vult-components": [
+        "./dist/vult-components"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "references": [
+    {
+      "path": "./projects/vult-components/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/vult-components/tsconfig.spec.json"
+    }
+  ]
 }
