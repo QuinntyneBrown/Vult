@@ -293,6 +293,43 @@ export type HeroTheme = 'light' | 'dark';
       }
     }
 
+    @media (max-width: 400px) {
+      .hero__content {
+        padding: 16px;
+      }
+
+      .hero__title {
+        font-size: 32px;
+        letter-spacing: -0.5px;
+      }
+
+      .hero__overline {
+        font-size: 14px;
+      }
+
+      .hero__subtitle {
+        font-size: 14px;
+      }
+
+      .hero--small {
+        min-height: 250px;
+      }
+
+      .hero--medium {
+        min-height: 320px;
+      }
+
+      .hero--large {
+        min-height: 400px;
+      }
+
+      .hero__cta {
+        height: 40px;
+        padding: 0 20px;
+        font-size: 14px;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .hero__cta {
         transition: none;
