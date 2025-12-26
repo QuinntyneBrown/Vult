@@ -62,13 +62,7 @@ const meta: Meta<ProductDetailsAccordionComponent> = {
       options: ['single', 'multiple']
     },
     ariaLabel: { control: 'text' }
-  },
-  decorators: [
-    (story) => ({
-      ...story,
-      template: `<div style="max-width: 500px;">${story.template}</div>`
-    })
-  ]
+  }
 };
 
 export default meta;

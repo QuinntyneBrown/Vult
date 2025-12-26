@@ -47,13 +47,7 @@ export const FullWidth: Story = {
     isFavorited: false,
     loading: false,
     variant: 'full-width'
-  },
-  decorators: [
-    (story) => ({
-      ...story,
-      template: `<div style="max-width: 400px;">${story.template}</div>`
-    })
-  ]
+  }
 };
 
 export const FullWidthFavorited: Story = {
@@ -61,13 +55,7 @@ export const FullWidthFavorited: Story = {
     isFavorited: true,
     loading: false,
     variant: 'full-width'
-  },
-  decorators: [
-    (story) => ({
-      ...story,
-      template: `<div style="max-width: 400px;">${story.template}</div>`
-    })
-  ]
+  }
 };
 
 export const FullWidthLoading: Story = {
@@ -75,13 +63,7 @@ export const FullWidthLoading: Story = {
     isFavorited: false,
     loading: true,
     variant: 'full-width'
-  },
-  decorators: [
-    (story) => ({
-      ...story,
-      template: `<div style="max-width: 400px;">${story.template}</div>`
-    })
-  ]
+  }
 };
 
 export const IconOnlyAllStates: Story = {

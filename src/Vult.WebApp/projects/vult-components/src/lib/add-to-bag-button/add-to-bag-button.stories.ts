@@ -15,13 +15,7 @@ const meta: Meta<AddToBagButtonComponent> = {
     showIcon: { control: 'boolean' },
     ariaLabel: { control: 'text' },
     errorMessage: { control: 'text' }
-  },
-  decorators: [
-    (story) => ({
-      ...story,
-      template: `<div style="max-width: 400px;">${story.template}</div>`
-    })
-  ]
+  }
 };
 
 export default meta;
