@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Result Counter Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 24px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .demo-section {
+            margin-bottom: 32px;
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 4px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 48px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .demo-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .demo-label {
+            font-size: 12px;
+            color: #757575;
+        }
+
+        /* Result Counter */
+        .result-counter {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            color: #111111;
+        }
+
+        .result-counter__number {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Loading skeleton */
+        .result-counter--loading .result-counter__number {
+            display: inline-block;
+            width: 40px;
+            height: 16px;
+            background-color: #E5E5E5;
+            border-radius: 2px;
+            vertical-align: middle;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Toolbar Context */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 48px;
+            background: #fff;
+        }
+
+        .sort-dropdown {
+            font-size: 14px;
+            color: #757575;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">Result Counter Variations</div>
+    <div class="demo-section">
+        <div class="demo-row">
+            <div class="demo-item">
+                <span class="demo-label">Standard</span>
+                <p class="result-counter" role="status" aria-live="polite">
+                    <span class="result-counter__number">234</span> Results
+                </p>
+            </div>
+
+            <div class="demo-item">
+                <span class="demo-label">Large Count</span>
+                <p class="result-counter" role="status" aria-live="polite">
+                    <span class="result-counter__number">2,456</span> Results
+                </p>
+            </div>
+
+            <div class="demo-item">
+                <span class="demo-label">Singular</span>
+                <p class="result-counter" role="status" aria-live="polite">
+                    <span class="result-counter__number">1</span> Result
+                </p>
+            </div>
+
+            <div class="demo-item">
+                <span class="demo-label">Zero</span>
+                <p class="result-counter" role="status" aria-live="polite">
+                    <span class="result-counter__number">0</span> Results
+                </p>
+            </div>
+
+            <div class="demo-item">
+                <span class="demo-label">Loading</span>
+                <p class="result-counter result-counter--loading" role="status" aria-live="polite">
+                    <span class="result-counter__number"></span> Results
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">In Toolbar Context</div>
+    <div class="demo-section" style="padding: 0;">
+        <div class="toolbar">
+            <p class="result-counter" role="status" aria-live="polite">
+                <span class="result-counter__number">234</span> Results
+            </p>
+            <span class="sort-dropdown">Sort By: Featured ▼</span>
+        </div>
+    </div>
+</body>
+</html>

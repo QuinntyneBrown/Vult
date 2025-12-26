@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Checkbox Filter Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 24px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .demo-section {
+            margin-bottom: 32px;
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 4px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .demo-column {
+            min-width: 200px;
+        }
+
+        .state-label {
+            font-size: 12px;
+            color: #757575;
+            margin-bottom: 8px;
+        }
+
+        /* Checkbox Filter */
+        .checkbox-filter {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .checkbox-filter:hover .checkbox-filter__label {
+            color: #757575;
+        }
+
+        .checkbox-filter__input {
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid #111111;
+            border-radius: 2px;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            background-color: transparent;
+        }
+
+        .checkbox-filter__input:checked {
+            background-color: #111111;
+        }
+
+        .checkbox-filter__input:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 5px;
+            height: 9px;
+            border: solid #FFFFFF;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-filter__input:focus {
+            outline: 2px solid #111111;
+            outline-offset: 2px;
+        }
+
+        .checkbox-filter__input:disabled {
+            border-color: #CCCCCC;
+            cursor: not-allowed;
+        }
+
+        .checkbox-filter__input:disabled + .checkbox-filter__label {
+            color: #CCCCCC;
+        }
+
+        .checkbox-filter__label {
+            font-size: 16px;
+            color: #111111;
+            flex: 1;
+        }
+
+        .checkbox-filter__count {
+            font-size: 14px;
+            color: #757575;
+        }
+
+        /* Filter Group */
+        .filter-group {
+            width: 260px;
+            background: #fff;
+            padding: 16px;
+        }
+
+        .filter-group__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E5E5E5;
+            margin-bottom: 8px;
+        }
+
+        .filter-group__title {
+            font-size: 16px;
+            font-weight: 400;
+            color: #111111;
+        }
+
+        .show-more {
+            font-size: 14px;
+            font-weight: 500;
+            color: #111111;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 0;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">Checkbox States</div>
+    <div class="demo-section">
+        <div class="demo-row">
+            <div class="demo-column">
+                <p class="state-label">Unchecked</p>
+                <label class="checkbox-filter">
+                    <input type="checkbox" class="checkbox-filter__input">
+                    <span class="checkbox-filter__label">Nike</span>
+                </label>
+            </div>
+
+            <div class="demo-column">
+                <p class="state-label">Checked</p>
+                <label class="checkbox-filter">
+                    <input type="checkbox" class="checkbox-filter__input" checked>
+                    <span class="checkbox-filter__label">Nike</span>
+                </label>
+            </div>
+
+            <div class="demo-column">
+                <p class="state-label">Disabled</p>
+                <label class="checkbox-filter">
+                    <input type="checkbox" class="checkbox-filter__input" disabled>
+                    <span class="checkbox-filter__label">Nike</span>
+                </label>
+            </div>
+
+            <div class="demo-column">
+                <p class="state-label">With Count</p>
+                <label class="checkbox-filter">
+                    <input type="checkbox" class="checkbox-filter__input">
+                    <span class="checkbox-filter__label">Nike</span>
+                    <span class="checkbox-filter__count">(124)</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">Filter Group Example</div>
+    <div class="demo-section">
+        <div class="filter-group">
+            <div class="filter-group__header">
+                <span class="filter-group__title">Brand</span>
+            </div>
+
+            <label class="checkbox-filter">
+                <input type="checkbox" class="checkbox-filter__input" checked>
+                <span class="checkbox-filter__label">Nike</span>
+                <span class="checkbox-filter__count">(124)</span>
+            </label>
+
+            <label class="checkbox-filter">
+                <input type="checkbox" class="checkbox-filter__input">
+                <span class="checkbox-filter__label">Jordan</span>
+                <span class="checkbox-filter__count">(56)</span>
+            </label>
+
+            <label class="checkbox-filter">
+                <input type="checkbox" class="checkbox-filter__input" checked>
+                <span class="checkbox-filter__label">Nike Sportswear</span>
+                <span class="checkbox-filter__count">(89)</span>
+            </label>
+
+            <label class="checkbox-filter">
+                <input type="checkbox" class="checkbox-filter__input">
+                <span class="checkbox-filter__label">ACG</span>
+                <span class="checkbox-filter__count">(23)</span>
+            </label>
+
+            <label class="checkbox-filter">
+                <input type="checkbox" class="checkbox-filter__input">
+                <span class="checkbox-filter__label">NikeLab</span>
+                <span class="checkbox-filter__count">(12)</span>
+            </label>
+
+            <button class="show-more">+ 12 More</button>
+        </div>
+    </div>
+</body>
+</html>

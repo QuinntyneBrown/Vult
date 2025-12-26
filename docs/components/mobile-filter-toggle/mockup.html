@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Mobile Filter Toggle Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 24px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .demo-section {
+            margin-bottom: 32px;
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 4px;
+        }
+
+        /* Mobile Frame */
+        .mobile-frame {
+            max-width: 375px;
+            height: 500px;
+            border: 1px solid #e5e5e5;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #f5f5f5;
+            position: relative;
+        }
+
+        .mobile-content {
+            padding: 16px;
+            height: calc(100% - 80px);
+            overflow-y: auto;
+        }
+
+        .mobile-header {
+            background: #fff;
+            padding: 12px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .product-placeholder {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .product-placeholder-card {
+            background: #fff;
+            aspect-ratio: 3/4;
+            border-radius: 4px;
+        }
+
+        /* Mobile Filter Bar */
+        .mobile-filter-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background-color: #FFFFFF;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-filter-buttons {
+            display: flex;
+            border: 1px solid #E5E5E5;
+        }
+
+        .mobile-filter-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 48px;
+            padding: 0 16px;
+            background-color: #FFFFFF;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            color: #111111;
+            cursor: pointer;
+        }
+
+        .mobile-filter-button:first-child {
+            border-right: 1px solid #E5E5E5;
+        }
+
+        .mobile-filter-button:hover {
+            background-color: #F5F5F5;
+        }
+
+        .mobile-filter-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+        }
+
+        .mobile-filter-button--active {
+            background-color: #111111;
+            color: #FFFFFF;
+        }
+
+        .mobile-filter-button__count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            background-color: #111111;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 10px;
+        }
+
+        .mobile-filter-button--active .mobile-filter-button__count {
+            background-color: #FFFFFF;
+            color: #111111;
+        }
+
+        /* Standalone buttons demo */
+        .button-demo-row {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .button-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .button-demo-label {
+            font-size: 12px;
+            color: #757575;
+        }
+
+        .button-demo .mobile-filter-buttons {
+            width: 280px;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">Mobile Filter Toggle States</div>
+    <div class="demo-section">
+        <div class="button-demo-row">
+            <div class="button-demo">
+                <span class="button-demo-label">Default</span>
+                <div class="mobile-filter-buttons">
+                    <button class="mobile-filter-button">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 4h18M3 12h18M3 20h18"/>
+                        </svg>
+                        <span>Filter</span>
+                    </button>
+                    <button class="mobile-filter-button">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 6h18M6 12h12M9 18h6"/>
+                        </svg>
+                        <span>Sort</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="button-demo">
+                <span class="button-demo-label">With Active Filters</span>
+                <div class="mobile-filter-buttons">
+                    <button class="mobile-filter-button">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 4h18M3 12h18M3 20h18"/>
+                        </svg>
+                        <span>Filter</span>
+                        <span class="mobile-filter-button__count">3</span>
+                    </button>
+                    <button class="mobile-filter-button">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 6h18M6 12h12M9 18h6"/>
+                        </svg>
+                        <span>Sort</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="button-demo">
+                <span class="button-demo-label">Filter Active</span>
+                <div class="mobile-filter-buttons">
+                    <button class="mobile-filter-button mobile-filter-button--active">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 4h18M3 12h18M3 20h18"/>
+                        </svg>
+                        <span>Filter</span>
+                        <span class="mobile-filter-button__count">3</span>
+                    </button>
+                    <button class="mobile-filter-button">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 6h18M6 12h12M9 18h6"/>
+                        </svg>
+                        <span>Sort</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">In Mobile Context</div>
+    <div class="demo-section" style="display: flex; gap: 24px; flex-wrap: wrap;">
+        <div class="mobile-frame">
+            <div class="mobile-header">Men's New Releases</div>
+            <div class="mobile-content">
+                <div class="product-placeholder">
+                    <div class="product-placeholder-card"></div>
+                    <div class="product-placeholder-card"></div>
+                    <div class="product-placeholder-card"></div>
+                    <div class="product-placeholder-card"></div>
+                </div>
+            </div>
+            <div class="mobile-filter-bar">
+                <div class="mobile-filter-buttons">
+                    <button class="mobile-filter-button">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 4h18M3 12h18M3 20h18"/>
+                        </svg>
+                        <span>Filter</span>
+                    </button>
+                    <button class="mobile-filter-button">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 6h18M6 12h12M9 18h6"/>
+                        </svg>
+                        <span>Sort</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mobile-frame">
+            <div class="mobile-header">Men's New Releases</div>
+            <div class="mobile-content">
+                <div class="product-placeholder">
+                    <div class="product-placeholder-card"></div>
+                    <div class="product-placeholder-card"></div>
+                    <div class="product-placeholder-card"></div>
+                    <div class="product-placeholder-card"></div>
+                </div>
+            </div>
+            <div class="mobile-filter-bar">
+                <div class="mobile-filter-buttons">
+                    <button class="mobile-filter-button">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 4h18M3 12h18M3 20h18"/>
+                        </svg>
+                        <span>Filter</span>
+                        <span class="mobile-filter-button__count">3</span>
+                    </button>
+                    <button class="mobile-filter-button">
+                        <svg viewBox="0 0 24 24" stroke-width="1.5">
+                            <path d="M3 6h18M6 12h12M9 18h6"/>
+                        </svg>
+                        <span>Sort</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

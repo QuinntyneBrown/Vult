@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Size Selector Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 24px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .demo-section {
+            margin-bottom: 32px;
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 4px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .demo-column {
+            min-width: 100px;
+        }
+
+        .state-label {
+            font-size: 12px;
+            color: #757575;
+            margin-bottom: 8px;
+        }
+
+        /* Size Grid */
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 220px;
+        }
+
+        .size-button {
+            height: 48px;
+            padding: 8px;
+            background-color: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 0;
+            font-family: inherit;
+            font-size: 14px;
+            color: #111111;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.15s ease;
+        }
+
+        .size-button:hover {
+            border-color: #111111;
+        }
+
+        .size-button--selected {
+            border: 1.5px solid #111111;
+        }
+
+        .size-button--unavailable {
+            color: #CCCCCC;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            width: 260px;
+            background: #fff;
+            padding: 16px;
+            border: 1px solid #E5E5E5;
+        }
+
+        .filter-section__header {
+            font-size: 16px;
+            color: #111111;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E5E5E5;
+            margin-bottom: 16px;
+        }
+
+        /* State buttons for demo */
+        .state-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .state-button-demo {
+            height: 48px;
+            width: 60px;
+            padding: 8px;
+            background-color: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            font-size: 14px;
+            color: #111111;
+            text-align: center;
+        }
+
+        .state-button-demo.hover {
+            border-color: #111111;
+        }
+
+        .state-button-demo.selected {
+            border: 1.5px solid #111111;
+        }
+
+        .state-button-demo.unavailable {
+            color: #CCCCCC;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">Size Button States</div>
+    <div class="demo-section">
+        <div class="demo-row">
+            <div class="demo-column">
+                <p class="state-label">Default</p>
+                <button class="state-button-demo">10</button>
+            </div>
+            <div class="demo-column">
+                <p class="state-label">Hover</p>
+                <button class="state-button-demo hover">10</button>
+            </div>
+            <div class="demo-column">
+                <p class="state-label">Selected</p>
+                <button class="state-button-demo selected">10</button>
+            </div>
+            <div class="demo-column">
+                <p class="state-label">Unavailable</p>
+                <button class="state-button-demo unavailable">10</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">Size Grid (Numeric - Shoes)</div>
+    <div class="demo-section">
+        <div class="size-grid" role="group" aria-label="Filter by size">
+            <button class="size-button">7</button>
+            <button class="size-button">7.5</button>
+            <button class="size-button">8</button>
+            <button class="size-button">8.5</button>
+            <button class="size-button size-button--selected" aria-pressed="true">9</button>
+            <button class="size-button">9.5</button>
+            <button class="size-button size-button--selected" aria-pressed="true">10</button>
+            <button class="size-button">10.5</button>
+            <button class="size-button">11</button>
+            <button class="size-button size-button--unavailable" aria-disabled="true">11.5</button>
+            <button class="size-button">12</button>
+            <button class="size-button size-button--unavailable" aria-disabled="true">13</button>
+        </div>
+    </div>
+
+    <div class="section-label">Size Grid (Text - Clothing)</div>
+    <div class="demo-section">
+        <div class="size-grid" role="group" aria-label="Filter by size" style="max-width: 220px;">
+            <button class="size-button">XS</button>
+            <button class="size-button size-button--selected">S</button>
+            <button class="size-button">M</button>
+            <button class="size-button">L</button>
+            <button class="size-button">XL</button>
+            <button class="size-button size-button--unavailable">XXL</button>
+        </div>
+    </div>
+
+    <div class="section-label">In Filter Section Context</div>
+    <div class="demo-section">
+        <div class="filter-section">
+            <div class="filter-section__header">Size</div>
+            <div class="size-grid" role="group" aria-label="Filter by size">
+                <button class="size-button">7</button>
+                <button class="size-button">7.5</button>
+                <button class="size-button">8</button>
+                <button class="size-button">8.5</button>
+                <button class="size-button size-button--selected">9</button>
+                <button class="size-button">9.5</button>
+                <button class="size-button">10</button>
+                <button class="size-button">10.5</button>
+                <button class="size-button">11</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
