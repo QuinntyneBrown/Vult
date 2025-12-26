@@ -23,6 +23,11 @@ if (app.Environment.IsDevelopment())
             var context = services.GetRequiredService<VultContext>();
 
             // Run migrations to ensure database is up to date
+
+            await context.Database.EnsureDeletedAsync();
+            
+            await context.Database.EnsureCreatedAsync();
+
             await context.Database.MigrateAsync();
 
             var seedService = services.GetRequiredService<Vult.Infrastructure.ISeedService>();
