@@ -134,8 +134,8 @@ export class Home {
 
   constructor(private router: Router) {}
 
-  onShopNowClick(): void {
-    this.router.navigate(['/catalog']);
+  onShopClick(): void {
+    this.router.navigate(['/products']);
   }
 
   onProductClick(product: ProductCardData): void {
