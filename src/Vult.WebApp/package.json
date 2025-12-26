@@ -14,7 +14,9 @@
     "test:coverage": "jest --coverage --config jest.config.js",
     "e2e": "playwright test",
     "e2e:vult": "playwright test --project=vult",
-    "e2e:admin": "playwright test --project=vult-admin"
+    "e2e:admin": "playwright test --project=vult-admin",
+    "storybook": "ng run vult-components:storybook",
+    "build-storybook": "ng run vult-components:build-storybook"
   },
   "prettier": {
     "printWidth": 100,
@@ -45,16 +47,19 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^21.0.4",
     "@angular/build": "^21.0.3",
     "@angular/cli": "^21.0.3",
     "@angular/compiler-cli": "^21.0.0",
     "@playwright/test": "^1.56.1",
+    "@storybook/angular": "^10.1.10",
     "@types/jest": "^30.0.0",
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.0.0",
     "jest-preset-angular": "^16.0.0",
     "jsdom": "^27.1.0",
     "ng-packagr": "^21.0.0",
+    "storybook": "^10.1.10",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
