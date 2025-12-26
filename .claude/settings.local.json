@@ -26,7 +26,9 @@
       "Bash(do sed -i 's/Nike Air Max/Air Max/g; s/Nike Dri-FIT/Dri-FIT/g; s/Nike Pegasus/Pegasus/g; s/Nike React/React/g; s/Nike Dunk/Dunk/g; s/Nike Air Force/Air Force/g; s/Nike Windrunner/Windrunner/g; s/Nike Brasilia/Brasilia/g; s/Nike Tech/Vult Tech/g; s/Nike ISPA/ISPA/g; s/\"\"\"\"Nike/\"\"\"\"Vult/g; s/\"\"\"\">Nike</\"\"\"\">Vult</g; s/About Nike/About Vult/g; s/Nike App/Vult App/g; s/Nike Run Club/Vult Run Club/g; s/Nike Training Club/Vult Training Club/g; s/Nike, Inc\\./Vult, Inc./g; s/Nike Members/Members/g; s/Nike Return Policy/Return Policy/g; s/Nike Sportswear/Sportswear/g; s/NikeLab/Lab/g; s/Nike website/website/g; s/Nike e-commerce/e-commerce/g' \"$file\")",
       "Bash(done)",
       "Bash(cd:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(dir:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []
