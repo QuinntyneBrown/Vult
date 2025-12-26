@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Secondary Button Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 48px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 48px;
+        }
+
+        /* Secondary Button Base */
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-secondary:focus {
+            outline: 2px solid #111111;
+            outline-offset: 2px;
+        }
+
+        /* Outlined Variant */
+        .btn-secondary.outlined {
+            background-color: transparent;
+            border: 1.5px solid #111111;
+            color: #111111;
+            border-radius: 30px;
+        }
+
+        .btn-secondary.outlined:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary.outlined:active {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: scale(0.95);
+        }
+
+        /* Text Variant */
+        .btn-secondary.text {
+            background: none;
+            border: none;
+            color: #111111;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .btn-secondary.text:hover {
+            text-decoration-thickness: 2px;
+        }
+
+        .btn-secondary.text:active {
+            color: #333333;
+        }
+
+        /* Ghost Variant */
+        .btn-secondary.ghost {
+            background: none;
+            border: none;
+            color: #111111;
+            border-radius: 30px;
+        }
+
+        .btn-secondary.ghost:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary.ghost:active {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Size Variants */
+        .btn-secondary.small {
+            height: 36px;
+            padding: 0 20px;
+            font-size: 14px;
+        }
+
+        .btn-secondary.medium {
+            height: 44px;
+            padding: 0 24px;
+            font-size: 16px;
+        }
+
+        .btn-secondary.large {
+            height: 52px;
+            padding: 0 32px;
+            font-size: 16px;
+        }
+
+        .btn-secondary.text.small {
+            height: auto;
+            padding: 8px 0;
+        }
+
+        .btn-secondary.text.medium {
+            height: auto;
+            padding: 12px 0;
+        }
+
+        .btn-secondary.text.large {
+            height: auto;
+            padding: 16px 0;
+        }
+
+        /* Disabled State */
+        .btn-secondary:disabled,
+        .btn-secondary.disabled {
+            cursor: not-allowed;
+        }
+
+        .btn-secondary.outlined:disabled,
+        .btn-secondary.outlined.disabled {
+            border-color: #CCCCCC;
+            color: #CCCCCC;
+        }
+
+        .btn-secondary.outlined:disabled:hover,
+        .btn-secondary.outlined.disabled:hover {
+            background-color: transparent;
+        }
+
+        .btn-secondary.text:disabled,
+        .btn-secondary.text.disabled {
+            color: #CCCCCC;
+        }
+
+        .btn-secondary.ghost:disabled,
+        .btn-secondary.ghost.disabled {
+            color: #CCCCCC;
+        }
+
+        .btn-secondary.ghost:disabled:hover,
+        .btn-secondary.ghost.disabled:hover {
+            background-color: transparent;
+        }
+
+        /* Light Theme (For Dark Backgrounds) */
+        .btn-secondary.outlined.light {
+            border-color: #FFFFFF;
+            color: #FFFFFF;
+        }
+
+        .btn-secondary.outlined.light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary.text.light {
+            color: #FFFFFF;
+        }
+
+        .btn-secondary.ghost.light {
+            color: #FFFFFF;
+        }
+
+        .btn-secondary.ghost.light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Button with Icon */
+        .btn-secondary svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* State Demo */
+        .state-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .state-item {
+            text-align: center;
+        }
+
+        .state-label {
+            font-size: 12px;
+            color: #757575;
+            margin-top: 8px;
+        }
+
+        /* Dark Background */
+        .dark-background {
+            background-color: #111111;
+            padding: 32px;
+            border-radius: 8px;
+            margin-bottom: 48px;
+        }
+
+        .dark-background .section-label {
+            color: #757575;
+            border-bottom-color: #333333;
+        }
+
+        /* Button Pairing Demo */
+        .pairing-demo {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
+            padding: 0 24px;
+            font-size: 16px;
+            font-weight: 500;
+            background-color: #111111;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">Outlined Variant - Size Variants</div>
+
+    <div class="button-group">
+        <button class="btn-secondary outlined small">Small</button>
+        <button class="btn-secondary outlined medium">Medium</button>
+        <button class="btn-secondary outlined large">Large</button>
+    </div>
+
+    <div class="section-label">Text Variant - Size Variants</div>
+
+    <div class="button-group">
+        <button class="btn-secondary text small">Small Text</button>
+        <button class="btn-secondary text medium">Medium Text</button>
+        <button class="btn-secondary text large">Large Text</button>
+    </div>
+
+    <div class="section-label">Ghost Variant - Size Variants</div>
+
+    <div class="button-group">
+        <button class="btn-secondary ghost small">Small Ghost</button>
+        <button class="btn-secondary ghost medium">Medium Ghost</button>
+        <button class="btn-secondary ghost large">Large Ghost</button>
+    </div>
+
+    <div class="section-label">Outlined Button States</div>
+
+    <div class="state-demo">
+        <div class="state-item">
+            <button class="btn-secondary outlined medium">Default</button>
+            <p class="state-label">Default</p>
+        </div>
+        <div class="state-item">
+            <button class="btn-secondary outlined medium" style="background-color: rgba(0,0,0,0.05);">Hover</button>
+            <p class="state-label">Hover</p>
+        </div>
+        <div class="state-item">
+            <button class="btn-secondary outlined medium" style="background-color: rgba(0,0,0,0.1); transform: scale(0.95);">Pressed</button>
+            <p class="state-label">Active/Pressed</p>
+        </div>
+        <div class="state-item">
+            <button class="btn-secondary outlined medium" style="outline: 2px solid #111111; outline-offset: 2px;">Focus</button>
+            <p class="state-label">Focus</p>
+        </div>
+        <div class="state-item">
+            <button class="btn-secondary outlined medium" disabled>Disabled</button>
+            <p class="state-label">Disabled</p>
+        </div>
+    </div>
+
+    <div class="section-label">Text Button States</div>
+
+    <div class="state-demo">
+        <div class="state-item">
+            <button class="btn-secondary text medium">Default</button>
+            <p class="state-label">Default</p>
+        </div>
+        <div class="state-item">
+            <button class="btn-secondary text medium" style="text-decoration-thickness: 2px;">Hover</button>
+            <p class="state-label">Hover</p>
+        </div>
+        <div class="state-item">
+            <button class="btn-secondary text medium" style="color: #333333;">Pressed</button>
+            <p class="state-label">Active/Pressed</p>
+        </div>
+        <div class="state-item">
+            <button class="btn-secondary text medium" disabled>Disabled</button>
+            <p class="state-label">Disabled</p>
+        </div>
+    </div>
+
+    <div class="section-label">Button Pairing</div>
+
+    <div class="pairing-demo">
+        <button class="btn-primary">Shop Now</button>
+        <button class="btn-secondary outlined medium">Learn More</button>
+    </div>
+
+    <div class="pairing-demo">
+        <button class="btn-primary">Add to Bag</button>
+        <button class="btn-secondary text medium">View Details</button>
+    </div>
+
+    <div class="section-label">With Icons</div>
+
+    <div class="button-group">
+        <button class="btn-secondary outlined medium">
+            Learn More
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+            </svg>
+        </button>
+        <button class="btn-secondary text medium">
+            View All
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="section-label">Light Theme (On Dark Background)</div>
+
+    <div class="dark-background">
+        <div class="button-group">
+            <button class="btn-secondary outlined light medium">Outlined Light</button>
+            <button class="btn-secondary text light medium">Text Light</button>
+            <button class="btn-secondary ghost light medium">Ghost Light</button>
+        </div>
+    </div>
+</body>
+</html>
