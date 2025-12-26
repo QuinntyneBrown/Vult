@@ -1,0 +1,69 @@
+<div class="product-list">
+  <div class="product-list__header">
+    <h2 class="product-list__title">Products</h2>
+    <button mat-raised-button color="primary" (click)="onCreate()" type="button">
+      <mat-icon>add</mat-icon>
+      Create
+    </button>
+  </div>
+
+  @if (isLoading()) {
+    <div class="product-list__loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else {
+    <mat-nav-list class="product-list__items">
+      @for (item of products(); track item.productId) {
+        <mat-list-item
+          class="product-list__item"
+          [class.product-list__item--selected]="item.productId === selectedItemId()"
+          (click)="onSelectItem(item)">
+          @if (item.productImages && item.productImages.length > 0) {
+            <img matListItemAvatar
+                 [src]="'data:image/jpeg;base64,' + item.productImages[0].imageData"
+                 [alt]="item.description || 'Item image'"
+                 class="product-list__avatar">
+          } @else {
+            <mat-icon matListItemIcon>image_not_supported</mat-icon>
+          }
+          <div matListItemTitle class="product-list__item-title">
+            {{ item.brandName || 'Unknown Brand' }}
+            @if (item.itemType !== undefined) {
+              <mat-chip class="product-list__type-chip">{{ getItemTypeLabel(item.itemType) }}</mat-chip>
+            }
+          </div>
+          <div matListItemLine class="product-list__item-subtitle">
+            @if (item.size) { Size: {{ item.size }} }
+            @if (item.size && item.estimatedResaleValue) { • }
+            @if (item.estimatedResaleValue) { ${{ item.estimatedResaleValue.toFixed(2) }} }
+          </div>
+          <button mat-icon-button
+                  color="warn"
+                  matListItemMeta
+                  (click)="onDelete($event, item.productId)"
+                  title="Delete item"
+                  type="button">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      } @empty {
+        <div class="product-list__empty">
+          <mat-icon>inventory_2</mat-icon>
+          <p>No products found</p>
+        </div>
+      }
+    </mat-nav-list>
+
+    @if (totalCount() > 0) {
+      <mat-paginator
+        class="product-list__paginator"
+        [length]="totalCount()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageNumber() - 1"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    }
+  }
+</div>

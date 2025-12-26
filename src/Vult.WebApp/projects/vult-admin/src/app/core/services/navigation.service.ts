@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class NavigationService {
   lastPath: string = '/';
   loginUrl: string = '/login';
-  defaultWorkspacePath: string = '/catalog-items';
+  defaultWorkspacePath: string = '/products';
 
   constructor(private router: Router) {}
 

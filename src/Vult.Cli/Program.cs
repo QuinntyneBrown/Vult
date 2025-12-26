@@ -15,7 +15,7 @@ builder.Configuration.AddUserSecrets("6936f8f1-c7b6-4ab4-baa2-b45b13c02e87");
 var host = builder.Build();
 
 
-var service = host.Services.GetRequiredService<ICatalogItemIngestionService>();
+var service = host.Services.GetRequiredService<IProductIngestionService>();
 
 List<byte[]> photoBytes = new();
 

@@ -31,7 +31,7 @@ describe('Login (Admin)', () => {
     await TestBed.configureTestingModule({
       imports: [Login, ReactiveFormsModule],
       providers: [
-        provideRouter([{ path: 'catalog-items', component: Login }]),
+        provideRouter([{ path: 'products', component: Login }]),
         provideHttpClient(),
         provideHttpClientTesting(),
         provideAnimations(),
@@ -61,7 +61,7 @@ describe('Login (Admin)', () => {
     expect(passwordControl?.hasError('minlength')).toBeTruthy();
   });
 
-  it('should navigate to catalog-items on successful login', fakeAsync(() => {
+  it('should navigate to products on successful login', fakeAsync(() => {
     const navigateSpy = jest.spyOn(router, 'navigate');
     authServiceSpy.login.mockReturnValue(of({ accessToken: 'test-token' }));
 
@@ -69,7 +69,7 @@ describe('Login (Admin)', () => {
     component.onSubmit();
     tick();
 
-    expect(navigateSpy).toHaveBeenCalledWith(['/catalog-items']);
+    expect(navigateSpy).toHaveBeenCalledWith(['/products']);
   }));
 
   it('should display error message on login failure', fakeAsync(() => {

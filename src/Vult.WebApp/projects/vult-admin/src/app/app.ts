@@ -16,7 +16,7 @@ import { AuthService } from './core/services';
 export const Aggregates = {
   User: 'User',
   Role: 'Role',
-  CatalogItem: 'CatalogItem',
+  Product: 'Product',
   InvitationToken: 'InvitationToken'
 } as const;
 
@@ -39,12 +39,12 @@ export const Aggregates = {
 })
 export class App {
   // Privilege check observables for conditional UI rendering
-  canAccessCatalogItems$: Observable<boolean>;
+  canAccessProducts$: Observable<boolean>;
   canAccessUsers$: Observable<boolean>;
 
   constructor(public authService: AuthService) {
     // Set up privilege-based observables for navigation items
-    this.canAccessCatalogItems$ = this.authService.hasReadWritePrivileges$(Aggregates.CatalogItem);
+    this.canAccessProducts$ = this.authService.hasReadWritePrivileges$(Aggregates.Product);
     this.canAccessUsers$ = this.authService.hasReadWritePrivileges$(Aggregates.User);
   }
 

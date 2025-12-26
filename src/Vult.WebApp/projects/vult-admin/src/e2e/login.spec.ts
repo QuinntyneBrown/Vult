@@ -29,7 +29,7 @@ test.describe('Admin Login Page', () => {
     await expect(page.getByText('Password must be at least 6 characters')).toBeVisible();
   });
 
-  test('should redirect to catalog-items on successful login', async ({ page }) => {
+  test('should redirect to products on successful login', async ({ page }) => {
     await page.route('**/api/user/token', async (route) => {
       await route.fulfill({
         status: 200,
@@ -45,7 +45,7 @@ test.describe('Admin Login Page', () => {
     await page.getByLabel('Password').fill('adminpass');
     await page.getByRole('button', { name: 'Sign In' }).click();
 
-    await expect(page).toHaveURL(/\/catalog-items/);
+    await expect(page).toHaveURL(/\/products/);
   });
 
   test('should show error on invalid credentials', async ({ page }) => {

@@ -3,10 +3,10 @@
 
 import { test, expect } from '@playwright/test';
 
-const mockCatalogItems = {
+const mockProducts = {
   items: [
     {
-      catalogItemId: '1',
+      productId: '1',
       brandName: 'Adidas',
       description: 'Running shoes',
       size: '10',
@@ -16,10 +16,10 @@ const mockCatalogItems = {
       estimatedResaleValue: 80,
       createdDate: '2024-01-01T00:00:00Z',
       updatedDate: '2024-01-01T00:00:00Z',
-      catalogItemImages: []
+      productImages: []
     },
     {
-      catalogItemId: '2',
+      productId: '2',
       brandName: 'Adidas',
       description: 'Sports jacket',
       size: 'L',
@@ -29,7 +29,7 @@ const mockCatalogItems = {
       estimatedResaleValue: 100,
       createdDate: '2024-01-02T00:00:00Z',
       updatedDate: '2024-01-02T00:00:00Z',
-      catalogItemImages: []
+      productImages: []
     }
   ],
   totalCount: 2,
@@ -49,23 +49,23 @@ test.describe('Catalog Page', () => {
     });
   });
 
-  test('should display catalog items', async ({ page }) => {
-    await page.route('**/api/catalogitems**', async (route) => {
+  test('should display products', async ({ page }) => {
+    await page.route('**/api/products**', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(mockCatalogItems)
+        body: JSON.stringify(mockProducts)
       });
     });
 
     await page.goto('/catalog');
 
-    await expect(page.getByRole('heading', { name: 'Catalog Items' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Products' })).toBeVisible();
     await expect(page.getByText('Adidas')).toBeVisible();
   });
 
   test('should show empty state when no items', async ({ page }) => {
-    await page.route('**/api/catalogitems**', async (route) => {
+    await page.route('**/api/products**', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -81,16 +81,16 @@ test.describe('Catalog Page', () => {
 
     await page.goto('/catalog');
 
-    await expect(page.getByText('No catalog items yet')).toBeVisible();
+    await expect(page.getByText('No products yet')).toBeVisible();
     await expect(page.getByText('Upload photos to get started')).toBeVisible();
   });
 
   test('should toggle upload section', async ({ page }) => {
-    await page.route('**/api/catalogitems**', async (route) => {
+    await page.route('**/api/products**', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(mockCatalogItems)
+        body: JSON.stringify(mockProducts)
       });
     });
 
@@ -108,15 +108,15 @@ test.describe('Catalog Page', () => {
     await expect(page.getByText('Drag and drop photos here')).not.toBeVisible();
   });
 
-  test('should delete catalog item', async ({ page }) => {
-    await page.route('**/api/catalogitems**', async (route) => {
+  test('should delete product', async ({ page }) => {
+    await page.route('**/api/products**', async (route) => {
       if (route.request().method() === 'DELETE') {
         await route.fulfill({ status: 204 });
       } else {
         await route.fulfill({
           status: 200,
           contentType: 'application/json',
-          body: JSON.stringify(mockCatalogItems)
+          body: JSON.stringify(mockProducts)
         });
       }
     });

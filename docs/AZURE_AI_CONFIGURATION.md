@@ -65,11 +65,11 @@ The following configuration options are available in `appsettings.json`:
 
 ## Using the Services
 
-See the inline code documentation for detailed usage examples of IAzureAIService and ICatalogItemIngestionService.
+See the inline code documentation for detailed usage examples of IAzureAIService and IProductIngestionService.
 
 ## AI Response Mapping
 
-The service analyzes images and maps Azure AI responses to catalog item fields:
+The service analyzes images and maps Azure AI responses to product fields:
 
 - **Estimated MSRP**: Calculated based on detected item type and brand
 - **Estimated Resale Value**: 60% of MSRP by default

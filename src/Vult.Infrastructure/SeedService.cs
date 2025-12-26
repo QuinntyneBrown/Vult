@@ -51,7 +51,7 @@ public class SeedService : ISeedService
         };
 
         // Add all privileges for SystemAdministrator
-        var aggregates = new[] { "User", "Role", "CatalogItem", "InvitationToken" };
+        var aggregates = new[] { "User", "Role", "Product", "InvitationToken" };
         var accessRights = new[] { AccessRight.Create, AccessRight.Read, AccessRight.Write, AccessRight.Delete };
 
         foreach (var aggregate in aggregates)

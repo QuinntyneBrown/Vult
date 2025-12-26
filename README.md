@@ -131,8 +131,8 @@ Vult follows a layered, clean architecture inspired by the ZoomLoop repository. 
 
 Responsible for core business concepts and rules:
 
-- Domain models such as `CatalogItem`, `CatalogItemImage`, `User`, `Role`.
-- Enums such as gender and item type for catalog classification.
+- Domain models such as `Product`, `ProductImage`, `User`, `Role`.
+- Enums such as gender and item type for product classification.
 - Interfaces like `IVultContext`, `IAzureAIService`, and service abstractions.
 - Validation rules and domain behavior.
 
@@ -143,7 +143,7 @@ This project has no dependency on ASP.NET Core, EF Core implementations, or Angu
 Implements infrastructure concerns:
 
 - `VultContext` EF Core DbContext implementing `IVultContext`.
-- Entity configurations and mappings for CatalogItem, CatalogItemImage, auth models, etc.
+- Entity configurations and mappings for Product, ProductImage, auth models, etc.
 - SQL Server configuration and migrations support.
 - Azure AI service integration (via Azure.AI.Vision.ImageAnalysis) used for image analysis.
 
