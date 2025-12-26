@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards';
 
 export const routes: Routes = [
   {
@@ -12,11 +11,6 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./pages/home/home').then(m => m.Home)
-  },
-  {
-    path: 'catalog',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/catalog-list/catalog-list').then(m => m.CatalogList)
   },
   {
     path: 'products',

@@ -9,9 +9,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { BehaviorSubject, combineLatest, switchMap, map, catchError, of, startWith, shareReplay, tap } from 'rxjs';
-import { ProductImagesUpload } from '../../components/product-images-upload';
-import { ProductService } from '../../core/services';
-import { Product, IngestionResult } from '../../core/models';
+import { ProductImagesUpload } from '../../../../../vult/src/app/components/product-images-upload';
+import { ProductService } from '../../../../../vult/src/app/core/services';
+import { Product, IngestionResult } from '../../../../../vult/src/app/core/models';
 
 interface ProductListViewModel {
   products: Product[];
