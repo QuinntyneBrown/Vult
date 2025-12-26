@@ -1,14 +1,14 @@
 # Navigation Bar Component
 
 ## Overview
-A responsive primary navigation bar that provides brand identity, navigation links, search functionality, and user actions. This component serves as the main header for the Nike website.
+A responsive primary navigation bar that provides brand identity, navigation links, search functionality, and user actions. This component serves as the main header for the website.
 
 ## Requirements
 
 ### Functional Requirements
 
 1. **Brand Logo**
-   - Display Nike Swoosh logo on the left side
+   - Display brand logo on the left side
    - Logo must be clickable and navigate to homepage
    - Logo should maintain consistent sizing across breakpoints
 
@@ -59,7 +59,7 @@ A responsive primary navigation bar that provides brand identity, navigation lin
 ### AC1: Logo Display
 - **Given** a user visits any page
 - **When** the page loads
-- **Then** the Nike Swoosh logo should be visible in the top-left corner
+- **Then** the brand logo should be visible in the top-left corner
 - **And** clicking the logo navigates to the homepage
 
 ### AC2: Navigation Links

@@ -98,7 +98,7 @@ The search bar is an input component that enables users to search for products, 
 
 ### AC7: Suggestions Dropdown
 - **Given** the search bar is focused
-- **When** the user types "nike"
+- **When** the user types a search term
 - **Then** a suggestions dropdown appears
 - **And** shows relevant product suggestions
 - **And** can be navigated with arrow keys

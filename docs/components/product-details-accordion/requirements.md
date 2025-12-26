@@ -89,7 +89,7 @@ interface ProductDetailsAccordionOutputs {
 }
 ```
 
-### Default Sections (Nike PDP)
+### Default Sections (PDP)
 1. **Product Description** - Features and benefits
 2. **Free Delivery and Returns** - Shipping info
 3. **Reviews** - Customer ratings and reviews

@@ -1,7 +1,7 @@
 # Primary Button Component
 
 ## Overview
-The primary button is the main call-to-action element used throughout the Nike website. It features a solid fill design with high visual prominence, used for the most important actions on a page such as "Add to Bag", "Shop Now", or "Join".
+The primary button is the main call-to-action element used throughout the website. It features a solid fill design with high visual prominence, used for the most important actions on a page such as "Add to Bag", "Shop Now", or "Join".
 
 ## Requirements
 

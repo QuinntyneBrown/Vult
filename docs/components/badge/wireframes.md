@@ -20,7 +20,7 @@ Font: 12px, 500 weight
 │   Sale    │
 └───────────┘
 
-Background: #9E3500 (Nike sale orange)
+Background: #9E3500 (sale orange)
 Text: #FFFFFF
 ```
 

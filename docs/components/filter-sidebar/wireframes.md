@@ -102,11 +102,11 @@ Section height: 48px
 ┌────────────────────────────┐
 │  Brand                  ▲  │
 │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │
-│  □ Nike                    │
+│  □ Vult                    │
 │  □ Jordan                  │
-│  □ Nike Sportswear         │
+│  □ Sportswear              │
 │  □ ACG                     │
-│  □ NikeLab                 │
+│  □ Lab                     │
 │                            │
 │  + 12 More                 │ ← Show more link
 │                            │

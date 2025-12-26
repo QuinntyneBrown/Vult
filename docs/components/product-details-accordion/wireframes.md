@@ -185,7 +185,7 @@
 │                                                             │
 │  Your order of $50 or more ships free.                      │
 │                                                             │
-│  View Nike Return Policy →                                  │
+│  View Return Policy →                                       │
 │                                                             │
 │  Link: underlined, color: #111111                           │
 │  Hover: color: #757575                                      │

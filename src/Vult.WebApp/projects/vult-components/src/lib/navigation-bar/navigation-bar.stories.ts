@@ -62,7 +62,7 @@ export const Default: Story = {
     props: args,
     template: `
       <lib-navigation-bar [items]="items" [logoHref]="logoHref">
-        <div logo style="font-weight: bold; font-size: 24px;">NIKE</div>
+        <div logo style="font-weight: bold; font-size: 24px;">VULT</div>
         <div actions style="display: flex; gap: 16px;">
           <span>Search</span>
           <span>Favorites</span>
@@ -83,7 +83,7 @@ export const WithActiveItem: Story = {
     props: args,
     template: `
       <lib-navigation-bar [items]="items" [logoHref]="logoHref" [activeItemId]="activeItemId">
-        <div logo style="font-weight: bold; font-size: 24px;">NIKE</div>
+        <div logo style="font-weight: bold; font-size: 24px;">VULT</div>
         <div actions style="display: flex; gap: 16px;">
           <span>Search</span>
           <span>Cart</span>

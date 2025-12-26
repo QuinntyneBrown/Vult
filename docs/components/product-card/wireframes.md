@@ -126,7 +126,7 @@ Info padding: 12px
 │                                     │
 ├─────────────────────────────────────┤
 │                                     │
-│  Nike Air Max 270                   │
+│  Air Max 270                        │
 │  Women's Shoes                      │
 │                                     │
 │  $150                               │
