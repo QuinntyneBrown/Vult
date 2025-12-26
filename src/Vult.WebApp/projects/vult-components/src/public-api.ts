@@ -67,3 +67,18 @@ export * from './lib/sort-dropdown/sort-dropdown.component';
 
 // Typography Display
 export * from './lib/typography-display/typography-display.component';
+
+// Product Image Gallery
+export * from './lib/product-image-gallery/product-image-gallery.component';
+
+// Product Info Section
+export * from './lib/product-info-section/product-info-section.component';
+
+// Add to Bag Button
+export * from './lib/add-to-bag-button/add-to-bag-button.component';
+
+// Favorites Button
+export * from './lib/favorites-button/favorites-button.component';
+
+// Product Details Accordion
+export * from './lib/product-details-accordion/product-details-accordion.component';

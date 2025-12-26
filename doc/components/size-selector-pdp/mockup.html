@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Size Selector PDP - Component Mockup</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      padding: 24px;
+    }
+
+    .component-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #111111;
+    }
+
+    .demo-section {
+      margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .demo-label {
+      font-size: 14px;
+      color: #757575;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Size Selector PDP Styles */
+    .size-selector-pdp {
+      max-width: 400px;
+    }
+
+    .size-selector__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .size-selector__label {
+      font-size: 16px;
+      font-weight: 500;
+      color: #111111;
+    }
+
+    .size-selector__guide-link {
+      font-size: 14px;
+      color: #111111;
+      text-decoration: underline;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    .size-selector__guide-link:hover {
+      color: #757575;
+    }
+
+    .size-selector__grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .size-button {
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 16px;
+      color: #111111;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+      position: relative;
+    }
+
+    .size-button:hover:not(.size-button--unavailable) {
+      border-color: #111111;
+    }
+
+    .size-button:focus {
+      outline: 2px solid #111111;
+      outline-offset: 2px;
+    }
+
+    .size-button--selected {
+      border: 1.5px solid #111111;
+    }
+
+    .size-button--unavailable {
+      color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    .size-button--unavailable::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -5%;
+      width: 110%;
+      height: 1px;
+      background-color: #cccccc;
+      transform: rotate(-20deg);
+    }
+
+    .size-button--error {
+      border-color: #d43f21;
+    }
+
+    .size-button__label {
+      font-size: 16px;
+    }
+
+    .size-button__stock {
+      font-size: 10px;
+      color: #d43f21;
+      margin-top: 2px;
+    }
+
+    .size-selector__error {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      color: #d43f21;
+      font-size: 14px;
+    }
+
+    .size-selector__error-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* States Row */
+    .states-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .state-demo {
+      text-align: center;
+    }
+
+    .state-label {
+      font-size: 12px;
+      color: #757575;
+      margin-top: 8px;
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      .size-selector__grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="component-title">Size Selector PDP Component</h1>
+
+  <!-- Default State -->
+  <div class="demo-section">
+    <div class="demo-label">Default State</div>
+    <div class="size-selector-pdp">
+      <div class="size-selector__header">
+        <span class="size-selector__label">Select Size</span>
+        <button class="size-selector__guide-link">Size Guide</button>
+      </div>
+      <div class="size-selector__grid" role="group" aria-label="Select size">
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">XS</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">S</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">M</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">L</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">XL</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">2XL</span>
+        </button>
+        <button class="size-button size-button--unavailable" aria-disabled="true">
+          <span class="size-button__label">3XL</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selected State -->
+  <div class="demo-section">
+    <div class="demo-label">Selected State</div>
+    <div class="size-selector-pdp">
+      <div class="size-selector__header">
+        <span class="size-selector__label">Select Size</span>
+        <button class="size-selector__guide-link">Size Guide</button>
+      </div>
+      <div class="size-selector__grid" role="group" aria-label="Select size">
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">XS</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">S</span>
+        </button>
+        <button class="size-button size-button--selected" aria-pressed="true">
+          <span class="size-button__label">M</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">L</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">XL</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">2XL</span>
+        </button>
+        <button class="size-button size-button--unavailable" aria-disabled="true">
+          <span class="size-button__label">3XL</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="demo-section">
+    <div class="demo-label">Error State (No Size Selected)</div>
+    <div class="size-selector-pdp">
+      <div class="size-selector__header">
+        <span class="size-selector__label">Select Size</span>
+        <button class="size-selector__guide-link">Size Guide</button>
+      </div>
+      <div class="size-selector__grid" role="group" aria-label="Select size">
+        <button class="size-button size-button--error" aria-pressed="false">
+          <span class="size-button__label">XS</span>
+        </button>
+        <button class="size-button size-button--error" aria-pressed="false">
+          <span class="size-button__label">S</span>
+        </button>
+        <button class="size-button size-button--error" aria-pressed="false">
+          <span class="size-button__label">M</span>
+        </button>
+        <button class="size-button size-button--error" aria-pressed="false">
+          <span class="size-button__label">L</span>
+        </button>
+        <button class="size-button size-button--error" aria-pressed="false">
+          <span class="size-button__label">XL</span>
+        </button>
+      </div>
+      <div class="size-selector__error" role="alert">
+        <svg class="size-selector__error-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        Please select a size
+      </div>
+    </div>
+  </div>
+
+  <!-- Low Stock -->
+  <div class="demo-section">
+    <div class="demo-label">Low Stock Indicator</div>
+    <div class="size-selector-pdp">
+      <div class="size-selector__header">
+        <span class="size-selector__label">Select Size</span>
+        <button class="size-selector__guide-link">Size Guide</button>
+      </div>
+      <div class="size-selector__grid" role="group" aria-label="Select size">
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">XS</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">S</span>
+        </button>
+        <button class="size-button" aria-pressed="false">
+          <span class="size-button__label">M</span>
+          <span class="size-button__stock">Low Stock</span>
+        </button>
+        <button class="size-button size-button--selected" aria-pressed="true">
+          <span class="size-button__label">L</span>
+        </button>
+        <button class="size-button size-button--unavailable" aria-disabled="true">
+          <span class="size-button__label">XL</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Button States -->
+  <div class="demo-section">
+    <div class="demo-label">Individual Button States</div>
+    <div class="states-row">
+      <div class="state-demo">
+        <button class="size-button" style="width: 80px;">
+          <span class="size-button__label">M</span>
+        </button>
+        <div class="state-label">Default</div>
+      </div>
+      <div class="state-demo">
+        <button class="size-button" style="width: 80px; border-color: #111111;">
+          <span class="size-button__label">M</span>
+        </button>
+        <div class="state-label">Hover</div>
+      </div>
+      <div class="state-demo">
+        <button class="size-button size-button--selected" style="width: 80px;">
+          <span class="size-button__label">M</span>
+        </button>
+        <div class="state-label">Selected</div>
+      </div>
+      <div class="state-demo">
+        <button class="size-button size-button--unavailable" style="width: 80px;">
+          <span class="size-button__label">M</span>
+        </button>
+        <div class="state-label">Unavailable</div>
+      </div>
+      <div class="state-demo">
+        <button class="size-button" style="width: 80px; outline: 2px solid #111111; outline-offset: 2px;">
+          <span class="size-button__label">M</span>
+        </button>
+        <div class="state-label">Focus</div>
+      </div>
+      <div class="state-demo">
+        <button class="size-button size-button--error" style="width: 80px;">
+          <span class="size-button__label">M</span>
+        </button>
+        <div class="state-label">Error</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

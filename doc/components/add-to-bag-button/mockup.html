@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add to Bag Button - Component Mockup</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      padding: 24px;
+    }
+
+    .component-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #111111;
+    }
+
+    .demo-section {
+      margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .demo-label {
+      font-size: 14px;
+      color: #757575;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Add to Bag Button Styles */
+    .add-to-bag-container {
+      max-width: 400px;
+    }
+
+    .add-to-bag-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      height: 60px;
+      padding: 0 24px;
+      background-color: #111111;
+      color: #ffffff;
+      border: none;
+      border-radius: 30px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      position: relative;
+    }
+
+    .add-to-bag-btn:hover:not(:disabled):not(.add-to-bag-btn--loading) {
+      background-color: #333333;
+    }
+
+    .add-to-bag-btn:active:not(:disabled):not(.add-to-bag-btn--loading) {
+      transform: scale(0.98);
+    }
+
+    .add-to-bag-btn:focus {
+      outline: 2px solid #111111;
+      outline-offset: 2px;
+    }
+
+    .add-to-bag-btn:disabled {
+      background-color: #cccccc;
+      color: #767676;
+      cursor: not-allowed;
+    }
+
+    .add-to-bag-btn--loading {
+      color: transparent;
+      pointer-events: none;
+    }
+
+    .add-to-bag-btn--loading::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .add-to-bag-btn--success {
+      background-color: #008c00;
+    }
+
+    .add-to-bag-btn--success:hover {
+      background-color: #007a00;
+    }
+
+    .add-to-bag-btn__icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .add-to-bag-btn__check {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 3;
+      fill: none;
+    }
+
+    .add-to-bag-error {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+      color: #d43f21;
+      font-size: 14px;
+    }
+
+    .add-to-bag-error__icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* States Row */
+    .states-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .state-demo {
+      text-align: center;
+    }
+
+    .state-label {
+      font-size: 12px;
+      color: #757575;
+      margin-top: 12px;
+    }
+
+    /* Mobile variant */
+    .add-to-bag-btn--mobile {
+      height: 52px;
+    }
+
+    @media (max-width: 768px) {
+      .add-to-bag-btn {
+        height: 52px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="component-title">Add to Bag Button Component</h1>
+
+  <!-- Default State -->
+  <div class="demo-section">
+    <div class="demo-label">Default State</div>
+    <div class="add-to-bag-container">
+      <button class="add-to-bag-btn" type="button">
+        Add to Bag
+      </button>
+    </div>
+  </div>
+
+  <!-- With Icon -->
+  <div class="demo-section">
+    <div class="demo-label">With Bag Icon</div>
+    <div class="add-to-bag-container">
+      <button class="add-to-bag-btn" type="button">
+        <svg class="add-to-bag-btn__icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 6V4.5C16 3.12 14.88 2 13.5 2h-3C9.12 2 8 3.12 8 4.5V6H3v2h1l1.5 13h13L20 8h1V6h-5zm-6-1.5c0-.28.22-.5.5-.5h3c.28 0 .5.22.5.5V6h-4V4.5zM17.5 19h-11L5.22 8h13.56l-1.28 11z"/>
+        </svg>
+        Add to Bag
+      </button>
+    </div>
+  </div>
+
+  <!-- All States -->
+  <div class="demo-section">
+    <div class="demo-label">All Button States</div>
+    <div class="states-grid">
+      <div class="state-demo">
+        <button class="add-to-bag-btn" type="button">
+          Add to Bag
+        </button>
+        <div class="state-label">Default</div>
+      </div>
+      <div class="state-demo">
+        <button class="add-to-bag-btn" type="button" style="background-color: #333333;">
+          Add to Bag
+        </button>
+        <div class="state-label">Hover</div>
+      </div>
+      <div class="state-demo">
+        <button class="add-to-bag-btn" type="button" style="transform: scale(0.98);">
+          Add to Bag
+        </button>
+        <div class="state-label">Active/Pressed</div>
+      </div>
+      <div class="state-demo">
+        <button class="add-to-bag-btn" type="button" style="outline: 2px solid #111111; outline-offset: 2px;">
+          Add to Bag
+        </button>
+        <div class="state-label">Focus</div>
+      </div>
+      <div class="state-demo">
+        <button class="add-to-bag-btn add-to-bag-btn--loading" type="button" disabled>
+          Add to Bag
+        </button>
+        <div class="state-label">Loading</div>
+      </div>
+      <div class="state-demo">
+        <button class="add-to-bag-btn add-to-bag-btn--success" type="button">
+          <svg class="add-to-bag-btn__check" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Added
+        </button>
+        <div class="state-label">Success</div>
+      </div>
+      <div class="state-demo">
+        <button class="add-to-bag-btn" type="button" disabled>
+          Add to Bag
+        </button>
+        <div class="state-label">Disabled</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="demo-section">
+    <div class="demo-label">Error State</div>
+    <div class="add-to-bag-container">
+      <button class="add-to-bag-btn" type="button">
+        Try Again
+      </button>
+      <div class="add-to-bag-error" role="alert">
+        <svg class="add-to-bag-error__icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        Something went wrong. Please try again.
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Size -->
+  <div class="demo-section">
+    <div class="demo-label">Mobile Size (52px height)</div>
+    <div class="add-to-bag-container">
+      <button class="add-to-bag-btn add-to-bag-btn--mobile" type="button">
+        Add to Bag
+      </button>
+    </div>
+  </div>
+</body>
+</html>

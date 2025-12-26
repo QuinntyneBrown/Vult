@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details Accordion - Component Mockup</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      padding: 24px;
+    }
+
+    .component-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #111111;
+    }
+
+    .demo-section {
+      margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .demo-label {
+      font-size: 14px;
+      color: #757575;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Accordion Styles */
+    .accordion {
+      max-width: 500px;
+      border-top: 1px solid #e5e5e5;
+    }
+
+    .accordion-item {
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .accordion-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      transition: opacity 0.15s ease;
+    }
+
+    .accordion-header:hover .accordion-title {
+      text-decoration: underline;
+    }
+
+    .accordion-header:focus {
+      outline: none;
+    }
+
+    .accordion-header:focus-visible {
+      outline: 2px solid #111111;
+      outline-offset: 2px;
+    }
+
+    .accordion-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #111111;
+      flex: 1;
+    }
+
+    .accordion-chevron {
+      width: 24px;
+      height: 24px;
+      stroke: #111111;
+      stroke-width: 1.5;
+      fill: none;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .accordion-item.is-expanded .accordion-chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.2s ease;
+    }
+
+    .accordion-item.is-expanded .accordion-panel {
+      grid-template-rows: 1fr;
+    }
+
+    .accordion-content {
+      overflow: hidden;
+    }
+
+    .accordion-content-inner {
+      padding-bottom: 24px;
+      font-size: 16px;
+      color: #111111;
+      line-height: 1.7;
+    }
+
+    .accordion-content-inner p {
+      margin-bottom: 12px;
+    }
+
+    .accordion-content-inner ul {
+      list-style: disc;
+      padding-left: 20px;
+      margin: 12px 0;
+    }
+
+    .accordion-content-inner li {
+      margin-bottom: 8px;
+    }
+
+    .accordion-content-inner a {
+      color: #111111;
+      text-decoration: underline;
+    }
+
+    .accordion-content-inner a:hover {
+      color: #757575;
+    }
+
+    /* Disabled State */
+    .accordion-header.is-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .accordion-header.is-disabled:hover .accordion-title {
+      text-decoration: none;
+    }
+
+    /* States Row */
+    .states-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .state-demo {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .state-label {
+      font-size: 12px;
+      color: #757575;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="component-title">Product Details Accordion Component</h1>
+
+  <!-- Default State -->
+  <div class="demo-section">
+    <div class="demo-label">Default State (All Collapsed)</div>
+    <div class="accordion" role="region" aria-label="Product information">
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="panel-1">
+          <span class="accordion-title">Product Description</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel" id="panel-1" aria-hidden="true">
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>Content hidden when collapsed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="panel-2">
+          <span class="accordion-title">Free Delivery and Returns</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel" id="panel-2" aria-hidden="true">
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>Content hidden when collapsed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="panel-3">
+          <span class="accordion-title">Reviews (125)</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel" id="panel-3" aria-hidden="true">
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>Content hidden when collapsed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expanded State -->
+  <div class="demo-section">
+    <div class="demo-label">First Section Expanded</div>
+    <div class="accordion" role="region" aria-label="Product information">
+      <div class="accordion-item is-expanded">
+        <button class="accordion-header" aria-expanded="true" aria-controls="panel-4">
+          <span class="accordion-title">Product Description</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel" id="panel-4" aria-hidden="false">
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>This lightweight woven jacket is designed to keep you comfortable and dry during your workout or daily activities.</p>
+              <ul>
+                <li>Dri-FIT technology helps keep you dry and comfortable</li>
+                <li>Color-blocked design adds visual interest</li>
+                <li>Loose fit for a relaxed, easy feel</li>
+                <li>Full-zip design with hood</li>
+              </ul>
+              <p><strong>Product Details:</strong></p>
+              <ul>
+                <li>Body: 100% Polyester</li>
+                <li>Machine wash</li>
+                <li>Imported</li>
+                <li>Style: IH8461-072</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="panel-5">
+          <span class="accordion-title">Free Delivery and Returns</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel" id="panel-5" aria-hidden="true">
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>Content hidden when collapsed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" aria-controls="panel-6">
+          <span class="accordion-title">Reviews (125)</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel" id="panel-6" aria-hidden="true">
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>Content hidden when collapsed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shipping Section Expanded -->
+  <div class="demo-section">
+    <div class="demo-label">Shipping Section Content</div>
+    <div class="accordion" role="region" aria-label="Product information">
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">
+          <span class="accordion-title">Product Description</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+      </div>
+      <div class="accordion-item is-expanded">
+        <button class="accordion-header" aria-expanded="true">
+          <span class="accordion-title">Free Delivery and Returns</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel" aria-hidden="false">
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>Your order of $50 or more gets free standard delivery.</p>
+              <ul>
+                <li>Standard delivered 4-5 Business Days</li>
+                <li>Express delivered 2-4 Business Days</li>
+              </ul>
+              <p>Orders are processed and delivered Monday-Friday (excluding public holidays)</p>
+              <p>Nike Members get free returns. <a href="#">View Nike Return Policy</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">
+          <span class="accordion-title">Reviews (125)</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header States -->
+  <div class="demo-section">
+    <div class="demo-label">Header States</div>
+    <div class="states-row">
+      <div class="state-demo">
+        <div class="state-label">Default (Collapsed)</div>
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+              <span class="accordion-title">Section Title</span>
+              <svg class="accordion-chevron" viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="state-demo">
+        <div class="state-label">Expanded</div>
+        <div class="accordion">
+          <div class="accordion-item is-expanded">
+            <button class="accordion-header" aria-expanded="true">
+              <span class="accordion-title">Section Title</span>
+              <svg class="accordion-chevron" viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="state-demo">
+        <div class="state-label">Focus</div>
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header" style="outline: 2px solid #111111; outline-offset: 2px;" aria-expanded="false">
+              <span class="accordion-title">Section Title</span>
+              <svg class="accordion-chevron" viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="state-demo">
+        <div class="state-label">Disabled</div>
+        <div class="accordion">
+          <div class="accordion-item">
+            <button class="accordion-header is-disabled" disabled aria-expanded="false">
+              <span class="accordion-title">Section Title</span>
+              <svg class="accordion-chevron" viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Demo -->
+  <div class="demo-section">
+    <div class="demo-label">Interactive Demo (Click to toggle)</div>
+    <div class="accordion" role="region" aria-label="Product information" id="interactiveAccordion">
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false" onclick="toggleAccordion(this)">
+          <span class="accordion-title">Click to Expand</span>
+          <svg class="accordion-chevron" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="accordion-panel" aria-hidden="true">
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>This panel expands and collapses with a smooth animation.</p>
+              <p>The chevron rotates 180 degrees to indicate the expanded state.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleAccordion(button) {
+      const item = button.closest('.accordion-item');
+      const isExpanded = item.classList.contains('is-expanded');
+
+      item.classList.toggle('is-expanded');
+      button.setAttribute('aria-expanded', !isExpanded);
+      button.nextElementSibling.setAttribute('aria-hidden', isExpanded);
+    }
+  </script>
+</body>
+</html>
