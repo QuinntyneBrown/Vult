@@ -23,7 +23,7 @@ public static class ConfigureServices
         services.AddDbContext<VultContext>(options =>
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly("Vult.Api")));
+                b => b.MigrationsAssembly("Vult.Infrastructure")));
 
         // IVultContext abstraction
         services.AddScoped<IVultContext>(provider => provider.GetRequiredService<VultContext>());
