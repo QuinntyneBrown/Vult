@@ -1,0 +1,106 @@
+<main class="products-page" data-testid="products-page">
+  <!-- Page Header -->
+  <div class="products-page__header" data-testid="products-header">
+    <lib-page-header
+      title="New Men's Releases"
+      [count]="totalProducts()"
+      alignment="left"
+      data-testid="page-header"
+    ></lib-page-header>
+
+    <div class="products-page__controls">
+      <!-- Mobile Filter Toggle -->
+      <lib-mobile-filter-toggle
+        [isActive]="isMobileFilterOpen()"
+        [activeFilterCount]="activeFilterCount()"
+        showText="Show Filters"
+        hideText="Hide Filters"
+        controlsId="filter-sidebar"
+        (toggleFilters)="onMobileFilterToggle($event)"
+        data-testid="mobile-filter-toggle"
+      ></lib-mobile-filter-toggle>
+
+      <!-- Sort Dropdown -->
+      <lib-sort-dropdown
+        [options]="sortOptions"
+        [selectedOptionId]="selectedSortId()"
+        label="Sort By:"
+        [showLabel]="true"
+        (selectionChange)="onSortChange($event)"
+        data-testid="sort-dropdown"
+      ></lib-sort-dropdown>
+    </div>
+  </div>
+
+  <!-- Content Layout -->
+  <div class="products-page__content" data-testid="products-content">
+    <!-- Filter Sidebar (Desktop) -->
+    <aside
+      class="products-page__sidebar"
+      [class.products-page__sidebar--mobile-open]="isMobileFilterOpen()"
+      data-testid="filter-sidebar"
+      id="filter-sidebar"
+    >
+      <lib-filter-sidebar
+        title="Filters"
+        [sections]="filterSections()"
+        [showCloseButton]="isMobileFilterOpen()"
+        [showClearButton]="true"
+        [isVisible]="true"
+        (filterChange)="onFilterChange($event)"
+        (clearAll)="onClearFilters()"
+        (closePanel)="onCloseMobileFilter()"
+        data-testid="filter-sidebar-component"
+      ></lib-filter-sidebar>
+    </aside>
+
+    <!-- Mobile Filter Overlay -->
+    @if (isMobileFilterOpen()) {
+      <div
+        class="products-page__overlay"
+        (click)="onCloseMobileFilter()"
+        data-testid="filter-overlay"
+      ></div>
+    }
+
+    <!-- Product Grid Section -->
+    <section class="products-page__grid-section" aria-label="Products">
+      <!-- Result Counter -->
+      <div class="products-page__result-info" data-testid="result-info">
+        <lib-result-counter
+          [count]="filteredProducts().length"
+          singularLabel="Result"
+          pluralLabel="Results"
+          [loading]="isLoading()"
+          data-testid="result-counter"
+        ></lib-result-counter>
+      </div>
+
+      <!-- Product Grid -->
+      <lib-product-grid
+        [products]="paginatedProducts()"
+        [loading]="isLoading()"
+        [skeletonItems]="8"
+        emptyTitle="No products found"
+        emptyMessage="Try adjusting your filters or browse all products."
+        emptyActionText="Clear Filters"
+        emptyActionUrl="#"
+        (productClick)="onProductClick($event)"
+        (favoriteToggle)="onFavoriteToggle($event)"
+        data-testid="product-grid"
+      ></lib-product-grid>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <lib-pagination
+          variant="numbered"
+          [page]="currentPage()"
+          [totalPages]="totalPages()"
+          [maxVisiblePages]="7"
+          (pageChange)="onPageChange($event)"
+          data-testid="pagination"
+        ></lib-pagination>
+      }
+    </section>
+  </div>
+</main>
