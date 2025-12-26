@@ -6,8 +6,8 @@ import { test, expect, Page } from '@playwright/test';
 // Mock product data for API responses
 const mockProducts = [
   {
-    id: 'nike-air-max-90',
-    name: 'Nike Air Max 90',
+    id: 'air-max-90',
+    name: 'Air Max 90',
     category: "Men's Shoes",
     colorCount: 3,
     price: 130,
@@ -16,8 +16,8 @@ const mockProducts = [
     badgeType: 'new'
   },
   {
-    id: 'nike-dri-fit-primary',
-    name: 'Nike Dri-FIT Primary',
+    id: 'dri-fit-primary',
+    name: 'Dri-FIT Primary',
     category: "Men's Training T-Shirt",
     colorCount: 5,
     price: 40,
@@ -26,16 +26,16 @@ const mockProducts = [
     badgeType: 'sale'
   },
   {
-    id: 'nike-pegasus-41',
-    name: 'Nike Pegasus 41',
+    id: 'pegasus-41',
+    name: 'Pegasus 41',
     category: "Men's Road Running Shoes",
     colorCount: 8,
     price: 140,
     imageUrl: 'assets/images/product-3.jpg'
   },
   {
-    id: 'nike-windrunner',
-    name: 'Nike Windrunner',
+    id: 'windrunner',
+    name: 'Windrunner',
     category: "Men's Running Jacket",
     colorCount: 4,
     price: 89,
@@ -45,24 +45,24 @@ const mockProducts = [
     badgeType: 'new'
   },
   {
-    id: 'nike-air-force-1-07',
-    name: "Nike Air Force 1 '07",
+    id: 'air-force-1-07',
+    name: "Air Force 1 '07",
     category: "Men's Shoes",
     colorCount: 2,
     price: 115,
     imageUrl: 'assets/images/product-5.jpg'
   },
   {
-    id: 'nike-challenger',
-    name: 'Nike Challenger',
+    id: 'challenger',
+    name: 'Challenger',
     category: "Men's Running Shorts",
     colorCount: 6,
     price: 45,
     imageUrl: 'assets/images/product-6.jpg'
   },
   {
-    id: 'nike-dunk-low-retro',
-    name: 'Nike Dunk Low Retro',
+    id: 'dunk-low-retro',
+    name: 'Dunk Low Retro',
     category: "Men's Shoes",
     colorCount: 12,
     price: 115,
@@ -71,8 +71,8 @@ const mockProducts = [
     badgeType: 'new'
   },
   {
-    id: 'nike-brasilia-95',
-    name: 'Nike Brasilia 9.5',
+    id: 'brasilia-95',
+    name: 'Brasilia 9.5',
     category: 'Training Backpack (Large)',
     colorCount: 3,
     price: 50,

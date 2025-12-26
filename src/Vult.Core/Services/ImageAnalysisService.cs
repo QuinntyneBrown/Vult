@@ -176,7 +176,7 @@ public class ImageAnalysisService : IImageAnalysisService
     private string ExtractBrand(List<string> detections)
     {
         // Common brand names to detect (simplified list)
-        var brands = new[] { "nike", "adidas", "puma", "reebok", "under armour", "champion", "gap", "levi", "gucci", "prada" };
+        var brands = new[] { "adidas", "puma", "reebok", "under armour", "champion", "gap", "levi", "gucci", "prada" };
         
         foreach (var brand in brands)
         {
@@ -230,7 +230,6 @@ public class ImageAnalysisService : IImageAnalysisService
         // Adjust for brand (simplified)
         var brandMultiplier = brandName.ToLower() switch
         {
-            "nike" => 1.5m,
             "adidas" => 1.4m,
             "gucci" => 3.0m,
             "prada" => 3.5m,

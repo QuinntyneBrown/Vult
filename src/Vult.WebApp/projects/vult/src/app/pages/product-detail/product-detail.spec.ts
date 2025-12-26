@@ -50,8 +50,8 @@ describe('ProductDetail', () => {
     it('should have product data loaded', () => {
       const product = component.product();
       expect(product).toBeTruthy();
-      expect(product.title).toBe('Nike Tech');
-      expect(product.subtitle).toBe("Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket");
+      expect(product.title).toBe('Tech Windrunner');
+      expect(product.subtitle).toBe("Men's Dri-FIT Woven Color-Block Loose Jacket");
     });
   });
 

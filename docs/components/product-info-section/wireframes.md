@@ -6,7 +6,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                                                             │
-│  Nike Tech                                    (subtitle)    │
+│  Brand Name                                   (subtitle)    │
 │  ─────────────────────────────────────────────              │
 │                                                             │
 │  Men's Dri-FIT Woven Color-Block              (title h1)   │
@@ -26,7 +26,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                                                             │
-│  Nike Tech                                    (subtitle)    │
+│  Brand Name                                   (subtitle)    │
 │  ─────────────────────────────────────────────              │
 │                                                             │
 │  Men's Dri-FIT Woven Color-Block              (title h1)   │
@@ -52,7 +52,7 @@
 │  │  Exclusive Access       │              (member badge)    │
 │  └─────────────────────────┘                                │
 │                                                             │
-│  Nike Tech                                    (subtitle)    │
+│  Brand Name                                   (subtitle)    │
 │  ─────────────────────────────────────────────              │
 │                                                             │
 │  Men's Dri-FIT Woven Color-Block              (title h1)   │

@@ -1,4 +1,4 @@
-# Nike Product Detail Page - CSS Specification
+# Product Detail Page - CSS Specification
 
 ## Overview
 

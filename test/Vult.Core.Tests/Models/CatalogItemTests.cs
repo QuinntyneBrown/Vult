@@ -65,10 +65,10 @@ public class CatalogItemTests
     public void CatalogItem_ShouldHaveBrandNameProperty()
     {
         // Arrange & Act
-        var catalogItem = new CatalogItem { BrandName = "Nike" };
+        var catalogItem = new CatalogItem { BrandName = "Adidas" };
 
         // Assert
-        Assert.That(catalogItem.BrandName, Is.EqualTo("Nike"));
+        Assert.That(catalogItem.BrandName, Is.EqualTo("Adidas"));
     }
 
     [Test]

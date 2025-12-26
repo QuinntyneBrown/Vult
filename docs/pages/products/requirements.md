@@ -2,9 +2,7 @@
 
 ## Overview
 
-The Products Page displays a filterable, sortable grid of products for a specific category (e.g., "New Men's Releases"). This page follows the Nike design pattern for product listing pages (PLP).
-
-**Reference:** [Nike New Men's Releases](https://www.nike.com/w/new-mens-3n82yznik1)
+The Products Page displays a filterable, sortable grid of products for a specific category (e.g., "New Men's Releases").
 
 ---
 

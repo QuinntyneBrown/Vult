@@ -89,9 +89,9 @@
 
 ```json
 {
-  "name": "Nike Air Max 270",
-  "sku": "NIKE-AM270-BLK-10",
-  "description": "The Nike Air Max 270 delivers visible cushioning under every step.",
+  "name": "Air Max 270",
+  "sku": "AM270-BLK-10",
+  "description": "The Air Max 270 delivers visible cushioning under every step.",
   "shortDescription": "Iconic comfort with modern style",
   "price": 150.00,
   "compareAtPrice": 180.00,
@@ -150,7 +150,7 @@
 ```json
 {
   "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "name": "Nike Air Max 270 - Updated",
+  "name": "Air Max 270 - Updated",
   "description": "Updated description with more details",
   "price": 155.00,
   "isActive": true,
@@ -312,10 +312,10 @@ GET /api/product/search?q={searchTerm}&page={page}&pageSize={pageSize}
   "items": [
     {
       "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "name": "Nike Air Max 270",
-      "sku": "NIKE-AM270-BLK-10",
+      "name": "Air Max 270",
+      "sku": "AM270-BLK-10",
       "price": 150.00,
-      "imageUrl": "/images/products/nike-air-max-270.jpg",
+      "imageUrl": "/images/products/air-max-270.jpg",
       "relevanceScore": 0.95
     }
   ]
@@ -347,7 +347,7 @@ GET /api/product/search?q={searchTerm}&page={page}&pageSize={pageSize}
   "attributes": {
     "size": ["10", "11"],
     "color": ["black", "white"],
-    "brand": ["Nike"]
+    "brand": ["Adidas"]
   },
   "inStockOnly": true,
   "isFeatured": false,
@@ -790,7 +790,7 @@ GET /api/product/search?q={searchTerm}&page={page}&pageSize={pageSize}
 
 ```csv
 SKU,Name,Description,Price,CategorySlugs,Stock,IsActive
-NIKE-001,"Nike Air Max","Comfortable athletic shoe",150.00,"shoes/athletic",100,true
+AM-001,"Air Max","Comfortable athletic shoe",150.00,"shoes/athletic",100,true
 ```
 
 ---

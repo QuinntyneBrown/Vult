@@ -20,7 +20,7 @@ A prominent section header used on category and listing pages to display the cur
 
 3. **Visual Hierarchy**
    - Clear typographic hierarchy
-   - Consistent with Nike brand typography
+   - Consistent with brand typography
    - Proper spacing from surrounding content
 
 4. **Responsive Behavior**

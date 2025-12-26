@@ -14,7 +14,7 @@ This document provides detailed CSS specifications for the Products Page, includ
 |-------|-------|-------|
 | `--color-primary` | `#111111` | Primary text, buttons, selected states |
 | `--color-secondary` | `#757575` | Secondary text, labels, icons |
-| `--color-accent` | `#fa5400` | Nike brand accent, "New" badges |
+| `--color-accent` | `#fa5400` | Brand accent, "New" badges |
 | `--color-background` | `#ffffff` | Page background |
 | `--color-surface` | `#f5f5f5` | Card backgrounds, hover states |
 | `--color-border` | `#e5e5e5` | Dividers, borders |
@@ -422,7 +422,7 @@ This document provides detailed CSS specifications for the Products Page, includ
 }
 
 .product-badge.new {
-    color: #fa5400;               /* Nike accent orange */
+    color: #fa5400;               /* Brand accent orange */
 }
 
 .product-badge.best-seller {

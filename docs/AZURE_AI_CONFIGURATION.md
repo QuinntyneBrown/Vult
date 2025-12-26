@@ -75,7 +75,7 @@ The service analyzes images and maps Azure AI responses to catalog item fields:
 - **Estimated Resale Value**: 60% of MSRP by default
 - **Description**: Friendly reseller perspective generated from image caption
 - **Size**: Extracted from tags or defaults to "M"
-- **Brand Name**: Detected from image tags (Nike, Adidas, etc.)
+- **Brand Name**: Detected from image tags (Adidas, Puma, etc.)
 - **Gender**: Detected from image tags (Mens, Womens, Unisex)
 - **Item Type**: Detected from image tags (Shoe, Jacket, Shirt, etc.)
 - **Image Description**: AI-generated description for each photo

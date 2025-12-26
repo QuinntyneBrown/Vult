@@ -7,7 +7,7 @@ const mockCatalogItems = {
   items: [
     {
       catalogItemId: '1',
-      brandName: 'Nike',
+      brandName: 'Adidas',
       description: 'Running shoes',
       size: '10',
       gender: 0,
@@ -61,7 +61,6 @@ test.describe('Catalog Page', () => {
     await page.goto('/catalog');
 
     await expect(page.getByRole('heading', { name: 'Catalog Items' })).toBeVisible();
-    await expect(page.getByText('Nike')).toBeVisible();
     await expect(page.getByText('Adidas')).toBeVisible();
   });
 

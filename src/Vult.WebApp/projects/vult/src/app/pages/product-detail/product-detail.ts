@@ -78,8 +78,8 @@ export class ProductDetail {
   // Mock product data - in a real app this would come from a service
   product = signal<ProductDetailData>({
     id: 'IH8461-072',
-    title: 'Nike Tech',
-    subtitle: "Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket",
+    title: 'Tech Windrunner',
+    subtitle: "Men's Dri-FIT Woven Color-Block Loose Jacket",
     price: {
       current: 160,
       original: 200,
@@ -113,7 +113,7 @@ export class ProductDetail {
       {
         id: 'description',
         title: 'Product Description',
-        content: `<p>The Nike Tech Windrunner updates the iconic silhouette with lightweight, Dri-FIT woven fabric that helps keep you dry and comfortable. The color-block design adds visual interest, while the loose fit allows for easy layering.</p>
+        content: `<p>The Tech Windrunner updates the iconic silhouette with lightweight, Dri-FIT woven fabric that helps keep you dry and comfortable. The color-block design adds visual interest, while the loose fit allows for easy layering.</p>
         <div class="product-meta">
           <p><strong>Shown:</strong> Smoke Grey/Black</p>
           <p><strong>Style:</strong> IH8461-072</p>

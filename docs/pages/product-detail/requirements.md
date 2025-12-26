@@ -1,10 +1,8 @@
-# Nike Product Detail Page (PDP) Specification
+# Product Detail Page (PDP) Specification
 
 ## Overview
 
-This document defines the requirements and acceptance criteria for the Product Detail Page component, modeled after the Nike Tech Men's Dri-FIT Windrunner Jacket product page.
-
-**Reference URL:** https://www.nike.com/t/tech-mens-dri-fit-woven-color-block-windrunner-loose-jacket-wbo0uDjb/IH8461-072
+This document defines the requirements and acceptance criteria for the Product Detail Page component.
 
 ---
 
