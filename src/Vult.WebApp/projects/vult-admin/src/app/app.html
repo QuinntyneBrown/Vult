@@ -3,10 +3,10 @@
     <span class="app__title">Vult Admin</span>
     <span class="app__spacer"></span>
     <nav class="app__nav">
-      @if (canAccessCatalogItems$ | async) {
-        <a mat-button routerLink="/catalog-items" routerLinkActive="app__nav-link--active">
+      @if (canAccessProducts$ | async) {
+        <a mat-button routerLink="/products" routerLinkActive="app__nav-link--active">
           <mat-icon>inventory_2</mat-icon>
-          Catalog Items
+          Products
         </a>
       }
       @if (canAccessUsers$ | async) {

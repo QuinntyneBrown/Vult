@@ -80,7 +80,7 @@ export class Login implements OnInit {
     this.authService.login({ username, password }).subscribe({
       next: () => {
         this.isLoading$.next(false);
-        this.router.navigate(['/catalog-items']);
+        this.router.navigate(['/products']);
       },
       error: (error) => {
         this.isLoading$.next(false);

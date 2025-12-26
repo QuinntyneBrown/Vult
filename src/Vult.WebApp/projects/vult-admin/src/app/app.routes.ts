@@ -10,14 +10,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login').then(m => m.Login)
   },
   {
-    path: 'catalog-items',
+    path: 'products',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/catalog-items/catalog-items').then(m => m.CatalogItems)
+    loadComponent: () => import('./pages/products/products').then(m => m.Products)
   },
   {
-    path: 'catalog-items/:catalogItemId',
+    path: 'products/:productId',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/catalog-items/catalog-items').then(m => m.CatalogItems)
+    loadComponent: () => import('./pages/products/products').then(m => m.Products)
   },
   {
     path: 'users',
