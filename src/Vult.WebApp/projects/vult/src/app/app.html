@@ -1,2 +1,8 @@
-<header class="app__header">Vult</header>
+<lib-page-header [title]="'Vult'"></lib-page-header>
 <router-outlet></router-outlet>
+<lib-footer
+  [columns]="footerColumns"
+  [socialLinks]="footerSocialLinks"
+  [legalLinks]="footerLegalLinks"
+  [copyright]="footerCopyright"
+></lib-footer>
