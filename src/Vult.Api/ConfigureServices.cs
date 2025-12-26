@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Vult.Api.Authorization;
+using Vult.Core.Authorization;
 using Vult.Api.Behaviours;
 using Vult.Api.Configuration;
 using Vult.Core;

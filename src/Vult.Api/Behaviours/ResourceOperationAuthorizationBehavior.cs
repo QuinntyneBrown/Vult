@@ -4,7 +4,7 @@
 using System.Reflection;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Vult.Api.Authorization;
+using Vult.Core.Authorization;
 
 namespace Vult.Api.Behaviours;
 

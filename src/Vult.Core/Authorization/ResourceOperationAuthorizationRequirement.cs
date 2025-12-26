@@ -3,7 +3,7 @@
 
 using Microsoft.AspNetCore.Authorization;
 
-namespace Vult.Api.Authorization;
+namespace Vult.Core.Authorization;
 
 public class ResourceOperationAuthorizationRequirement : IAuthorizationRequirement
 {
