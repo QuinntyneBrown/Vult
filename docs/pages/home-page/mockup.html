@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vult - Buy Premium Used Products</title>
+    <style>
+        /* Reset & Base */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #FFFFFF;
+            color: #111111;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== NAVIGATION BAR ===== */
+        .nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            padding: 0 48px;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #111111;
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+
+        .nav-primary {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-link {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            text-decoration: none;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 18px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #111111;
+            transform: scaleX(0);
+            transition: transform 0.2s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background-color: #E5E5E5;
+        }
+
+        .icon-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #111111;
+        }
+
+        .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            min-width: 18px;
+            height: 18px;
+            background-color: #111111;
+            color: #FFFFFF;
+            font-size: 10px;
+            font-weight: 500;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .home-hero {
+            position: relative;
+            width: 100%;
+            height: 700px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #1a365d 100%);
+        }
+
+        .home-hero-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Simulated hat image with CSS */
+        .hat-visual {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 300px;
+        }
+
+        .hat-brim {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 30px;
+            background: linear-gradient(to bottom, #1e40af, #1e3a8a);
+            border-radius: 50%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .hat-crown {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 140px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+            border-radius: 100px 100px 20px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .hat-logo {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            font-weight: 800;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hat-bird {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 60px;
+        }
+
+        .bird-body {
+            position: absolute;
+            width: 50px;
+            height: 40px;
+            background: #dc2626;
+            border-radius: 50% 50% 40% 40%;
+            left: 15px;
+            top: 10px;
+        }
+
+        .bird-head {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #1e40af;
+            border-radius: 50%;
+            left: 40px;
+            top: 0;
+        }
+
+        .bird-beak {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 15px solid #f59e0b;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            left: 65px;
+            top: 8px;
+        }
+
+        .home-hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to top,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.4) 40%,
+                rgba(0, 0, 0, 0.2) 100%
+            );
+            z-index: 2;
+        }
+
+        .home-hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            color: #FFFFFF;
+            max-width: 800px;
+            padding: 0 48px;
+            animation: heroFadeUp 600ms ease-out forwards;
+        }
+
+        @keyframes heroFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .home-hero-headline {
+            font-size: 84px;
+            font-weight: 800;
+            line-height: 1.0;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+        }
+
+        .home-hero-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #FFFFFF;
+            color: #111111;
+        }
+
+        .home-hero-cta:hover {
+            background-color: #E5E5E5;
+        }
+
+        /* ===== FEATURED PRODUCTS SECTION ===== */
+        .featured-products-section {
+            padding: 64px 0;
+            background-color: #FFFFFF;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 48px;
+            margin-bottom: 24px;
+            max-width: 1440px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #111111;
+            line-height: 1.3;
+        }
+
+        .carousel-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .carousel-nav-btn {
+            width: 48px;
+            height: 48px;
+            border: none;
+            background-color: #E5E5E5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .carousel-nav-btn:hover {
+            background-color: #CCCCCC;
+        }
+
+        .carousel-nav-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #111111;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 16px;
+            padding: 0 48px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-item {
+            flex: 0 0 calc(25% - 12px);
+            scroll-snap-align: start;
+            min-width: 250px;
+        }
+
+        /* ===== PRODUCT CARD ===== */
+        .product-card {
+            background-color: #FFFFFF;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            background-color: #F5F5F5;
+            overflow: hidden;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: linear-gradient(135deg, #E5E5E5 0%, #F5F5F5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #757575;
+            font-size: 14px;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            z-index: 2;
+        }
+
+        .favorite-btn:hover {
+            background-color: #FFFFFF;
+            transform: scale(1.1);
+        }
+
+        .favorite-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #111111;
+            stroke-width: 1.5;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #111111;
+            color: #FFFFFF;
+            z-index: 2;
+        }
+
+        .card-info {
+            padding: 12px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .product-category {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+        }
+
+        /* ===== TESTIMONIALS SECTION ===== */
+        .testimonials-section {
+            padding: 64px 0;
+            background-color: #F5F5F5;
+        }
+
+        /* ===== TESTIMONIAL CARD ===== */
+        .testimonial-card {
+            background-color: #FFFFFF;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            aspect-ratio: 3 / 4;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .testimonial-card-image {
+            flex: 0 0 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #E5E5E5 0%, #D4D4D4 100%);
+        }
+
+        .testimonial-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .testimonial-avatar {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #757575;
+        }
+
+        .testimonial-card-content {
+            flex: 0 0 50%;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .testimonial-rating {
+            display: flex;
+            gap: 4px;
+        }
+
+        .star {
+            width: 16px;
+            height: 16px;
+            fill: #FFB800;
+        }
+
+        .star.empty {
+            fill: #E5E5E5;
+        }
+
+        .testimonial-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #111111;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #E5E5E5;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .carousel-dot.active {
+            background-color: #111111;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background-color: #111111;
+            color: #7E7E7E;
+            padding: 48px;
+        }
+
+        .footer-container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h4 {
+            color: #FFFFFF;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column a {
+            color: #7E7E7E;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-column a:hover {
+            color: #FFFFFF;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+        }
+
+        .social-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #7E7E7E;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            text-decoration: none;
+            color: #111111;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .social-icon:hover {
+            background-color: #FFFFFF;
+        }
+
+        .footer-divider {
+            height: 1px;
+            background-color: #3D3D3D;
+            margin-bottom: 24px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .location-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #7E7E7E;
+            font-size: 12px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .copyright {
+            color: #7E7E7E;
+            font-size: 12px;
+        }
+
+        .legal-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .legal-links a {
+            color: #7E7E7E;
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.2s ease;
+        }
+
+        .legal-links a:hover {
+            color: #FFFFFF;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .home-hero {
+                height: 600px;
+            }
+
+            .home-hero-headline {
+                font-size: 64px;
+            }
+
+            .nav-primary {
+                display: none;
+            }
+
+            .footer-main {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-wrapper {
+                padding: 0 16px;
+            }
+
+            .home-hero {
+                height: auto;
+                min-height: 500px;
+                padding: 80px 0;
+            }
+
+            .home-hero-headline {
+                font-size: 44px;
+                letter-spacing: -1px;
+            }
+
+            .home-hero-content {
+                padding: 0 24px;
+            }
+
+            .featured-products-section,
+            .testimonials-section {
+                padding: 32px 0;
+            }
+
+            .section-header {
+                padding: 0 16px;
+            }
+
+            .carousel-track {
+                padding: 0 16px;
+                gap: 12px;
+            }
+
+            .carousel-item {
+                flex: 0 0 80%;
+            }
+
+            .carousel-nav {
+                display: none;
+            }
+
+            .footer {
+                padding: 32px 24px;
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr;
+            }
+
+            .social-icons {
+                justify-content: center;
+                padding: 24px 0;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+            }
+
+            .legal-links {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="nav-container">
+        <nav class="nav-wrapper">
+            <a href="/" class="nav-logo">VULT</a>
+            <div class="nav-primary">
+                <a href="#" class="nav-link">Men</a>
+                <a href="#" class="nav-link">Women</a>
+                <a href="#" class="nav-link">Kids</a>
+                <a href="#" class="nav-link">Sale</a>
+            </div>
+            <div class="nav-actions">
+                <button class="icon-btn" aria-label="Search">
+                    <svg viewBox="0 0 24 24"><path d="M21 21l-5.2-5.2M17 10a7 7 0 11-14 0 7 7 0 0114 0z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Favorites">
+                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Account">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                </button>
+                <button class="icon-btn" aria-label="Cart">
+                    <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <span class="badge">3</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="home-hero">
+            <div class="home-hero-background">
+                <!-- Visual representation of Blue Jays hat -->
+                <div class="hat-visual">
+                    <div class="hat-crown">
+                        <div class="hat-bird">
+                            <div class="bird-body"></div>
+                            <div class="bird-head"></div>
+                            <div class="bird-beak"></div>
+                        </div>
+                    </div>
+                    <div class="hat-brim"></div>
+                </div>
+            </div>
+            <div class="home-hero-overlay"></div>
+            <div class="home-hero-content">
+                <h1 class="home-hero-headline">Buy Premium<br>Used Products</h1>
+                <a href="/shop" class="home-hero-cta">Shop Now</a>
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section class="featured-products-section">
+            <div class="section-header">
+                <h2 class="section-title">Featured Products</h2>
+                <div class="carousel-nav">
+                    <button class="carousel-nav-btn" aria-label="Previous">
+                        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                    <button class="carousel-nav-btn" aria-label="Next">
+                        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <!-- Product 1 -->
+                    <div class="carousel-item">
+                        <article class="product-card">
+                            <div class="card-image-container">
+                                <div class="card-image">Product Image</div>
+                                <span class="card-badge">Featured</span>
+                                <button class="favorite-btn" aria-label="Add to favorites">
+                                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                </button>
+                            </div>
+                            <div class="card-info">
+                                <h3 class="product-name">Vintage Denim Jacket</h3>
+                                <p class="product-category">Men's Outerwear</p>
+                                <p class="product-price">$89</p>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Product 2 -->
+                    <div class="carousel-item">
+                        <article class="product-card">
+                            <div class="card-image-container">
+                                <div class="card-image">Product Image</div>
+                                <button class="favorite-btn" aria-label="Add to favorites">
+                                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                </button>
+                            </div>
+                            <div class="card-info">
+                                <h3 class="product-name">New Era Blue Jays Cap</h3>
+                                <p class="product-category">Accessories</p>
+                                <p class="product-price">$45</p>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Product 3 -->
+                    <div class="carousel-item">
+                        <article class="product-card">
+                            <div class="card-image-container">
+                                <div class="card-image">Product Image</div>
+                                <span class="card-badge">Featured</span>
+                                <button class="favorite-btn" aria-label="Add to favorites">
+                                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                </button>
+                            </div>
+                            <div class="card-info">
+                                <h3 class="product-name">Leather Crossbody Bag</h3>
+                                <p class="product-category">Women's Bags</p>
+                                <p class="product-price">$125</p>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Product 4 -->
+                    <div class="carousel-item">
+                        <article class="product-card">
+                            <div class="card-image-container">
+                                <div class="card-image">Product Image</div>
+                                <button class="favorite-btn" aria-label="Add to favorites">
+                                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                </button>
+                            </div>
+                            <div class="card-info">
+                                <h3 class="product-name">Retro Sneakers</h3>
+                                <p class="product-category">Men's Footwear</p>
+                                <p class="product-price">$75</p>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Product 5 -->
+                    <div class="carousel-item">
+                        <article class="product-card">
+                            <div class="card-image-container">
+                                <div class="card-image">Product Image</div>
+                                <button class="favorite-btn" aria-label="Add to favorites">
+                                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                </button>
+                            </div>
+                            <div class="card-info">
+                                <h3 class="product-name">Classic Watch</h3>
+                                <p class="product-category">Accessories</p>
+                                <p class="product-price">$195</p>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Product 6 -->
+                    <div class="carousel-item">
+                        <article class="product-card">
+                            <div class="card-image-container">
+                                <div class="card-image">Product Image</div>
+                                <button class="favorite-btn" aria-label="Add to favorites">
+                                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                </button>
+                            </div>
+                            <div class="card-info">
+                                <h3 class="product-name">Wool Blazer</h3>
+                                <p class="product-category">Men's Outerwear</p>
+                                <p class="product-price">$145</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-dots">
+                <button class="carousel-dot active" aria-label="Slide 1"></button>
+                <button class="carousel-dot" aria-label="Slide 2"></button>
+                <button class="carousel-dot" aria-label="Slide 3"></button>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section">
+            <div class="section-header">
+                <h2 class="section-title">Our customers love us</h2>
+                <div class="carousel-nav">
+                    <button class="carousel-nav-btn" aria-label="Previous">
+                        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                    <button class="carousel-nav-btn" aria-label="Next">
+                        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <!-- Testimonial 1 -->
+                    <div class="carousel-item">
+                        <article class="testimonial-card">
+                            <div class="testimonial-card-image">
+                                <div class="testimonial-avatar">
+                                    <svg viewBox="0 0 24 24" width="80" height="80"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                                </div>
+                            </div>
+                            <div class="testimonial-card-content">
+                                <div class="testimonial-rating">
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                </div>
+                                <p class="testimonial-text">"Amazing quality! The jacket I bought looked brand new. Fast shipping and great customer service. Will definitely shop here again!"</p>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="carousel-item">
+                        <article class="testimonial-card">
+                            <div class="testimonial-card-image">
+                                <div class="testimonial-avatar">
+                                    <svg viewBox="0 0 24 24" width="80" height="80"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                                </div>
+                            </div>
+                            <div class="testimonial-card-content">
+                                <div class="testimonial-rating">
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star empty" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                </div>
+                                <p class="testimonial-text">"Found the perfect vintage watch at a fraction of retail price. The product description was accurate and it arrived quickly."</p>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="carousel-item">
+                        <article class="testimonial-card">
+                            <div class="testimonial-card-image">
+                                <div class="testimonial-avatar">
+                                    <svg viewBox="0 0 24 24" width="80" height="80"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                                </div>
+                            </div>
+                            <div class="testimonial-card-content">
+                                <div class="testimonial-rating">
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                </div>
+                                <p class="testimonial-text">"Love shopping sustainably! Every item I've purchased has been in excellent condition. Vult is now my go-to for quality pre-owned items."</p>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Testimonial 4 -->
+                    <div class="carousel-item">
+                        <article class="testimonial-card">
+                            <div class="testimonial-card-image">
+                                <div class="testimonial-avatar">
+                                    <svg viewBox="0 0 24 24" width="80" height="80"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                                </div>
+                            </div>
+                            <div class="testimonial-card-content">
+                                <div class="testimonial-rating">
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                </div>
+                                <p class="testimonial-text">"The authentication process gives me peace of mind. I've bought designer bags here and they've all been genuine and in great shape."</p>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Testimonial 5 -->
+                    <div class="carousel-item">
+                        <article class="testimonial-card">
+                            <div class="testimonial-card-image">
+                                <div class="testimonial-avatar">
+                                    <svg viewBox="0 0 24 24" width="80" height="80"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                                </div>
+                            </div>
+                            <div class="testimonial-card-content">
+                                <div class="testimonial-rating">
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <svg class="star empty" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                </div>
+                                <p class="testimonial-text">"Great selection of vintage sportswear. Found a rare jersey I'd been looking for years. The condition grading system is very accurate."</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-dots">
+                <button class="carousel-dot active" aria-label="Slide 1"></button>
+                <button class="carousel-dot" aria-label="Slide 2"></button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-main">
+                <div class="footer-column">
+                    <h4>Help</h4>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Order Status</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Vult</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Investors</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Promotions</h4>
+                    <ul>
+                        <li><a href="#">Student Discount</a></li>
+                        <li><a href="#">Military Discount</a></li>
+                        <li><a href="#">First Responder</a></li>
+                        <li><a href="#">Refer a Friend</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <div class="social-icons">
+                        <a href="#" class="social-icon" aria-label="Facebook">f</a>
+                        <a href="#" class="social-icon" aria-label="Twitter">t</a>
+                        <a href="#" class="social-icon" aria-label="Instagram">i</a>
+                        <a href="#" class="social-icon" aria-label="YouTube">y</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-divider"></div>
+            <div class="footer-bottom">
+                <div class="footer-left">
+                    <button class="location-selector">
+                        <span>United States</span>
+                    </button>
+                    <span class="copyright">&copy; 2024 Vult, Inc. All Rights Reserved</span>
+                </div>
+                <div class="legal-links">
+                    <a href="#">Terms of Sale</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Cookie Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
