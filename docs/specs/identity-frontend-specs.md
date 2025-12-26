@@ -15,14 +15,13 @@
 2. [Token Management Requirements](#token-management-requirements)
 3. [Route Protection & Navigation Requirements](#route-protection--navigation-requirements)
 4. [User Registration Requirements](#user-registration-requirements)
-5. [User Invitation Requirements](#user-invitation-requirements)
-6. [Session Management Requirements](#session-management-requirements)
-7. [Authorization & Access Control Requirements](#authorization--access-control-requirements)
-8. [User Profile Management Requirements](#user-profile-management-requirements)
-9. [Password Management Requirements](#password-management-requirements)
-10. [User Interface Requirements](#user-interface-requirements)
-11. [State Management Requirements](#state-management-requirements)
-12. [Validation Requirements](#validation-requirements)
+5. [Session Management Requirements](#session-management-requirements)
+6. [Authorization & Access Control Requirements](#authorization--access-control-requirements)
+7. [User Profile Management Requirements](#user-profile-management-requirements)
+8. [Password Management Requirements](#password-management-requirements)
+9. [User Interface Requirements](#user-interface-requirements)
+10. [State Management Requirements](#state-management-requirements)
+11. [Validation Requirements](#validation-requirements)
 
 ---
 
@@ -501,72 +500,7 @@ this.emailFormControl = new FormControl(
 
 ---
 
-## 5. User Invitation Requirements
-
-### REQ-FE-INV-001: Invitation Token Service
-
-**Requirement:** The system shall provide a service for managing invitation tokens including CRUD operations.
-
-**Acceptance Criteria:**
-- [ ] Service provides `get()` method to list all invitation tokens
-- [ ] Service provides `getById()` method to retrieve specific token
-- [ ] Service provides `create()` method to create new invitation tokens
-- [ ] Service provides `update()` method to modify tokens
-- [ ] Service provides `remove()` method to delete tokens
-- [ ] Service implements `IPagableService<InvitationToken>` interface
-- [ ] Service calls backend API endpoints under `/api/invitationToken`
-
-**Service Interface:**
-
-```typescript
-export class InvitationTokenService implements IPagableService<InvitationToken> {
-  get(): Observable<InvitationToken[]>;
-  getById(options: { invitationTokenId: string }): Observable<InvitationToken>;
-  create(options: { request: CreateInvitationTokenRequest }): Observable<CreateInvitationTokenResponse>;
-  update(options: { request: UpdateInvitationTokenRequest }): Observable<UpdateInvitationTokenResponse>;
-  remove(options: { invitationTokenId: string }): Observable<RemoveInvitationTokenResponse>;
-}
-```
-
-**Invitation Token Model:**
-
-```typescript
-interface InvitationToken {
-  invitationTokenId: string;
-  value: string;
-  expiry?: Date;
-  type: InvitationTokenType;
-}
-```
-
----
-
-### REQ-FE-INV-002: Invitation Token State Management
-
-**Requirement:** The system shall manage invitation token state using NgRx Component Store.
-
-**Acceptance Criteria:**
-- [ ] Store maintains list of invitation tokens
-- [ ] Store maintains selected invitation token
-- [ ] Store provides effects for create, update, remove operations
-- [ ] Store handles loading and error states
-- [ ] Store exposes selectors for reactive state access
-- [ ] Store integrates with InvitationTokenService
-
-**Store State:**
-
-```typescript
-interface InvitationTokenState {
-  invitationTokens: InvitationToken[];
-  invitationToken?: InvitationToken;
-  loading?: boolean;
-  error?: any;
-}
-```
-
----
-
-## 6. Session Management Requirements
+## 5. Session Management Requirements
 
 ### REQ-FE-SESS-001: Current User Initialization
 
@@ -625,7 +559,7 @@ private tryToInitializeCurrentUser(): void {
 
 ---
 
-## 7. Authorization & Access Control Requirements
+## 6. Authorization & Access Control Requirements
 
 ### REQ-FE-AUTHZ-001: User Model with Roles
 
@@ -823,7 +757,7 @@ export class AuthService {
 
 ---
 
-## 8. User Profile Management Requirements
+## 7. User Profile Management Requirements
 
 ### REQ-FE-PROFILE-001: Profile Model
 
@@ -935,7 +869,7 @@ export class ProfileComponent implements OnInit {
 
 ---
 
-## 9. Password Management Requirements
+## 8. Password Management Requirements
 
 ### REQ-FE-PWD-001: Password Change Feature
 
@@ -964,7 +898,7 @@ export class ProfileComponent implements OnInit {
 
 ---
 
-## 10. User Interface Requirements
+## 9. User Interface Requirements
 
 ### REQ-FE-UI-001: User List Component
 
@@ -1029,7 +963,7 @@ export class ProfileComponent implements OnInit {
 
 ---
 
-## 11. State Management Requirements
+## 10. State Management Requirements
 
 ### REQ-FE-STATE-001: User State Management
 
@@ -1107,7 +1041,7 @@ export class UserStore extends ComponentStore<UserState> {
 
 ---
 
-## 12. Validation Requirements
+## 11. Validation Requirements
 
 ### REQ-FE-VAL-001: Login Form Validation
 
@@ -1211,16 +1145,6 @@ export class UserStore extends ComponentStore<UserState> {
 | PUT | /api/privilege | Update privilege |
 | DELETE | /api/privilege/{id} | Delete privilege |
 
-### Invitation Token Endpoints
-
-| Method | Endpoint | Purpose |
-|--------|----------|---------|
-| GET | /api/invitationToken | Get all tokens |
-| GET | /api/invitationToken/{id} | Get token by ID |
-| POST | /api/invitationToken | Create token |
-| PUT | /api/invitationToken | Update token |
-| DELETE | /api/invitationToken/{id} | Delete token |
-
 ---
 
 ## Appendix B: LocalStorage Keys
@@ -1246,7 +1170,6 @@ export class UserStore extends ComponentStore<UserState> {
 - **ProfileService**: Profile API client
 - **RoleService**: Role API client
 - **PrivilegeService**: Privilege API client
-- **InvitationTokenService**: Invitation token API client
 
 ### HTTP Interceptors
 
@@ -1263,7 +1186,6 @@ export class UserStore extends ComponentStore<UserState> {
 - **ProfileStore**: Profile state management
 - **RoleStore**: Role state management
 - **PrivilegeStore**: Privilege state management
-- **InvitationTokenStore**: Invitation token state management
 
 ### Feature Components
 
@@ -1414,21 +1336,6 @@ enum AccessRight {
   Write = 2,
   Create = 3,
   Delete = 4
-}
-```
-
-### Invitation Models
-
-```typescript
-interface InvitationToken {
-  invitationTokenId: string;
-  value: string;
-  expiry?: Date;
-  type: InvitationTokenType;
-}
-
-enum InvitationTokenType {
-  TBD
 }
 ```
 
