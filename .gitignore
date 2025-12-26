@@ -484,3 +484,6 @@ $RECYCLE.BIN/
 # Angular build artifacts
 .angular/
 dist/
+
+# Storybook build output
+storybook-static/

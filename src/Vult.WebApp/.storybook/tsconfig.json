@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "jest"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
+  "include": ["../projects/vult-components/src/**/*", "./preview.ts", "./main.ts"],
+  "exclude": ["../node_modules", "../**/*.spec.ts"]
+}
