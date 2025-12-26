@@ -20,7 +20,8 @@
       "Bash(npm run e2e:vult-admin:*)",
       "Bash(npm run:*)",
       "Bash(Remove-Item \"src/Vult.Infrastructure/Migrations/*.cs\" -Force)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []
