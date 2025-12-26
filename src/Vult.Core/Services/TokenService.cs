@@ -7,9 +7,8 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Vult.Core;
 
-namespace Vult.Api.Services;
+namespace Vult.Core.Services;
 
 public class TokenService : ITokenService
 {
