@@ -2,9 +2,8 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System.Security.Cryptography;
-using Vult.Core;
 
-namespace Vult.Api.Services;
+namespace Vult.Core;
 
 public class PasswordHasher : IPasswordHasher
 {

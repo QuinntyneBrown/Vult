@@ -9,7 +9,6 @@ using System.Text;
 using Vult.Api.Authorization;
 using Vult.Api.Behaviours;
 using Vult.Api.Configuration;
-using Vult.Api.Services;
 using Vult.Core;
 using Vult.Infrastructure.Data;
 
