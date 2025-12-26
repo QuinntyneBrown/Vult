@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Product Card Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 48px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        @media (max-width: 1024px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        /* Product Card */
+        .product-card {
+            background-color: #ffffff;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Card Image Container */
+        .card-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: opacity 0.2s ease;
+        }
+
+        .card-image-hover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .product-card:hover .card-image-hover {
+            opacity: 1;
+        }
+
+        /* Placeholder for demo */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Favorite Button */
+        .favorite-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            z-index: 2;
+        }
+
+        .favorite-btn:hover {
+            background-color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .favorite-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #111111;
+            stroke-width: 1.5;
+        }
+
+        .favorite-btn.active svg {
+            fill: #111111;
+        }
+
+        /* Badges */
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #ffffff;
+            color: #111111;
+            z-index: 2;
+        }
+
+        .card-badge.sale {
+            background-color: #9E3500;
+            color: #ffffff;
+        }
+
+        /* Card Info */
+        .card-info {
+            padding: 12px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            line-height: 1.4;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-category {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 4px;
+        }
+
+        .product-colors {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+        }
+
+        .product-price.sale {
+            color: #9E3500;
+        }
+
+        .original-price {
+            color: #757575;
+            text-decoration: line-through;
+            font-weight: 400;
+            margin-left: 8px;
+        }
+
+        /* Sold Out State */
+        .sold-out-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .sold-out-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #111111;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Color Swatches */
+        .color-swatches {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .color-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid #e5e5e5;
+            cursor: pointer;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .more-colors {
+            font-size: 12px;
+            color: #757575;
+        }
+
+        /* Card Variants Container */
+        .card-variants {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+
+        .card-variant {
+            flex: 0 0 280px;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">Product Card Grid (4-Column)</div>
+
+    <!-- Product Grid -->
+    <div class="product-grid">
+        <!-- Card 1: Standard -->
+        <article class="product-card">
+            <div class="card-image-container">
+                <div class="image-placeholder">Product Image</div>
+                <button class="favorite-btn" aria-label="Add to favorites">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.794 3.75c1.324 0 2.568.516 3.504 1.451a4.96 4.96 0 010 7.008L12 20.508l-8.299-8.299a4.96 4.96 0 010-7.007A4.923 4.923 0 017.205 3.75c1.324 0 2.568.516 3.504 1.451l.53.53.531-.53c.937-.935 2.18-1.451 3.504-1.451z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="card-info">
+                <h3 class="product-name">Nike Air Max 270</h3>
+                <p class="product-category">Women's Shoes</p>
+                <p class="product-colors">3 Colors</p>
+                <p class="product-price">$150</p>
+            </div>
+        </article>
+
+        <!-- Card 2: With Badge -->
+        <article class="product-card">
+            <div class="card-image-container">
+                <div class="image-placeholder">Product Image</div>
+                <span class="card-badge">Just In</span>
+                <button class="favorite-btn" aria-label="Add to favorites">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.794 3.75c1.324 0 2.568.516 3.504 1.451a4.96 4.96 0 010 7.008L12 20.508l-8.299-8.299a4.96 4.96 0 010-7.007A4.923 4.923 0 017.205 3.75c1.324 0 2.568.516 3.504 1.451l.53.53.531-.53c.937-.935 2.18-1.451 3.504-1.451z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="card-info">
+                <h3 class="product-name">Jordan 1 Retro High OG</h3>
+                <p class="product-category">Men's Shoes</p>
+                <p class="product-colors">1 Color</p>
+                <p class="product-price">$180</p>
+            </div>
+        </article>
+
+        <!-- Card 3: Sale -->
+        <article class="product-card">
+            <div class="card-image-container">
+                <div class="image-placeholder">Product Image</div>
+                <span class="card-badge sale">Sale</span>
+                <button class="favorite-btn" aria-label="Add to favorites">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.794 3.75c1.324 0 2.568.516 3.504 1.451a4.96 4.96 0 010 7.008L12 20.508l-8.299-8.299a4.96 4.96 0 010-7.007A4.923 4.923 0 017.205 3.75c1.324 0 2.568.516 3.504 1.451l.53.53.531-.53c.937-.935 2.18-1.451 3.504-1.451z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="card-info">
+                <h3 class="product-name">Nike React Infinity Run Flyknit 3</h3>
+                <p class="product-category">Men's Running Shoes</p>
+                <p class="product-colors">2 Colors</p>
+                <p class="product-price sale">$119 <span class="original-price">$160</span></p>
+            </div>
+        </article>
+
+        <!-- Card 4: Favorited -->
+        <article class="product-card">
+            <div class="card-image-container">
+                <div class="image-placeholder">Product Image</div>
+                <button class="favorite-btn active" aria-label="Remove from favorites">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.794 3.75c1.324 0 2.568.516 3.504 1.451a4.96 4.96 0 010 7.008L12 20.508l-8.299-8.299a4.96 4.96 0 010-7.007A4.923 4.923 0 017.205 3.75c1.324 0 2.568.516 3.504 1.451l.53.53.531-.53c.937-.935 2.18-1.451 3.504-1.451z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="card-info">
+                <h3 class="product-name">Nike Dunk Low Retro</h3>
+                <p class="product-category">Men's Shoes</p>
+                <p class="product-colors">8 Colors</p>
+                <p class="product-price">$115</p>
+            </div>
+        </article>
+    </div>
+
+    <div class="section-label">Card Variants</div>
+
+    <div class="card-variants">
+        <!-- Card with Color Swatches -->
+        <div class="card-variant">
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                    <button class="favorite-btn" aria-label="Add to favorites">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.794 3.75c1.324 0 2.568.516 3.504 1.451a4.96 4.96 0 010 7.008L12 20.508l-8.299-8.299a4.96 4.96 0 010-7.007A4.923 4.923 0 017.205 3.75c1.324 0 2.568.516 3.504 1.451l.53.53.531-.53c.937-.935 2.18-1.451 3.504-1.451z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike Air Force 1 '07</h3>
+                    <p class="product-category">Men's Shoes</p>
+                    <div class="color-swatches">
+                        <span class="color-swatch" style="background-color: #FFFFFF;"></span>
+                        <span class="color-swatch" style="background-color: #111111;"></span>
+                        <span class="color-swatch" style="background-color: #8B4513;"></span>
+                        <span class="color-swatch" style="background-color: #FFD700;"></span>
+                        <span class="more-colors">+5</span>
+                    </div>
+                    <p class="product-price">$115</p>
+                </div>
+            </article>
+        </div>
+
+        <!-- Sold Out Card -->
+        <div class="card-variant">
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                    <div class="sold-out-overlay">
+                        <span class="sold-out-text">Sold Out</span>
+                    </div>
+                    <button class="favorite-btn" aria-label="Add to favorites">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.794 3.75c1.324 0 2.568.516 3.504 1.451a4.96 4.96 0 010 7.008L12 20.508l-8.299-8.299a4.96 4.96 0 010-7.007A4.923 4.923 0 017.205 3.75c1.324 0 2.568.516 3.504 1.451l.53.53.531-.53c.937-.935 2.18-1.451 3.504-1.451z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike Dunk Low SE</h3>
+                    <p class="product-category">Women's Shoes</p>
+                    <p class="product-colors">1 Color</p>
+                    <p class="product-price">$125</p>
+                </div>
+            </article>
+        </div>
+
+        <!-- Member Exclusive Card -->
+        <div class="card-variant">
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                    <span class="card-badge">Member Access</span>
+                    <button class="favorite-btn" aria-label="Add to favorites">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16.794 3.75c1.324 0 2.568.516 3.504 1.451a4.96 4.96 0 010 7.008L12 20.508l-8.299-8.299a4.96 4.96 0 010-7.007A4.923 4.923 0 017.205 3.75c1.324 0 2.568.516 3.504 1.451l.53.53.531-.53c.937-.935 2.18-1.451 3.504-1.451z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike ISPA Link Axis</h3>
+                    <p class="product-category">Shoes</p>
+                    <p class="product-colors">2 Colors</p>
+                    <p class="product-price">$200</p>
+                </div>
+            </article>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Navigation Bar Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+        }
+
+        /* Promo Banner */
+        .promo-banner {
+            background-color: #f5f5f5;
+            text-align: center;
+            padding: 8px 16px;
+            font-size: 11px;
+            color: #111111;
+        }
+
+        .promo-banner a {
+            color: #111111;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        /* Main Navigation */
+        .nav-container {
+            background-color: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            padding: 0 48px;
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        /* Logo */
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo svg {
+            width: 59px;
+            height: 21px;
+            fill: #111111;
+        }
+
+        .nav-logo:hover svg {
+            fill: #757575;
+        }
+
+        /* Primary Navigation */
+        .nav-primary {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-link {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            text-decoration: none;
+            padding: 20px 0;
+            position: relative;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 18px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #111111;
+            transform: scaleX(0);
+            transition: transform 0.2s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-link:hover {
+            color: #111111;
+        }
+
+        /* Right Section */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Search */
+        .search-container {
+            position: relative;
+            margin-right: 8px;
+        }
+
+        .search-input {
+            width: 180px;
+            height: 40px;
+            border: none;
+            border-radius: 20px;
+            background-color: #f5f5f5;
+            padding: 0 40px 0 44px;
+            font-size: 16px;
+            transition: width 0.2s ease, background-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            width: 280px;
+            background-color: #e5e5e5;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #757575;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            fill: #111111;
+            pointer-events: none;
+        }
+
+        /* Icon Buttons */
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background-color: #e5e5e5;
+        }
+
+        .icon-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #111111;
+        }
+
+        /* Badge */
+        .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            min-width: 18px;
+            height: 18px;
+            background-color: #111111;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 500;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            padding: 48px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link:hover + .dropdown-menu,
+        .dropdown-menu:hover {
+            display: block;
+        }
+
+        .dropdown-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 32px;
+        }
+
+        .dropdown-column h4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            margin-bottom: 16px;
+        }
+
+        .dropdown-column ul {
+            list-style: none;
+        }
+
+        .dropdown-column li {
+            margin-bottom: 8px;
+        }
+
+        .dropdown-column a {
+            font-size: 14px;
+            color: #757575;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .dropdown-column a:hover {
+            color: #111111;
+        }
+
+        /* Mobile Menu Button (hidden on desktop) */
+        .mobile-menu-btn {
+            display: none;
+        }
+
+        /* Demo Content Area */
+        .demo-content {
+            padding: 48px;
+            text-align: center;
+            color: #757575;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 960px) {
+            .nav-wrapper {
+                padding: 0 24px;
+            }
+
+            .nav-primary {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+                order: -1;
+                margin-right: 16px;
+            }
+
+            .search-input {
+                width: 40px;
+                padding: 0;
+                background-color: transparent;
+            }
+
+            .search-input:focus {
+                width: 200px;
+                background-color: #f5f5f5;
+                padding: 0 40px 0 44px;
+            }
+
+            .nav-logo {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-wrapper {
+                padding: 0 16px;
+            }
+
+            .icon-btn.favorites {
+                display: none;
+            }
+
+            .icon-btn.account {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Promo Banner -->
+    <div class="promo-banner">
+        Free Standard Shipping on Orders $50+ and Free 60-Day Returns. <a href="#">Join Us</a> for Member-Exclusive Products & Offers.
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-wrapper">
+            <!-- Logo -->
+            <a href="/" class="nav-logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 8.719L7.836 14.303C6.74 14.768 5.818 15 5.075 15c-.836 0-1.445-.295-1.819-.884-.485-.76-.273-1.982.559-3.272.494-.754 1.122-1.446 1.734-2.108-.144.234-1.415 2.349-.025 3.345.275.197.62.3 1.023.3.836 0 1.912-.47 3.37-1.08L21 8.719z"/>
+                </svg>
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button class="icon-btn mobile-menu-btn" aria-label="Menu">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+                </svg>
+            </button>
+
+            <!-- Primary Navigation -->
+            <div class="nav-primary">
+                <a href="/new" class="nav-link">New & Featured</a>
+                <a href="/men" class="nav-link">Men</a>
+                <a href="/women" class="nav-link">Women</a>
+                <a href="/kids" class="nav-link">Kids</a>
+                <a href="/sale" class="nav-link">Sale</a>
+            </div>
+
+            <!-- Right Section -->
+            <div class="nav-right">
+                <!-- Search -->
+                <div class="search-container">
+                    <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                    <input type="text" class="search-input" placeholder="Search" aria-label="Search">
+                </div>
+
+                <!-- Favorites -->
+                <button class="icon-btn favorites" aria-label="Favorites">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.794 3.75c1.324 0 2.568.516 3.504 1.451a4.96 4.96 0 010 7.008L12 20.508l-8.299-8.299a4.96 4.96 0 010-7.007A4.923 4.923 0 017.205 3.75c1.324 0 2.568.516 3.504 1.451l.53.53.531-.53.53-.53c.937-.935 2.18-1.451 3.504-1.451z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </button>
+
+                <!-- Account -->
+                <button class="icon-btn account" aria-label="Account">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </button>
+
+                <!-- Cart -->
+                <button class="icon-btn cart" aria-label="Shopping Bag">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 6V5c0-2.21 1.79-4 4-4s4 1.79 4 4v1h3.5c.83 0 1.5.67 1.5 1.5V20c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V7.5C3 6.67 3.67 6 4.5 6H8zm2-1v1h4V5c0-1.1-.9-2-2-2s-2 .9-2 2zM5 20h14V8H5v12z"/>
+                    </svg>
+                    <span class="badge">2</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dropdown Menu (shown on hover) -->
+        <div class="dropdown-menu">
+            <div class="dropdown-content">
+                <div class="dropdown-column">
+                    <h4>Featured</h4>
+                    <ul>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Best Sellers</a></li>
+                        <li><a href="#">Member Exclusive</a></li>
+                        <li><a href="#">Jordan</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown-column">
+                    <h4>Shoes</h4>
+                    <ul>
+                        <li><a href="#">All Shoes</a></li>
+                        <li><a href="#">Lifestyle</a></li>
+                        <li><a href="#">Running</a></li>
+                        <li><a href="#">Basketball</a></li>
+                        <li><a href="#">Jordan</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown-column">
+                    <h4>Clothing</h4>
+                    <ul>
+                        <li><a href="#">All Clothing</a></li>
+                        <li><a href="#">Tops & T-Shirts</a></li>
+                        <li><a href="#">Hoodies</a></li>
+                        <li><a href="#">Jackets</a></li>
+                        <li><a href="#">Pants</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown-column">
+                    <h4>Accessories</h4>
+                    <ul>
+                        <li><a href="#">Bags & Backpacks</a></li>
+                        <li><a href="#">Hats</a></li>
+                        <li><a href="#">Socks</a></li>
+                        <li><a href="#">Sunglasses</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown-column">
+                    <h4>Shop by Sport</h4>
+                    <ul>
+                        <li><a href="#">Running</a></li>
+                        <li><a href="#">Basketball</a></li>
+                        <li><a href="#">Football</a></li>
+                        <li><a href="#">Soccer</a></li>
+                        <li><a href="#">Golf</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Demo Content -->
+    <div class="demo-content">
+        <p>Page content goes here...</p>
+    </div>
+</body>
+</html>
