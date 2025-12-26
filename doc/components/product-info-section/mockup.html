@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Info Section - Component Mockup</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      padding: 24px;
+    }
+
+    .component-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #111111;
+    }
+
+    .demo-section {
+      margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .demo-label {
+      font-size: 14px;
+      color: #757575;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Product Info Section Styles */
+    .product-info-section {
+      max-width: 400px;
+    }
+
+    .product-info__badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background-color: #111111;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .product-info__subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      color: #757575;
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+
+    .product-info__title {
+      font-size: 24px;
+      font-weight: 500;
+      color: #111111;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+
+    .product-info__color {
+      font-size: 16px;
+      font-weight: 400;
+      color: #111111;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .product-info__price-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .product-info__price {
+      font-size: 20px;
+      font-weight: 500;
+      color: #111111;
+      line-height: 1.4;
+    }
+
+    .product-info__price--original {
+      font-size: 16px;
+      font-weight: 400;
+      color: #757575;
+      text-decoration: line-through;
+    }
+
+    .product-info__sale-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background-color: #008c00;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 2px;
+    }
+
+    .product-info__promo {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #008c00;
+      font-weight: 500;
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+      .product-info__subtitle {
+        font-size: 14px;
+      }
+
+      .product-info__title {
+        font-size: 20px;
+      }
+
+      .product-info__price {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="component-title">Product Info Section Component</h1>
+
+  <!-- Regular Price -->
+  <div class="demo-section">
+    <div class="demo-label">Regular Price</div>
+    <div class="product-info-section">
+      <p class="product-info__subtitle">Nike Tech</p>
+      <h1 class="product-info__title">Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket</h1>
+      <p class="product-info__color">Black/White</p>
+      <div class="product-info__price-container">
+        <span class="product-info__price">$175</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sale Price -->
+  <div class="demo-section">
+    <div class="demo-label">Sale Price</div>
+    <div class="product-info-section">
+      <p class="product-info__subtitle">Nike Tech</p>
+      <h1 class="product-info__title">Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket</h1>
+      <p class="product-info__color">Black/White</p>
+      <div class="product-info__price-container">
+        <span class="product-info__price">$140</span>
+        <span class="product-info__price--original">$175</span>
+        <span class="product-info__sale-badge">20% off</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Member Exclusive -->
+  <div class="demo-section">
+    <div class="demo-label">Member Exclusive</div>
+    <div class="product-info-section">
+      <span class="product-info__badge">Exclusive Access</span>
+      <p class="product-info__subtitle">Nike Tech</p>
+      <h1 class="product-info__title">Men's Dri-FIT Woven Color-Block Windrunner Loose Jacket</h1>
+      <p class="product-info__color">Black/White</p>
+      <div class="product-info__price-container">
+        <span class="product-info__price">$175</span>
+      </div>
+      <p class="product-info__promo">Nike Members get free shipping</p>
+    </div>
+  </div>
+
+  <!-- Without Color Name -->
+  <div class="demo-section">
+    <div class="demo-label">Without Color Name</div>
+    <div class="product-info-section">
+      <p class="product-info__subtitle">Nike Sportswear</p>
+      <h1 class="product-info__title">Club Fleece Pullover Hoodie</h1>
+      <div class="product-info__price-container">
+        <span class="product-info__price">$70</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
