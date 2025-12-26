@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Page Header Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 24px;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .demo-section {
+            margin-bottom: 32px;
+            background-color: #ffffff;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* Page Header Component */
+        .page-header {
+            width: 100%;
+            background-color: #FFFFFF;
+            padding: 24px 48px 16px;
+            text-align: left;
+        }
+
+        .page-header--center {
+            text-align: center;
+        }
+
+        .page-header__title {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 28px;
+            font-weight: 500;
+            line-height: 1.2;
+            color: #111111;
+            margin: 0;
+        }
+
+        .page-header__count {
+            font-weight: 400;
+            color: #757575;
+        }
+
+        .page-header__subtitle {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #757575;
+            margin: 8px 0 0;
+            max-width: 600px;
+        }
+
+        .page-header--center .page-header__subtitle {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 16px 16px 12px;
+            }
+
+            .page-header__title {
+                font-size: 24px;
+            }
+
+            .page-header__subtitle {
+                font-size: 14px;
+                margin-top: 4px;
+            }
+        }
+
+        /* Mobile simulation */
+        .mobile-frame {
+            max-width: 375px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .mobile-frame .page-header {
+            padding: 16px 16px 12px;
+        }
+
+        .mobile-frame .page-header__title {
+            font-size: 24px;
+        }
+
+        .mobile-frame .page-header__subtitle {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="section-label">Standard Page Header - Title Only</div>
+        <div class="demo-section">
+            <header class="page-header">
+                <h1 class="page-header__title">Men's New Releases</h1>
+            </header>
+        </div>
+
+        <div class="section-label">Page Header with Product Count</div>
+        <div class="demo-section">
+            <header class="page-header">
+                <h1 class="page-header__title">Men's New Releases <span class="page-header__count">(234)</span></h1>
+            </header>
+        </div>
+
+        <div class="section-label">Page Header with Subtitle</div>
+        <div class="demo-section">
+            <header class="page-header">
+                <h1 class="page-header__title">Men's New Releases</h1>
+                <p class="page-header__subtitle">Check out the latest drops and new arrivals from Nike. Fresh styles added weekly.</p>
+            </header>
+        </div>
+
+        <div class="section-label">Center Aligned Page Header</div>
+        <div class="demo-section">
+            <header class="page-header page-header--center">
+                <h1 class="page-header__title">Sale</h1>
+                <p class="page-header__subtitle">Save up to 50% on select styles. Limited time only.</p>
+            </header>
+        </div>
+
+        <div class="section-label">Category Page Header</div>
+        <div class="demo-section">
+            <header class="page-header">
+                <h1 class="page-header__title">Nike Air Max</h1>
+                <p class="page-header__subtitle">Big style. Big comfort. Iconic cushioning.</p>
+            </header>
+        </div>
+
+        <div class="section-label">Mobile View Simulation</div>
+        <div class="mobile-frame">
+            <header class="page-header">
+                <h1 class="page-header__title">Men's New Releases</h1>
+                <p class="page-header__subtitle">Check out the latest drops and new arrivals from Nike.</p>
+            </header>
+        </div>
+    </div>
+</body>
+</html>

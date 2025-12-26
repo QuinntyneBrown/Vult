@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Filter Sidebar Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 24px;
+        }
+
+        .demo-container {
+            display: flex;
+            gap: 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        /* Filter Sidebar */
+        .filter-sidebar {
+            width: 260px;
+            background-color: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .filter-sidebar__header {
+            padding: 24px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        .filter-sidebar__title {
+            font-size: 24px;
+            font-weight: 500;
+            color: #111111;
+            margin: 0;
+        }
+
+        .filter-sidebar__clear-all {
+            font-size: 14px;
+            color: #757575;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .filter-sidebar__clear-all:hover {
+            color: #111111;
+        }
+
+        /* Filter Sections */
+        .filter-section {
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        .filter-section__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .filter-section__header:hover {
+            background-color: #F5F5F5;
+        }
+
+        .filter-section__title {
+            font-size: 16px;
+            font-weight: 400;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-section__count {
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .filter-section__chevron {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .filter-section--expanded .filter-section__chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Filter Content */
+        .filter-section__content {
+            padding: 0 16px 16px;
+            display: none;
+        }
+
+        .filter-section--expanded .filter-section__content {
+            display: block;
+        }
+
+        /* Filter Options */
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .filter-option__checkbox {
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid #111111;
+            border-radius: 2px;
+            appearance: none;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .filter-option__checkbox:checked {
+            background-color: #111111;
+        }
+
+        .filter-option__checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 5px;
+            height: 9px;
+            border: solid #FFFFFF;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .filter-option__label {
+            font-size: 16px;
+            color: #111111;
+        }
+
+        /* Color Swatches */
+        .color-swatch-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .color-swatch-filter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid #E5E5E5;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .color-swatch-filter:hover {
+            transform: scale(1.1);
+        }
+
+        .color-swatch-filter--selected {
+            border: 2px solid #111111;
+        }
+
+        /* Size Grid */
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .size-button {
+            padding: 12px 8px;
+            border: 1px solid #E5E5E5;
+            background: #FFFFFF;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.15s ease;
+        }
+
+        .size-button:hover {
+            border-color: #111111;
+        }
+
+        .size-button--selected {
+            border: 1.5px solid #111111;
+        }
+
+        /* Show More */
+        .filter-section__show-more {
+            font-size: 14px;
+            font-weight: 500;
+            color: #111111;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 0;
+            text-decoration: underline;
+        }
+
+        .filter-section__show-more:hover {
+            color: #757575;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Sidebar 1: All Collapsed -->
+        <div>
+            <div class="section-label">Collapsed State</div>
+            <aside class="filter-sidebar">
+                <div class="filter-sidebar__header">
+                    <h2 class="filter-sidebar__title">Filter</h2>
+                </div>
+
+                <div class="filter-section">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Gender</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="filter-section">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Kids</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="filter-section">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Sale & Offers</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="filter-section">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Shop by Price</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="filter-section">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Color</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="filter-section">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Brand</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="filter-section">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Size</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Sidebar 2: With Expanded Sections -->
+        <div>
+            <div class="section-label">Expanded with Selections</div>
+            <aside class="filter-sidebar">
+                <div class="filter-sidebar__header">
+                    <h2 class="filter-sidebar__title">Filter</h2>
+                    <button class="filter-sidebar__clear-all">Clear All</button>
+                </div>
+
+                <div class="filter-section filter-section--expanded">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">
+                            Gender
+                            <span class="filter-section__count">(2)</span>
+                        </span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                    <div class="filter-section__content">
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-option__checkbox" checked>
+                            <span class="filter-option__label">Men</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-option__checkbox" checked>
+                            <span class="filter-option__label">Women</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-option__checkbox">
+                            <span class="filter-option__label">Unisex</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Kids</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="filter-section filter-section--expanded">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Color</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                    <div class="filter-section__content">
+                        <div class="color-swatch-grid">
+                            <span class="color-swatch-filter color-swatch-filter--selected" style="background-color: #111111;"></span>
+                            <span class="color-swatch-filter" style="background-color: #FFFFFF;"></span>
+                            <span class="color-swatch-filter" style="background-color: #757575;"></span>
+                            <span class="color-swatch-filter" style="background-color: #9E3500;"></span>
+                            <span class="color-swatch-filter" style="background-color: #0055A6;"></span>
+                            <span class="color-swatch-filter" style="background-color: #2E7D32;"></span>
+                            <span class="color-swatch-filter" style="background-color: #E91E63;"></span>
+                            <span class="color-swatch-filter" style="background-color: #FF9800;"></span>
+                            <span class="color-swatch-filter" style="background-color: #FFEB3B;"></span>
+                            <span class="color-swatch-filter" style="background-color: #9C27B0;"></span>
+                            <span class="color-swatch-filter" style="background-color: #795548;"></span>
+                            <span class="color-swatch-filter" style="background-color: #1A237E;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section filter-section--expanded">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">
+                            Size
+                            <span class="filter-section__count">(1)</span>
+                        </span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                    <div class="filter-section__content">
+                        <div class="size-grid">
+                            <button class="size-button">7</button>
+                            <button class="size-button">7.5</button>
+                            <button class="size-button">8</button>
+                            <button class="size-button">8.5</button>
+                            <button class="size-button">9</button>
+                            <button class="size-button">9.5</button>
+                            <button class="size-button size-button--selected">10</button>
+                            <button class="size-button">10.5</button>
+                            <button class="size-button">11</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section filter-section--expanded">
+                    <button class="filter-section__header">
+                        <span class="filter-section__title">Brand</span>
+                        <svg class="filter-section__chevron" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                    <div class="filter-section__content">
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-option__checkbox">
+                            <span class="filter-option__label">Nike</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-option__checkbox">
+                            <span class="filter-option__label">Jordan</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-option__checkbox">
+                            <span class="filter-option__label">Nike Sportswear</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-option__checkbox">
+                            <span class="filter-option__label">ACG</span>
+                        </label>
+                        <button class="filter-section__show-more">+ 8 More</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</body>
+</html>

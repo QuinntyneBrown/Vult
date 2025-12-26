@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Sort Dropdown Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 24px;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .demo-section {
+            margin-bottom: 48px;
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 4px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        /* Sort Dropdown */
+        .sort-dropdown {
+            position: relative;
+            width: 200px;
+        }
+
+        .sort-dropdown__trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 40px;
+            padding: 0 16px;
+            background-color: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 0;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .sort-dropdown--hover .sort-dropdown__trigger {
+            border-color: #111111;
+        }
+
+        .sort-dropdown--open .sort-dropdown__trigger {
+            border-color: #111111;
+        }
+
+        .sort-dropdown__trigger-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .sort-dropdown__label {
+            font-size: 14px;
+            color: #757575;
+            margin-right: 4px;
+        }
+
+        .sort-dropdown__value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #111111;
+        }
+
+        .sort-dropdown__chevron {
+            width: 12px;
+            height: 12px;
+            margin-left: 8px;
+        }
+
+        .sort-dropdown--open .sort-dropdown__chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Menu */
+        .sort-dropdown__menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background-color: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            list-style: none;
+            padding: 0;
+            display: none;
+        }
+
+        .sort-dropdown--open .sort-dropdown__menu {
+            display: block;
+        }
+
+        /* Options */
+        .sort-dropdown__option {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 40px;
+            padding: 0 16px;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+            color: #111111;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .sort-dropdown__option:hover {
+            background-color: #F5F5F5;
+        }
+
+        .sort-dropdown__option--selected {
+            font-weight: 500;
+        }
+
+        .sort-dropdown__checkmark {
+            width: 16px;
+            height: 16px;
+            margin-right: 12px;
+            visibility: hidden;
+        }
+
+        .sort-dropdown__option--selected .sort-dropdown__checkmark {
+            visibility: visible;
+        }
+
+        /* Toolbar Context */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .toolbar__results {
+            font-size: 16px;
+            color: #111111;
+        }
+
+        /* Mobile Simulation */
+        .mobile-frame {
+            max-width: 375px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+            padding: 16px;
+        }
+
+        .mobile-frame .sort-dropdown {
+            width: 100%;
+        }
+
+        .mobile-frame .sort-dropdown__trigger {
+            height: 48px;
+        }
+
+        .mobile-frame .sort-dropdown__option {
+            height: 48px;
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        .mobile-frame .sort-dropdown__option:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="section-label">Sort Dropdown States</div>
+        <div class="demo-section">
+            <div class="demo-row">
+                <!-- Closed State -->
+                <div>
+                    <p style="font-size: 12px; color: #757575; margin-bottom: 8px;">Closed</p>
+                    <div class="sort-dropdown">
+                        <button class="sort-dropdown__trigger">
+                            <span class="sort-dropdown__trigger-content">
+                                <span class="sort-dropdown__label">Sort By:</span>
+                                <span class="sort-dropdown__value">Featured</span>
+                            </span>
+                            <svg class="sort-dropdown__chevron" viewBox="0 0 12 12" fill="none">
+                                <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hover State -->
+                <div>
+                    <p style="font-size: 12px; color: #757575; margin-bottom: 8px;">Hover</p>
+                    <div class="sort-dropdown sort-dropdown--hover">
+                        <button class="sort-dropdown__trigger">
+                            <span class="sort-dropdown__trigger-content">
+                                <span class="sort-dropdown__label">Sort By:</span>
+                                <span class="sort-dropdown__value">Featured</span>
+                            </span>
+                            <svg class="sort-dropdown__chevron" viewBox="0 0 12 12" fill="none">
+                                <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-label">Open State with Options</div>
+        <div class="demo-section" style="min-height: 300px;">
+            <div class="sort-dropdown sort-dropdown--open">
+                <button class="sort-dropdown__trigger">
+                    <span class="sort-dropdown__trigger-content">
+                        <span class="sort-dropdown__label">Sort By:</span>
+                        <span class="sort-dropdown__value">Featured</span>
+                    </span>
+                    <svg class="sort-dropdown__chevron" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                    </svg>
+                </button>
+                <ul class="sort-dropdown__menu" role="listbox">
+                    <li>
+                        <button class="sort-dropdown__option sort-dropdown__option--selected" role="option">
+                            <svg class="sort-dropdown__checkmark" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                            Featured
+                        </button>
+                    </li>
+                    <li>
+                        <button class="sort-dropdown__option" role="option">
+                            <svg class="sort-dropdown__checkmark" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                            Newest
+                        </button>
+                    </li>
+                    <li>
+                        <button class="sort-dropdown__option" role="option">
+                            <svg class="sort-dropdown__checkmark" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                            Price: High-Low
+                        </button>
+                    </li>
+                    <li>
+                        <button class="sort-dropdown__option" role="option">
+                            <svg class="sort-dropdown__checkmark" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                            Price: Low-High
+                        </button>
+                    </li>
+                    <li>
+                        <button class="sort-dropdown__option" role="option">
+                            <svg class="sort-dropdown__checkmark" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                            Best Selling
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-label">In Toolbar Context</div>
+        <div class="demo-section">
+            <div class="toolbar">
+                <span class="toolbar__results">234 Results</span>
+                <div class="sort-dropdown">
+                    <button class="sort-dropdown__trigger">
+                        <span class="sort-dropdown__trigger-content">
+                            <span class="sort-dropdown__label">Sort By:</span>
+                            <span class="sort-dropdown__value">Newest</span>
+                        </span>
+                        <svg class="sort-dropdown__chevron" viewBox="0 0 12 12" fill="none">
+                            <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-label">Mobile View</div>
+        <div class="mobile-frame">
+            <div class="sort-dropdown sort-dropdown--open">
+                <button class="sort-dropdown__trigger">
+                    <span class="sort-dropdown__trigger-content">
+                        <span class="sort-dropdown__label">Sort By:</span>
+                        <span class="sort-dropdown__value">Featured</span>
+                    </span>
+                    <svg class="sort-dropdown__chevron" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 4L6 8L10 4" stroke="#111111" stroke-width="1.5"/>
+                    </svg>
+                </button>
+                <ul class="sort-dropdown__menu" role="listbox">
+                    <li>
+                        <button class="sort-dropdown__option sort-dropdown__option--selected" role="option">
+                            <svg class="sort-dropdown__checkmark" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                            Featured
+                        </button>
+                    </li>
+                    <li>
+                        <button class="sort-dropdown__option" role="option">
+                            <svg class="sort-dropdown__checkmark" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                            Newest
+                        </button>
+                    </li>
+                    <li>
+                        <button class="sort-dropdown__option" role="option">
+                            <svg class="sort-dropdown__checkmark" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                            Price: High-Low
+                        </button>
+                    </li>
+                    <li>
+                        <button class="sort-dropdown__option" role="option">
+                            <svg class="sort-dropdown__checkmark" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#111111" stroke-width="1.5"/>
+                            </svg>
+                            Price: Low-High
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

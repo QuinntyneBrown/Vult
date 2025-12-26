@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Badge Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 24px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .demo-section {
+            margin-bottom: 32px;
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 4px;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Badge Component */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1;
+            background-color: #FFFFFF;
+            color: #111111;
+            white-space: nowrap;
+        }
+
+        .badge--sale {
+            background-color: #9E3500;
+            color: #FFFFFF;
+        }
+
+        .badge--member {
+            background-color: #111111;
+            color: #FFFFFF;
+        }
+
+        .badge--sustainable {
+            background-color: #2E7D32;
+            color: #FFFFFF;
+        }
+
+        .badge--limited {
+            background-color: #FFFFFF;
+            color: #111111;
+            border: 1px solid #111111;
+        }
+
+        /* Product Card Demo */
+        .product-card {
+            width: 280px;
+            background-color: #ffffff;
+            position: relative;
+        }
+
+        .card-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            color: #999;
+            font-size: 12px;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 2;
+        }
+
+        .card-badges {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-start;
+        }
+
+        .card-info {
+            padding: 12px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            margin-bottom: 4px;
+        }
+
+        .product-category {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+        }
+
+        .cards-grid {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">Badge Variants</div>
+    <div class="demo-section">
+        <div class="demo-row">
+            <span class="badge">Just In</span>
+            <span class="badge badge--sale">Sale</span>
+            <span class="badge badge--member">Member Access</span>
+            <span class="badge badge--sustainable">Sustainable</span>
+            <span class="badge badge--limited">Limited</span>
+            <span class="badge">Best Seller</span>
+        </div>
+    </div>
+
+    <div class="section-label">Badges on Product Cards</div>
+    <div class="demo-section">
+        <div class="cards-grid">
+            <!-- Card with Just In badge -->
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                    <span class="badge card-badge">Just In</span>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Jordan 1 Retro High OG</h3>
+                    <p class="product-category">Men's Shoes</p>
+                    <p class="product-price">$180</p>
+                </div>
+            </article>
+
+            <!-- Card with Sale badge -->
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                    <span class="badge badge--sale card-badge">Sale</span>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike React Infinity Run</h3>
+                    <p class="product-category">Men's Running Shoes</p>
+                    <p class="product-price" style="color: #9E3500;">$119 <span style="text-decoration: line-through; color: #757575; font-weight: 400;">$160</span></p>
+                </div>
+            </article>
+
+            <!-- Card with Member badge -->
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                    <span class="badge badge--member card-badge">Member Access</span>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike ISPA Link Axis</h3>
+                    <p class="product-category">Shoes</p>
+                    <p class="product-price">$200</p>
+                </div>
+            </article>
+
+            <!-- Card with multiple badges -->
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                    <div class="card-badges">
+                        <span class="badge badge--sale">Sale</span>
+                        <span class="badge badge--sustainable">Sustainable</span>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike Space Hippie 04</h3>
+                    <p class="product-category">Shoes</p>
+                    <p class="product-price" style="color: #9E3500;">$99 <span style="text-decoration: line-through; color: #757575; font-weight: 400;">$130</span></p>
+                </div>
+            </article>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Product Grid Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 24px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .demo-section {
+            margin-bottom: 48px;
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 4px;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+
+        @media (max-width: 1024px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        /* Product Card */
+        .product-card {
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+
+        .card-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            color: #999;
+            font-size: 12px;
+        }
+
+        .card-info {
+            padding: 12px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            margin-bottom: 4px;
+        }
+
+        .product-category {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 4px;
+        }
+
+        .product-colors {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+        }
+
+        /* Loading Skeleton */
+        .product-card-skeleton {
+            background-color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card-skeleton__image {
+            aspect-ratio: 3 / 4;
+            background-color: #F5F5F5;
+        }
+
+        .product-card-skeleton__content {
+            padding: 12px;
+        }
+
+        .product-card-skeleton__text {
+            height: 16px;
+            background-color: #E5E5E5;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+
+        .product-card-skeleton__text--title {
+            width: 80%;
+        }
+
+        .product-card-skeleton__text--category {
+            width: 50%;
+            height: 14px;
+        }
+
+        .product-card-skeleton__text--price {
+            width: 30%;
+            margin-top: 16px;
+        }
+
+        .product-card-skeleton::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.5),
+                transparent
+            );
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Empty State */
+        .product-grid__empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 24px;
+        }
+
+        .product-grid__empty-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 24px;
+            opacity: 0.5;
+        }
+
+        .product-grid__empty-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #111111;
+            margin-bottom: 8px;
+        }
+
+        .product-grid__empty-message {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 24px;
+        }
+
+        .product-grid__empty-action {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #111111;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Layout with Sidebar */
+        .product-listing {
+            display: flex;
+            gap: 16px;
+        }
+
+        .product-listing__sidebar {
+            width: 200px;
+            flex-shrink: 0;
+            background: #fff;
+            padding: 16px;
+            font-size: 14px;
+        }
+
+        .product-listing__content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-placeholder {
+            color: #757575;
+            font-size: 12px;
+        }
+
+        .product-grid--with-sidebar {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">4-Column Desktop Grid</div>
+    <div class="demo-section">
+        <div class="product-grid">
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike Air Max 270</h3>
+                    <p class="product-category">Women's Shoes</p>
+                    <p class="product-colors">3 Colors</p>
+                    <p class="product-price">$150</p>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Jordan 1 Retro High OG</h3>
+                    <p class="product-category">Men's Shoes</p>
+                    <p class="product-colors">1 Color</p>
+                    <p class="product-price">$180</p>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike Dunk Low Retro</h3>
+                    <p class="product-category">Men's Shoes</p>
+                    <p class="product-colors">8 Colors</p>
+                    <p class="product-price">$115</p>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike Air Force 1 '07</h3>
+                    <p class="product-category">Men's Shoes</p>
+                    <p class="product-colors">5 Colors</p>
+                    <p class="product-price">$115</p>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike Pegasus 40</h3>
+                    <p class="product-category">Men's Running Shoes</p>
+                    <p class="product-colors">4 Colors</p>
+                    <p class="product-price">$130</p>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike Blazer Mid '77</h3>
+                    <p class="product-category">Shoes</p>
+                    <p class="product-colors">6 Colors</p>
+                    <p class="product-price">$105</p>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike React Infinity Run</h3>
+                    <p class="product-category">Men's Running Shoes</p>
+                    <p class="product-colors">2 Colors</p>
+                    <p class="product-price">$160</p>
+                </div>
+            </article>
+            <article class="product-card">
+                <div class="card-image-container">
+                    <div class="image-placeholder">Product Image</div>
+                </div>
+                <div class="card-info">
+                    <h3 class="product-name">Nike Air Zoom Alphafly</h3>
+                    <p class="product-category">Racing Shoes</p>
+                    <p class="product-colors">2 Colors</p>
+                    <p class="product-price">$275</p>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <div class="section-label">Loading State (Skeleton)</div>
+    <div class="demo-section">
+        <div class="product-grid">
+            <div class="product-card-skeleton">
+                <div class="product-card-skeleton__image"></div>
+                <div class="product-card-skeleton__content">
+                    <div class="product-card-skeleton__text product-card-skeleton__text--title"></div>
+                    <div class="product-card-skeleton__text product-card-skeleton__text--category"></div>
+                    <div class="product-card-skeleton__text product-card-skeleton__text--price"></div>
+                </div>
+            </div>
+            <div class="product-card-skeleton">
+                <div class="product-card-skeleton__image"></div>
+                <div class="product-card-skeleton__content">
+                    <div class="product-card-skeleton__text product-card-skeleton__text--title"></div>
+                    <div class="product-card-skeleton__text product-card-skeleton__text--category"></div>
+                    <div class="product-card-skeleton__text product-card-skeleton__text--price"></div>
+                </div>
+            </div>
+            <div class="product-card-skeleton">
+                <div class="product-card-skeleton__image"></div>
+                <div class="product-card-skeleton__content">
+                    <div class="product-card-skeleton__text product-card-skeleton__text--title"></div>
+                    <div class="product-card-skeleton__text product-card-skeleton__text--category"></div>
+                    <div class="product-card-skeleton__text product-card-skeleton__text--price"></div>
+                </div>
+            </div>
+            <div class="product-card-skeleton">
+                <div class="product-card-skeleton__image"></div>
+                <div class="product-card-skeleton__content">
+                    <div class="product-card-skeleton__text product-card-skeleton__text--title"></div>
+                    <div class="product-card-skeleton__text product-card-skeleton__text--category"></div>
+                    <div class="product-card-skeleton__text product-card-skeleton__text--price"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">Empty State</div>
+    <div class="demo-section">
+        <div class="product-grid">
+            <div class="product-grid__empty">
+                <svg class="product-grid__empty-icon" viewBox="0 0 24 24" fill="none" stroke="#757575" stroke-width="1.5">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <h3 class="product-grid__empty-title">No products found</h3>
+                <p class="product-grid__empty-message">Try adjusting your filters or search for something else.</p>
+                <a href="#" class="product-grid__empty-action">Clear All Filters</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">Grid with Sidebar Layout</div>
+    <div class="demo-section">
+        <div class="product-listing">
+            <aside class="product-listing__sidebar">
+                <p class="sidebar-placeholder">Filter Sidebar<br><br>Gender ▼<br>Size ▼<br>Color ▼<br>Brand ▼</p>
+            </aside>
+            <main class="product-listing__content">
+                <div class="product-grid product-grid--with-sidebar">
+                    <article class="product-card">
+                        <div class="card-image-container">
+                            <div class="image-placeholder">Image</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike Air Max 270</h3>
+                            <p class="product-category">Shoes</p>
+                            <p class="product-price">$150</p>
+                        </div>
+                    </article>
+                    <article class="product-card">
+                        <div class="card-image-container">
+                            <div class="image-placeholder">Image</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="product-name">Jordan 1 Retro</h3>
+                            <p class="product-category">Shoes</p>
+                            <p class="product-price">$180</p>
+                        </div>
+                    </article>
+                    <article class="product-card">
+                        <div class="card-image-container">
+                            <div class="image-placeholder">Image</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike Dunk Low</h3>
+                            <p class="product-category">Shoes</p>
+                            <p class="product-price">$115</p>
+                        </div>
+                    </article>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
