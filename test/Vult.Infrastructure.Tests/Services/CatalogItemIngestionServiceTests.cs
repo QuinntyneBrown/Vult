@@ -86,12 +86,12 @@ public class CatalogItemIngestionServiceTests
             Success = true,
             EstimatedMSRP = 100m,
             EstimatedResaleValue = 60m,
-            Description = "Great condition Nike shoe",
+            Description = "Great condition Adidas shoe",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Adidas",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
-            ImageDescription = "A red Nike shoe"
+            ImageDescription = "A red Adidas shoe"
         };
 
         _imageAnalysusServiceMock
@@ -109,21 +109,21 @@ public class CatalogItemIngestionServiceTests
         Assert.That(result.CatalogItems, Has.Count.EqualTo(1));
         
         var catalogItem = result.CatalogItems[0];
-        Assert.That(catalogItem.BrandName, Is.EqualTo("Nike"));
+        Assert.That(catalogItem.BrandName, Is.EqualTo("Adidas"));
         Assert.That(catalogItem.EstimatedMSRP, Is.EqualTo(100m));
         Assert.That(catalogItem.EstimatedResaleValue, Is.EqualTo(60m));
         Assert.That(catalogItem.ItemType, Is.EqualTo(ItemType.Shoe));
         Assert.That(catalogItem.Gender, Is.EqualTo(Gender.Mens));
         Assert.That(catalogItem.CatalogItemImages, Has.Count.EqualTo(1));
-        
+
         var image = catalogItem.CatalogItemImages.First();
         Assert.That(image.ImageData, Is.EqualTo(imageData));
-        Assert.That(image.Description, Is.EqualTo("A red Nike shoe"));
+        Assert.That(image.Description, Is.EqualTo("A red Adidas shoe"));
 
         // Verify it was saved to database
         var dbItem = await _context.CatalogItems.Include(c => c.CatalogItemImages).FirstOrDefaultAsync();
         Assert.That(dbItem, Is.Not.Null);
-        Assert.That(dbItem!.BrandName, Is.EqualTo("Nike"));
+        Assert.That(dbItem!.BrandName, Is.EqualTo("Adidas"));
     }
 
     [Test]
@@ -146,8 +146,8 @@ public class CatalogItemIngestionServiceTests
                 Success = true,
                 EstimatedMSRP = 100m,
                 EstimatedResaleValue = 60m,
-                Description = "Nike shoe",
-                BrandName = "Nike",
+                Description = "Puma shoe",
+                BrandName = "Puma",
                 ItemType = ItemType.Shoe,
                 Gender = Gender.Mens,
                 Size = "L"
@@ -212,8 +212,8 @@ public class CatalogItemIngestionServiceTests
             Success = true,
             EstimatedMSRP = 100m,
             EstimatedResaleValue = 60m,
-            Description = "Nike shoe",
-            BrandName = "Nike",
+            Description = "Reebok shoe",
+            BrandName = "Reebok",
             ItemType = ItemType.Shoe,
             Gender = Gender.Mens,
             Size = "L"

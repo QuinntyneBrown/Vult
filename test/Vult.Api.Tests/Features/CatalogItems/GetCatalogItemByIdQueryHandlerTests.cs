@@ -35,7 +35,7 @@ public class GetCatalogItemByIdQueryHandlerTests
             EstimatedResaleValue = 50m,
             Description = "Test Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Adidas",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -53,7 +53,7 @@ public class GetCatalogItemByIdQueryHandlerTests
         // Assert
         Assert.That(result.CatalogItem, Is.Not.Null);
         Assert.That(result.CatalogItem!.CatalogItemId, Is.EqualTo(catalogItemId));
-        Assert.That(result.CatalogItem.BrandName, Is.EqualTo("Nike"));
+        Assert.That(result.CatalogItem.BrandName, Is.EqualTo("Adidas"));
     }
 
     [Test]
@@ -86,7 +86,7 @@ public class GetCatalogItemByIdQueryHandlerTests
             EstimatedResaleValue = 50m,
             Description = "Test Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Puma",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,

@@ -67,7 +67,7 @@ public class CatalogItemEvaluationServiceTests
         var catalogItem = new CatalogItem
         {
             CatalogItemId = Guid.NewGuid(),
-            BrandName = "Nike",
+            BrandName = "Adidas",
             Description = "Test Item",
             Size = "M",
             EstimatedMSRP = 100m,

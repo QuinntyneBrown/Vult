@@ -21,7 +21,7 @@ public class CatalogItemExtensionsTests
             EstimatedResaleValue = 75.25m,
             Description = "Test Description",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Adidas",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -59,7 +59,7 @@ public class CatalogItemExtensionsTests
             EstimatedResaleValue = 75.25m,
             Description = "Test Description",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Puma",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -121,7 +121,7 @@ public class CatalogItemExtensionsTests
             EstimatedResaleValue = 75.25m,
             Description = "Test Description",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Reebok",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe
         };
@@ -167,7 +167,7 @@ public class CatalogItemExtensionsTests
             EstimatedResaleValue = 75.25m,
             Description = "New Description",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "New Balance",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe
         };

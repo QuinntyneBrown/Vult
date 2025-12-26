@@ -27,7 +27,7 @@ public class DeleteCatalogItemCommandHandlerTests
         // Arrange
         await using var context = GetInMemoryContext();
         var catalogItemId = Guid.NewGuid();
-        
+
         var catalogItem = new CatalogItem
         {
             CatalogItemId = catalogItemId,
@@ -35,7 +35,7 @@ public class DeleteCatalogItemCommandHandlerTests
             EstimatedResaleValue = 50m,
             Description = "Test Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Adidas",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -106,7 +106,7 @@ public class DeleteCatalogItemCommandHandlerTests
             EstimatedResaleValue = 50m,
             Description = "Test Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Reebok",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,

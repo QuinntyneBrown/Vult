@@ -7,7 +7,7 @@ const mockCatalogItems = {
   items: [
     {
       catalogItemId: '1',
-      brandName: 'Nike',
+      brandName: 'Adidas',
       description: 'Running shoes',
       size: '10',
       gender: 0,
@@ -60,7 +60,6 @@ test.describe('Admin Catalog Items Page', () => {
     await page.goto('/catalog-items');
 
     await expect(page.getByRole('heading', { name: 'Catalog Items' })).toBeVisible();
-    await expect(page.getByText('Nike')).toBeVisible();
     await expect(page.getByText('Adidas')).toBeVisible();
   });
 
@@ -117,10 +116,10 @@ test.describe('Admin Catalog Items Page', () => {
 
     await page.goto('/catalog-items');
 
-    await page.getByText('Nike').click();
+    await page.getByText('Adidas').click();
 
     await expect(page.getByRole('heading', { name: 'Edit Catalog Item' })).toBeVisible();
-    await expect(page.getByLabel('Brand Name')).toHaveValue('Nike');
+    await expect(page.getByLabel('Brand Name')).toHaveValue('Adidas');
     await expect(page.getByLabel('Size')).toHaveValue('10');
   });
 
@@ -144,7 +143,7 @@ test.describe('Admin Catalog Items Page', () => {
     await page.goto('/catalog-items/1');
 
     await expect(page.getByRole('heading', { name: 'Edit Catalog Item' })).toBeVisible();
-    await expect(page.getByLabel('Brand Name')).toHaveValue('Nike');
+    await expect(page.getByLabel('Brand Name')).toHaveValue('Adidas');
   });
 
   test('should validate price fields', async ({ page }) => {

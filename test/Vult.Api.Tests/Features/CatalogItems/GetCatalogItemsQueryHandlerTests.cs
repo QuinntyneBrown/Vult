@@ -36,7 +36,7 @@ public class GetCatalogItemsQueryHandlerTests
                 EstimatedResaleValue = 50m + i,
                 Description = $"Item {i}",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Adidas",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe,
                 CreatedDate = DateTime.UtcNow.AddDays(-i),
@@ -74,9 +74,9 @@ public class GetCatalogItemsQueryHandlerTests
             CatalogItemId = Guid.NewGuid(),
             EstimatedMSRP = 100m,
             EstimatedResaleValue = 50m,
-            Description = "Nike Item",
+            Description = "Puma Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Puma",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -102,7 +102,7 @@ public class GetCatalogItemsQueryHandlerTests
         var handler = new GetCatalogItemsQueryHandler(context);
         var query = new GetCatalogItemsQuery
         {
-            BrandName = "Nike"
+            BrandName = "Puma"
         };
 
         // Act
@@ -110,7 +110,7 @@ public class GetCatalogItemsQueryHandlerTests
 
         // Assert
         Assert.That(result.Items, Has.Count.EqualTo(1));
-        Assert.That(result.Items[0].BrandName, Is.EqualTo("Nike"));
+        Assert.That(result.Items[0].BrandName, Is.EqualTo("Puma"));
     }
 
     [Test]
@@ -126,7 +126,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 50m,
             Description = "Shoe",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Reebok",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -140,7 +140,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 60m,
             Description = "Shirt",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Reebok",
             Gender = Gender.Mens,
             ItemType = ItemType.Shirt,
             CreatedDate = DateTime.UtcNow,
@@ -176,7 +176,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 50m,
             Description = "Mens Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "New Balance",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -190,7 +190,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 60m,
             Description = "Womens Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "New Balance",
             Gender = Gender.Womens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -226,7 +226,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 75m,
             Description = "Expensive",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Under Armour",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -240,7 +240,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 25m,
             Description = "Cheap",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Under Armour",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -277,7 +277,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 25m,
             Description = "Cheap",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Converse",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -291,7 +291,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 75m,
             Description = "Expensive",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Converse",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -331,7 +331,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 50m,
             Description = "Old Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Vans",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = oldDate,
@@ -345,7 +345,7 @@ public class GetCatalogItemsQueryHandlerTests
             EstimatedResaleValue = 60m,
             Description = "New Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Vans",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = newDate,

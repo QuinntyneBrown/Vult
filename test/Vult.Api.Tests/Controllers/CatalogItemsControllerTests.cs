@@ -36,7 +36,7 @@ public class CatalogItemsControllerTests
         var catalogItemDto = new CatalogItemDto
         {
             CatalogItemId = Guid.NewGuid(),
-            BrandName = "Nike",
+            BrandName = "Adidas",
             Description = "Test Item",
             Size = "M",
             EstimatedMSRP = 100m,
@@ -86,7 +86,7 @@ public class CatalogItemsControllerTests
                 CatalogItem = new CatalogItemDto
                 {
                     CatalogItemId = catalogItemId,
-                    BrandName = "Nike",
+                    BrandName = "Puma",
                     Description = "Test Item",
                     Size = "M",
                     EstimatedMSRP = 100m,
@@ -152,7 +152,7 @@ public class CatalogItemsControllerTests
                 CatalogItem = new CatalogItemDto
                 {
                     CatalogItemId = Guid.NewGuid(),
-                    BrandName = "Nike",
+                    BrandName = "Reebok",
                     Description = "Test Item",
                     Size = "M",
                     EstimatedMSRP = 100m,
@@ -168,7 +168,7 @@ public class CatalogItemsControllerTests
 
         var dto = new CreateCatalogItemDto
         {
-            BrandName = "Nike",
+            BrandName = "Reebok",
             Description = "Test Item",
             Size = "M",
             EstimatedMSRP = 100m,
@@ -301,7 +301,7 @@ public class CatalogItemsControllerTests
         var dto = new UpdateCatalogItemDto
         {
             CatalogItemId = nonExistentId,
-            BrandName = "Nike",
+            BrandName = "New Balance",
             Description = "Updated Item",
             Size = "L",
             EstimatedMSRP = 120m,

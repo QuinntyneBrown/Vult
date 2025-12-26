@@ -34,7 +34,7 @@ public class CreateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = "Test Item",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Adidas",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
@@ -46,12 +46,12 @@ public class CreateCatalogItemCommandHandlerTests
         // Assert
         Assert.That(result.Success, Is.True);
         Assert.That(result.CatalogItem, Is.Not.Null);
-        Assert.That(result.CatalogItem!.BrandName, Is.EqualTo("Nike"));
+        Assert.That(result.CatalogItem!.BrandName, Is.EqualTo("Adidas"));
         Assert.That(result.Errors, Is.Empty);
 
         var itemInDb = await context.CatalogItems.FirstOrDefaultAsync();
         Assert.That(itemInDb, Is.Not.Null);
-        Assert.That(itemInDb!.BrandName, Is.EqualTo("Nike"));
+        Assert.That(itemInDb!.BrandName, Is.EqualTo("Adidas"));
     }
 
     [Test]
@@ -68,7 +68,7 @@ public class CreateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = "Test Item",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Puma",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
@@ -96,7 +96,7 @@ public class CreateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 0m,
                 Description = "Test Item",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Reebok",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
@@ -124,7 +124,7 @@ public class CreateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = "",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "New Balance",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
@@ -152,7 +152,7 @@ public class CreateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = new string('a', 1001),
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Under Armour",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
@@ -180,7 +180,7 @@ public class CreateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = "Test Item",
                 Size = "",
-                BrandName = "Nike",
+                BrandName = "Converse",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }

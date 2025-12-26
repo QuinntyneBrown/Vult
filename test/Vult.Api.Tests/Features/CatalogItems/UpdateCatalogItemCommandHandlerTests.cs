@@ -55,7 +55,7 @@ public class UpdateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = "New Description",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Adidas",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
@@ -67,13 +67,13 @@ public class UpdateCatalogItemCommandHandlerTests
         // Assert
         Assert.That(result.Success, Is.True);
         Assert.That(result.CatalogItem, Is.Not.Null);
-        Assert.That(result.CatalogItem!.BrandName, Is.EqualTo("Nike"));
+        Assert.That(result.CatalogItem!.BrandName, Is.EqualTo("Adidas"));
         Assert.That(result.CatalogItem.EstimatedMSRP, Is.EqualTo(100m));
         Assert.That(result.Errors, Is.Empty);
 
         var itemInDb = await context.CatalogItems.FirstOrDefaultAsync(x => x.CatalogItemId == catalogItemId);
         Assert.That(itemInDb, Is.Not.Null);
-        Assert.That(itemInDb!.BrandName, Is.EqualTo("Nike"));
+        Assert.That(itemInDb!.BrandName, Is.EqualTo("Adidas"));
     }
 
     [Test]
@@ -91,7 +91,7 @@ public class UpdateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = "Test Item",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Adidas",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
@@ -120,7 +120,7 @@ public class UpdateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = "Test Item",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Adidas",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
@@ -140,7 +140,7 @@ public class UpdateCatalogItemCommandHandlerTests
         // Arrange
         await using var context = GetInMemoryContext();
         var catalogItemId = Guid.NewGuid();
-        
+
         context.CatalogItems.Add(new CatalogItem
         {
             CatalogItemId = catalogItemId,
@@ -148,7 +148,7 @@ public class UpdateCatalogItemCommandHandlerTests
             EstimatedResaleValue = 50m,
             Description = "Test Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Adidas",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -166,7 +166,7 @@ public class UpdateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = "Test Item",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Adidas",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
@@ -194,7 +194,7 @@ public class UpdateCatalogItemCommandHandlerTests
             EstimatedResaleValue = 50m,
             Description = "Test Item",
             Size = "M",
-            BrandName = "Nike",
+            BrandName = "Adidas",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
             CreatedDate = DateTime.UtcNow,
@@ -212,7 +212,7 @@ public class UpdateCatalogItemCommandHandlerTests
                 EstimatedResaleValue = 50m,
                 Description = "",
                 Size = "M",
-                BrandName = "Nike",
+                BrandName = "Adidas",
                 Gender = Gender.Mens,
                 ItemType = ItemType.Shoe
             }
