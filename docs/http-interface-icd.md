@@ -245,7 +245,7 @@ Vult.Api/
 }
 ```
 
-#### GetProductsQuery Response
+#### GetProductsQueryResult
 **Location**: `src/Vult.Api/Features/Products/GetProductsQueryResult.cs`
 
 ```json
@@ -258,8 +258,49 @@ Vult.Api/
 }
 ```
 
-#### IngestProductPhotosCommand Response
-**Location**: `src/Vult.Api/Features/Products/IngestProductPhotosCommandResult.cs`
+#### GetProductByIdQueryResult
+**Location**: `src/Vult.Api/Features/Products/GetProductByIdQuery.cs`
+
+```json
+{
+    "product": ProductDto
+}
+```
+
+#### CreateProductCommandResult
+**Location**: `src/Vult.Api/Features/Products/CreateProductCommand.cs`
+
+```json
+{
+    "product": ProductDto,
+    "success": "bool",
+    "errors": ["string array"]
+}
+```
+
+#### UpdateProductCommandResult
+**Location**: `src/Vult.Api/Features/Products/UpdateProductCommand.cs`
+
+```json
+{
+    "product": ProductDto,
+    "success": "bool",
+    "errors": ["string array"]
+}
+```
+
+#### DeleteProductCommandResult
+**Location**: `src/Vult.Api/Features/Products/DeleteProductCommand.cs`
+
+```json
+{
+    "success": "bool",
+    "errors": ["string array"]
+}
+```
+
+#### IngestProductPhotosCommandResult
+**Location**: `src/Vult.Api/Features/Products/IngestProductPhotosCommand.cs`
 
 ```json
 {
@@ -938,7 +979,25 @@ true
 **Path Parameters**:
 - `id` (guid): Product ID
 
-**Success Response** (200 OK): ProductDto
+**Success Response** (200 OK):
+```json
+{
+    "product": {
+        "productId": "guid",
+        "estimatedMSRP": 150.00,
+        "estimatedResaleValue": 95.00,
+        "description": "Shoe",
+        "size": "10",
+        "brandName": "Vult",
+        "gender": 0,
+        "itemType": 0,
+        "createdDate": "2025-12-26T10:00:00Z",
+        "updatedDate": "2025-12-26T10:00:00Z",
+        "images": []
+    }
+}
+```
+
 **Error Response** (404 Not Found):
 ```json
 {
