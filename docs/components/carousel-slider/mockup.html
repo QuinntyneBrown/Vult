@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Carousel/Slider Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #ffffff;
+            padding: 48px 0;
+        }
+
+        .section-label {
+            font-size: 14px;
+            color: #757575;
+            margin: 0 48px 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        /* Carousel Container */
+        .carousel-section {
+            margin-bottom: 64px;
+        }
+
+        .carousel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 48px;
+            margin-bottom: 24px;
+        }
+
+        .carousel-title {
+            font-size: 24px;
+            font-weight: 500;
+            color: #111111;
+        }
+
+        .carousel-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .carousel-nav-btn {
+            width: 48px;
+            height: 48px;
+            border: none;
+            background-color: #E5E5E5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .carousel-nav-btn:hover {
+            background-color: #CCCCCC;
+        }
+
+        .carousel-nav-btn:disabled {
+            background-color: #F5F5F5;
+            cursor: not-allowed;
+        }
+
+        .carousel-nav-btn:disabled svg {
+            fill: #CCCCCC;
+        }
+
+        .carousel-nav-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #111111;
+        }
+
+        /* Carousel Track */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 16px;
+            padding: 0 48px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Carousel Items */
+        .carousel-item {
+            flex: 0 0 calc(25% - 12px);
+            scroll-snap-align: start;
+            min-width: 250px;
+        }
+
+        @media (max-width: 1200px) {
+            .carousel-item {
+                flex: 0 0 calc(33.333% - 11px);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .carousel-item {
+                flex: 0 0 calc(50% - 8px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .carousel-item {
+                flex: 0 0 calc(80%);
+            }
+
+            .carousel-header {
+                padding: 0 16px;
+            }
+
+            .carousel-track {
+                padding: 0 16px;
+                gap: 12px;
+            }
+        }
+
+        /* Product Card in Carousel */
+        .product-card {
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+
+        .card-image {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .card-info {
+            padding: 12px 0;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            margin-bottom: 4px;
+        }
+
+        .product-category {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+        }
+
+        /* Category Carousel */
+        .category-card {
+            cursor: pointer;
+        }
+
+        .category-image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .category-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #111111;
+            text-align: center;
+        }
+
+        /* Gradient Overlay Variant */
+        .carousel-container-gradient {
+            position: relative;
+        }
+
+        .carousel-gradient-left,
+        .carousel-gradient-right {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .carousel-gradient-left {
+            left: 0;
+            background: linear-gradient(to right, #ffffff 0%, transparent 100%);
+            opacity: 0;
+        }
+
+        .carousel-gradient-left.visible {
+            opacity: 1;
+        }
+
+        .carousel-gradient-right {
+            right: 0;
+            background: linear-gradient(to left, #ffffff 0%, transparent 100%);
+        }
+
+        /* Inline Arrow Variant */
+        .carousel-inline-arrows {
+            position: relative;
+        }
+
+        .inline-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 3;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .inline-arrow:hover {
+            background-color: #ffffff;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .inline-arrow svg {
+            width: 24px;
+            height: 24px;
+            fill: #111111;
+        }
+
+        .inline-arrow-left {
+            left: 24px;
+        }
+
+        .inline-arrow-right {
+            right: 24px;
+        }
+
+        /* Pagination Dots */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #E5E5E5;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .carousel-dot.active {
+            background-color: #111111;
+        }
+
+        .carousel-dot:hover {
+            background-color: #CCCCCC;
+        }
+
+        .carousel-dot.active:hover {
+            background-color: #111111;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">Product Carousel - Header Navigation</div>
+
+    <!-- Carousel 1: Standard with Header Nav -->
+    <section class="carousel-section">
+        <div class="carousel-header">
+            <h2 class="carousel-title">Trending Now</h2>
+            <div class="carousel-nav">
+                <button class="carousel-nav-btn" disabled aria-label="Previous">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                </button>
+                <button class="carousel-nav-btn" aria-label="Next">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike Air Max 270</h3>
+                            <p class="product-category">Women's Shoes</p>
+                            <p class="product-price">$150</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike Dunk Low Retro</h3>
+                            <p class="product-category">Men's Shoes</p>
+                            <p class="product-price">$115</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Air Jordan 1 Mid</h3>
+                            <p class="product-category">Men's Shoes</p>
+                            <p class="product-price">$125</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike Air Force 1 '07</h3>
+                            <p class="product-category">Men's Shoes</p>
+                            <p class="product-price">$115</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike Pegasus 40</h3>
+                            <p class="product-category">Men's Running Shoes</p>
+                            <p class="product-price">$130</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike Blazer Mid '77</h3>
+                            <p class="product-category">Shoes</p>
+                            <p class="product-price">$105</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-label">Category Carousel - Inline Arrows</div>
+
+    <!-- Carousel 2: With Inline Arrows -->
+    <section class="carousel-section">
+        <div class="carousel-header">
+            <h2 class="carousel-title">Shop By Sport</h2>
+        </div>
+        <div class="carousel-container carousel-inline-arrows">
+            <button class="inline-arrow inline-arrow-left" aria-label="Previous">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
+            <div class="carousel-track">
+                <article class="carousel-item">
+                    <div class="category-card">
+                        <div class="category-image">Category Image</div>
+                        <p class="category-name">Running</p>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="category-card">
+                        <div class="category-image">Category Image</div>
+                        <p class="category-name">Basketball</p>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="category-card">
+                        <div class="category-image">Category Image</div>
+                        <p class="category-name">Training</p>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="category-card">
+                        <div class="category-image">Category Image</div>
+                        <p class="category-name">Soccer</p>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="category-card">
+                        <div class="category-image">Category Image</div>
+                        <p class="category-name">Golf</p>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="category-card">
+                        <div class="category-image">Category Image</div>
+                        <p class="category-name">Tennis</p>
+                    </div>
+                </article>
+            </div>
+            <button class="inline-arrow inline-arrow-right" aria-label="Next">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <div class="section-label">Carousel with Pagination Dots</div>
+
+    <!-- Carousel 3: With Dots -->
+    <section class="carousel-section">
+        <div class="carousel-header">
+            <h2 class="carousel-title">New Arrivals</h2>
+        </div>
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike Air VaporMax 2023</h3>
+                            <p class="product-category">Men's Shoes</p>
+                            <p class="product-price">$210</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike ZoomX Invincible</h3>
+                            <p class="product-category">Men's Running Shoes</p>
+                            <p class="product-price">$180</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike Metcon 9</h3>
+                            <p class="product-category">Training Shoes</p>
+                            <p class="product-price">$150</p>
+                        </div>
+                    </div>
+                </article>
+                <article class="carousel-item">
+                    <div class="product-card">
+                        <div class="card-image">Product Image</div>
+                        <div class="card-info">
+                            <h3 class="product-name">Nike React Infinity 4</h3>
+                            <p class="product-category">Road Running Shoes</p>
+                            <p class="product-price">$160</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="carousel-dots">
+                <button class="carousel-dot active" aria-label="Page 1"></button>
+                <button class="carousel-dot" aria-label="Page 2"></button>
+                <button class="carousel-dot" aria-label="Page 3"></button>
+                <button class="carousel-dot" aria-label="Page 4"></button>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

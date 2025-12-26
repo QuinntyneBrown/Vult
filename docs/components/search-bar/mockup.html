@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Search Bar Component</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f5f5f5;
+            padding: 48px;
+        }
+
+        .section-label {
+            font-size: 14px;
+            color: #757575;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .demo-row {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            margin-bottom: 48px;
+        }
+
+        .demo-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .demo-label {
+            font-size: 12px;
+            color: #757575;
+        }
+
+        /* Search Bar Container */
+        .search-container {
+            position: relative;
+        }
+
+        /* Search Input */
+        .search-input {
+            height: 40px;
+            border: none;
+            border-radius: 20px;
+            background-color: #F5F5F5;
+            padding: 0 40px 0 44px;
+            font-size: 16px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            transition: width 0.2s ease, background-color 0.2s ease;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #757575;
+        }
+
+        .search-input.compact {
+            width: 180px;
+        }
+
+        .search-input.expanded {
+            width: 280px;
+            background-color: #E5E5E5;
+        }
+
+        .search-input.full-width {
+            width: 100%;
+        }
+
+        .search-input:focus {
+            background-color: #E5E5E5;
+        }
+
+        /* Search Icon */
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            fill: #111111;
+            pointer-events: none;
+        }
+
+        /* Clear Button */
+        .clear-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            display: none;
+        }
+
+        .clear-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #757575;
+        }
+
+        .clear-btn:hover svg {
+            fill: #111111;
+        }
+
+        .clear-btn.visible {
+            display: block;
+        }
+
+        /* Dropdown */
+        .search-dropdown {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            width: 400px;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .dropdown-section {
+            padding: 16px;
+        }
+
+        .dropdown-section:not(:last-child) {
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        .dropdown-title {
+            font-size: 12px;
+            font-weight: 500;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dropdown-title a {
+            font-size: 12px;
+            color: #757575;
+            text-decoration: underline;
+        }
+
+        /* Suggestion Items */
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            border-radius: 4px;
+            margin: 0 -8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .suggestion-item:hover {
+            background-color: #F5F5F5;
+        }
+
+        .suggestion-item svg {
+            width: 20px;
+            height: 20px;
+            fill: #757575;
+            flex-shrink: 0;
+        }
+
+        .suggestion-text {
+            font-size: 16px;
+            color: #111111;
+            flex-grow: 1;
+        }
+
+        .suggestion-remove {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            opacity: 0;
+        }
+
+        .suggestion-item:hover .suggestion-remove {
+            opacity: 1;
+        }
+
+        .suggestion-remove svg {
+            fill: #757575;
+        }
+
+        /* Product Suggestion */
+        .product-suggestion {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .product-suggestion:hover {
+            background-color: #F5F5F5;
+            margin: 0 -8px;
+            padding-left: 8px;
+            padding-right: 8px;
+            border-radius: 4px;
+        }
+
+        .product-thumb {
+            width: 56px;
+            height: 56px;
+            background-color: #F5F5F5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #999;
+            flex-shrink: 0;
+        }
+
+        .product-info {
+            flex-grow: 1;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #111111;
+        }
+
+        .product-category {
+            font-size: 12px;
+            color: #757575;
+        }
+
+        .product-price {
+            font-size: 14px;
+            font-weight: 500;
+            color: #111111;
+        }
+
+        /* State Demos */
+        .state-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .state-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .state-label-inline {
+            font-size: 12px;
+            color: #757575;
+            width: 100px;
+        }
+
+        /* Dropdown Demo */
+        .dropdown-demo {
+            position: relative;
+            padding-bottom: 450px;
+        }
+    </style>
+</head>
+<body>
+    <div class="section-label">Search Bar States</div>
+
+    <div class="state-demo">
+        <div class="state-row">
+            <span class="state-label-inline">Compact</span>
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" class="search-input compact" placeholder="Search">
+            </div>
+        </div>
+
+        <div class="state-row">
+            <span class="state-label-inline">Expanded</span>
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" class="search-input expanded" placeholder="Search">
+            </div>
+        </div>
+
+        <div class="state-row">
+            <span class="state-label-inline">With Text</span>
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" class="search-input expanded" value="air force 1">
+                <button class="clear-btn visible" aria-label="Clear search">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 48px;"></div>
+
+    <div class="section-label">With Suggestions Dropdown</div>
+
+    <div class="dropdown-demo">
+        <div class="search-container">
+            <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input type="text" class="search-input expanded" value="air max">
+            <button class="clear-btn visible" aria-label="Clear search">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+
+            <div class="search-dropdown">
+                <div class="dropdown-section">
+                    <div class="dropdown-title">Popular Search Terms</div>
+                    <div class="suggestion-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                        <span class="suggestion-text">air max 90</span>
+                    </div>
+                    <div class="suggestion-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                        <span class="suggestion-text">air max 97</span>
+                    </div>
+                    <div class="suggestion-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                        <span class="suggestion-text">air max 270</span>
+                    </div>
+                </div>
+
+                <div class="dropdown-section">
+                    <div class="dropdown-title">Products</div>
+                    <div class="product-suggestion">
+                        <div class="product-thumb">img</div>
+                        <div class="product-info">
+                            <div class="product-name">Nike Air Max 90</div>
+                            <div class="product-category">Men's Shoes</div>
+                        </div>
+                        <div class="product-price">$130</div>
+                    </div>
+                    <div class="product-suggestion">
+                        <div class="product-thumb">img</div>
+                        <div class="product-info">
+                            <div class="product-name">Nike Air Max 97</div>
+                            <div class="product-category">Men's Shoes</div>
+                        </div>
+                        <div class="product-price">$175</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-label">Recent Searches Dropdown</div>
+
+    <div class="dropdown-demo">
+        <div class="search-container">
+            <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input type="text" class="search-input expanded" placeholder="Search">
+
+            <div class="search-dropdown">
+                <div class="dropdown-section">
+                    <div class="dropdown-title">
+                        Recent Searches
+                        <a href="#">Clear</a>
+                    </div>
+                    <div class="suggestion-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                        </svg>
+                        <span class="suggestion-text">jordan 1</span>
+                        <button class="suggestion-remove" aria-label="Remove">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="suggestion-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                        </svg>
+                        <span class="suggestion-text">dunk low</span>
+                        <button class="suggestion-remove" aria-label="Remove">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dropdown-section">
+                    <div class="dropdown-title">Trending</div>
+                    <div class="suggestion-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="fill: #F57C00;">
+                            <path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
+                        </svg>
+                        <span class="suggestion-text">Nike Pegasus 40</span>
+                    </div>
+                    <div class="suggestion-item">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="fill: #F57C00;">
+                            <path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
+                        </svg>
+                        <span class="suggestion-text">Jordan Retro</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
