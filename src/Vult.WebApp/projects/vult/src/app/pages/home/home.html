@@ -1,20 +1,76 @@
-<div class="home">
-  <mat-card class="home__card">
-    <mat-card-header>
-      <mat-icon mat-card-avatar class="home__icon">inventory_2</mat-icon>
-      <mat-card-title>Welcome to Vult</mat-card-title>
-      <mat-card-subtitle>Catalog Management System</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <p class="home__description">
-        Manage your catalog items with AI-powered photo ingestion and analysis.
-      </p>
-    </mat-card-content>
-    <mat-card-actions>
-      <a mat-raised-button color="primary" routerLink="/login">
-        <mat-icon>login</mat-icon>
-        Get Started
-      </a>
-    </mat-card-actions>
-  </mat-card>
-</div>
+<main class="home-page">
+  <!-- Hero Section -->
+  <lib-hero-section
+    [backgroundImage]="heroImage"
+    imageAlt="Premium used Blue Jays New Era cap showcasing product quality"
+    [title]="heroTitle"
+    primaryCtaText="Shop Now"
+    size="large"
+    textPosition="center"
+    theme="dark"
+    [overlayGradient]="heroOverlay"
+    (primaryCtaClick)="onShopNowClick()"
+  ></lib-hero-section>
+
+  <!-- Featured Products Section -->
+  <section class="featured-products-section">
+    <div class="section-header">
+      <lib-typography variant="title-3">Featured Products</lib-typography>
+    </div>
+    <div class="products-carousel">
+      <div class="products-track">
+        @for (product of featuredProducts(); track product.id) {
+          <div class="product-item">
+            <lib-product-card
+              [product]="product"
+              (cardClick)="onProductClick($event)"
+              (favoriteToggle)="onFavoriteToggle($event)"
+            ></lib-product-card>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials-section">
+    <div class="section-header">
+      <lib-typography variant="title-3">Our customers love us</lib-typography>
+    </div>
+    <div class="testimonials-carousel">
+      <div class="testimonials-track">
+        @for (testimonial of testimonials(); track testimonial.id) {
+          <div class="testimonial-item">
+            <article class="testimonial-card">
+              <div class="testimonial-card-image">
+                <img
+                  [src]="testimonial.photoUrl"
+                  [alt]="testimonial.customerName + ' - Vult customer'"
+                  loading="lazy"
+                />
+              </div>
+              <div class="testimonial-card-content">
+                <div class="testimonial-rating" role="img" [attr.aria-label]="testimonial.rating + ' out of 5 stars'">
+                  @for (filled of getStarArray(testimonial.rating); track $index) {
+                    <svg
+                      class="testimonial-star"
+                      [class.filled]="filled"
+                      [class.empty]="!filled"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      aria-hidden="true"
+                    >
+                      <path d="M8 0L9.79611 5.52786H15.6085L10.9062 8.94427L12.7023 14.4721L8 11.0557L3.29772 14.4721L5.09383 8.94427L0.391548 5.52786H6.20389L8 0Z" fill="currentColor"/>
+                    </svg>
+                  }
+                </div>
+                <p class="testimonial-text">{{ testimonial.text }}</p>
+              </div>
+            </article>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+</main>
