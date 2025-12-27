@@ -21,6 +21,26 @@ public class ProductTests
     }
 
     [Test]
+    public void Product_ShouldHaveNameProperty()
+    {
+        // Arrange & Act
+        var product = new Product { Name = "Test Product Name" };
+
+        // Assert
+        Assert.That(product.Name, Is.EqualTo("Test Product Name"));
+    }
+
+    [Test]
+    public void Product_ShouldDefaultToEmptyStringForName()
+    {
+        // Arrange & Act
+        var product = new Product();
+
+        // Assert
+        Assert.That(product.Name, Is.EqualTo(string.Empty));
+    }
+
+    [Test]
     public void Product_ShouldHaveEstimatedMSRPProperty()
     {
         // Arrange & Act

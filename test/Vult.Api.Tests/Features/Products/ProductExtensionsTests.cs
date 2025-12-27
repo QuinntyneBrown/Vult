@@ -16,6 +16,7 @@ public class ProductExtensionsTests
         var product = new Product
         {
             ProductId = Guid.NewGuid(),
+            Name = "Test Product Name",
             EstimatedMSRP = 100.50m,
             EstimatedResaleValue = 75.25m,
             Description = "Test Description",
@@ -40,6 +41,7 @@ public class ProductExtensionsTests
 
         // Assert
         Assert.That(dto.ProductId, Is.EqualTo(product.ProductId));
+        Assert.That(dto.Name, Is.EqualTo(product.Name));
         Assert.That(dto.EstimatedMSRP, Is.EqualTo(product.EstimatedMSRP));
         Assert.That(dto.EstimatedResaleValue, Is.EqualTo(product.EstimatedResaleValue));
         Assert.That(dto.Description, Is.EqualTo(product.Description));
@@ -68,6 +70,7 @@ public class ProductExtensionsTests
         var product = new Product
         {
             ProductId = productId,
+            Name = "Puma Shoes",
             EstimatedMSRP = 100.50m,
             EstimatedResaleValue = 75.25m,
             Description = "Test Description",
@@ -137,6 +140,7 @@ public class ProductExtensionsTests
         // Arrange
         var dto = new CreateProductDto
         {
+            Name = "Reebok Shoes",
             EstimatedMSRP = 100.50m,
             EstimatedResaleValue = 75.25m,
             Description = "Test Description",
@@ -158,6 +162,7 @@ public class ProductExtensionsTests
 
         // Assert
         Assert.That(product.ProductId, Is.Not.EqualTo(Guid.Empty));
+        Assert.That(product.Name, Is.EqualTo(dto.Name));
         Assert.That(product.EstimatedMSRP, Is.EqualTo(dto.EstimatedMSRP));
         Assert.That(product.EstimatedResaleValue, Is.EqualTo(dto.EstimatedResaleValue));
         Assert.That(product.Description, Is.EqualTo(dto.Description));
@@ -183,6 +188,7 @@ public class ProductExtensionsTests
         var product = new Product
         {
             ProductId = Guid.NewGuid(),
+            Name = "Old Name",
             EstimatedMSRP = 50.00m,
             EstimatedResaleValue = 30.00m,
             Description = "Old Description",
@@ -204,6 +210,7 @@ public class ProductExtensionsTests
         var dto = new UpdateProductDto
         {
             ProductId = product.ProductId,
+            Name = "New Name",
             EstimatedMSRP = 100.50m,
             EstimatedResaleValue = 75.25m,
             Description = "New Description",
@@ -227,6 +234,7 @@ public class ProductExtensionsTests
         product.UpdateFromDto(dto);
 
         // Assert
+        Assert.That(product.Name, Is.EqualTo(dto.Name));
         Assert.That(product.EstimatedMSRP, Is.EqualTo(dto.EstimatedMSRP));
         Assert.That(product.EstimatedResaleValue, Is.EqualTo(dto.EstimatedResaleValue));
         Assert.That(product.Description, Is.EqualTo(dto.Description));

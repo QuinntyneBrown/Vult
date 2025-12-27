@@ -8,6 +8,7 @@ namespace Vult.Api.Features.Products;
 public class UpdateProductDto
 {
     public Guid ProductId { get; set; }
+    public string Name { get; set; } = string.Empty;
     public decimal EstimatedMSRP { get; set; }
     public decimal EstimatedResaleValue { get; set; }
     public string Description { get; set; } = string.Empty;

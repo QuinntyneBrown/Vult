@@ -223,6 +223,7 @@ Vult.Api/
 ```json
 {
     "productId": "guid",
+    "name": "string",
     "estimatedMSRP": "decimal",
     "estimatedResaleValue": "decimal",
     "description": "string",
@@ -250,6 +251,7 @@ Vult.Api/
 
 ```json
 {
+    "name": "string",
     "estimatedMSRP": "decimal",
     "estimatedResaleValue": "decimal",
     "description": "string",
@@ -266,6 +268,7 @@ Vult.Api/
 ```json
 {
     "productId": "guid (set from URL)",
+    "name": "string",
     "estimatedMSRP": "decimal",
     "estimatedResaleValue": "decimal",
     "description": "string",
@@ -1281,6 +1284,7 @@ true
 **Request Body**:
 ```json
 {
+    "name": "Air Max 90",
     "estimatedMSRP": 150.00,
     "estimatedResaleValue": 95.00,
     "description": "Air Max 90",
@@ -1296,6 +1300,7 @@ true
 {
     "product": {
         "productId": "guid",
+        "name": "Air Max 90",
         "estimatedMSRP": 150.00,
         "estimatedResaleValue": 95.00,
         "description": "Air Max 90",
@@ -1332,6 +1337,7 @@ true
 ```json
 {
     "productId": "guid or empty",
+    "name": "Updated Air Max 90",
     "estimatedMSRP": 160.00,
     "estimatedResaleValue": 100.00,
     "description": "Updated Air Max 90",

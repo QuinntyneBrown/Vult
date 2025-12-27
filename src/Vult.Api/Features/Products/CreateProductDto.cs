@@ -7,6 +7,7 @@ namespace Vult.Api.Features.Products;
 
 public class CreateProductDto
 {
+    public string Name { get; set; } = string.Empty;
     public decimal EstimatedMSRP { get; set; }
     public decimal EstimatedResaleValue { get; set; }
     public string Description { get; set; } = string.Empty;
