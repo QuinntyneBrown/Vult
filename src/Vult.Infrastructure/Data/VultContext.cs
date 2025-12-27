@@ -18,6 +18,7 @@ public class VultContext : DbContext, IVultContext
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Role> Roles { get; set; } = null!;
     public DbSet<Privilege> Privileges { get; set; } = null!;
+    public DbSet<Testimonial> Testimonials { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,5 +29,6 @@ public class VultContext : DbContext, IVultContext
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
         modelBuilder.ApplyConfiguration(new PrivilegeConfiguration());
+        modelBuilder.ApplyConfiguration(new TestimonialConfiguration());
     }
 }

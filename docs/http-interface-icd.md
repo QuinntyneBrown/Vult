@@ -18,13 +18,17 @@ This document provides a comprehensive technical specification of all HTTP endpo
 ### Key Directory Structure
 ```
 Vult.Api/
-├── Controllers/              # HTTP Controller endpoints (2 controllers)
+├── Controllers/              # HTTP Controller endpoints (4 controllers)
 │   ├── UserController.cs
-│   └── ProductsController.cs
+│   ├── ProductsController.cs
+│   ├── InvitationTokenController.cs
+│   └── TestimonialsController.cs
 ├── Features/                 # Feature modules (Commands/Queries/Handlers)
 │   ├── Auth/
 │   ├── Users/
-│   └── Products/
+│   ├── Products/
+│   ├── InvitationTokens/
+│   └── Testimonials/
 ├── Behaviours/              # MediatR pipeline behaviors
 │   └── ResourceOperationAuthorizationBehavior.cs
 ├── Hubs/                    # SignalR hubs
@@ -69,6 +73,30 @@ Vult.Api/
 | POST | CreateProduct | `/api/products` | Required | Create new product |
 | PUT | UpdateProduct | `/api/products/{id}` | Required | Update product details |
 | DELETE | DeleteProduct | `/api/products/{id}` | Required | Delete product |
+
+### 2.3 InvitationTokenController
+**Route Base**: `/api/invitation-token`
+**Location**: `src/Vult.Api/Controllers/InvitationTokenController.cs`
+
+| Method | Endpoint | Route | Auth | Description |
+|--------|----------|-------|------|-------------|
+| GET | GetAll | `/api/invitation-token` | Required | Get all invitation tokens |
+| GET | GetById | `/api/invitation-token/{id:guid}` | Required | Get token by ID |
+| POST | Create | `/api/invitation-token` | Required | Create new invitation token |
+| PUT | UpdateExpiry | `/api/invitation-token/{id:guid}/expiry` | Required | Update token expiry date |
+| DELETE | Delete | `/api/invitation-token/{id:guid}` | Required | Delete invitation token |
+
+### 2.4 TestimonialsController
+**Route Base**: `/api/testimonials`
+**Location**: `src/Vult.Api/Controllers/TestimonialsController.cs`
+
+| Method | Endpoint | Route | Auth | Description |
+|--------|----------|-------|------|-------------|
+| GET | GetTestimonials | `/api/testimonials` | Public | Get paginated list of testimonials with filters |
+| GET | GetTestimonialById | `/api/testimonials/{id}` | Public | Get testimonial details by ID |
+| POST | CreateTestimonial | `/api/testimonials` | Required | Create new testimonial |
+| PUT | UpdateTestimonial | `/api/testimonials/{id}` | Required | Update testimonial details |
+| DELETE | DeleteTestimonial | `/api/testimonials/{id}` | Required | Delete testimonial |
 
 ---
 
@@ -328,6 +356,145 @@ Vult.Api/
 - `Create` = 3
 - `Delete` = 4
 
+#### InvitationTokenType
+**Location**: `src/Vult.Core/Model/InvitationTokenAggregate/Enums/InvitationTokenType.cs`
+- `Standard` = 1
+
+### 3.5 Invitation Token DTOs
+
+#### InvitationTokenDto
+**Location**: `src/Vult.Api/Features/InvitationTokens/InvitationTokenDto.cs`
+
+```json
+{
+    "invitationTokenId": "guid",
+    "value": "string (token value)",
+    "expiry": "datetime | null",
+    "type": 1
+}
+```
+
+#### CreateInvitationTokenCommand
+**Location**: `src/Vult.Api/Features/InvitationTokens/CreateInvitationTokenCommand.cs`
+
+```json
+{
+    "expiry": "datetime (optional)",
+    "type": 1
+}
+```
+
+#### UpdateInvitationTokenExpiryCommand
+**Location**: `src/Vult.Api/Features/InvitationTokens/UpdateInvitationTokenExpiryCommand.cs`
+
+```json
+{
+    "invitationTokenId": "guid (set from URL)",
+    "expiry": "datetime | null"
+}
+```
+
+### 3.6 Testimonial DTOs
+
+#### TestimonialDto
+**Location**: `src/Vult.Api/Features/Testimonials/TestimonialDto.cs`
+
+```json
+{
+    "testimonialId": "guid",
+    "customerName": "string",
+    "photoUrl": "string",
+    "rating": 5,
+    "text": "string",
+    "createdDate": "datetime",
+    "updatedDate": "datetime"
+}
+```
+
+#### CreateTestimonialDto
+**Location**: `src/Vult.Api/Features/Testimonials/CreateTestimonialDto.cs`
+
+```json
+{
+    "customerName": "string (required, max 100 chars)",
+    "photoUrl": "string (required, max 500 chars)",
+    "rating": 5,
+    "text": "string (required, max 1000 chars)"
+}
+```
+**Validations**:
+- CustomerName is required, max 100 characters
+- PhotoUrl is required, max 500 characters
+- Rating must be between 1 and 5
+- Text is required, max 1000 characters
+
+#### UpdateTestimonialDto
+**Location**: `src/Vult.Api/Features/Testimonials/UpdateTestimonialDto.cs`
+
+```json
+{
+    "testimonialId": "guid (set from URL)",
+    "customerName": "string (required, max 100 chars)",
+    "photoUrl": "string (required, max 500 chars)",
+    "rating": 5,
+    "text": "string (required, max 1000 chars)"
+}
+```
+
+#### GetTestimonialsQueryResult
+**Location**: `src/Vult.Api/Features/Testimonials/GetTestimonialsQuery.cs`
+
+```json
+{
+    "items": [TestimonialDto],
+    "totalCount": "int",
+    "pageNumber": "int",
+    "pageSize": "int",
+    "totalPages": "int"
+}
+```
+
+#### GetTestimonialByIdQueryResult
+**Location**: `src/Vult.Api/Features/Testimonials/GetTestimonialByIdQuery.cs`
+
+```json
+{
+    "testimonial": TestimonialDto
+}
+```
+
+#### CreateTestimonialCommandResult
+**Location**: `src/Vult.Api/Features/Testimonials/CreateTestimonialCommand.cs`
+
+```json
+{
+    "testimonial": TestimonialDto,
+    "success": "bool",
+    "errors": ["string array"]
+}
+```
+
+#### UpdateTestimonialCommandResult
+**Location**: `src/Vult.Api/Features/Testimonials/UpdateTestimonialCommand.cs`
+
+```json
+{
+    "testimonial": TestimonialDto,
+    "success": "bool",
+    "errors": ["string array"]
+}
+```
+
+#### DeleteTestimonialCommandResult
+**Location**: `src/Vult.Api/Features/Testimonials/DeleteTestimonialCommand.cs`
+
+```json
+{
+    "success": "bool",
+    "errors": ["string array"]
+}
+```
+
 ---
 
 ## 4. AUTHENTICATION AND AUTHORIZATION
@@ -413,6 +580,7 @@ Implemented as MediatR Pipeline Behavior that:
 - `User`
 - `Role`
 - `Product`
+- `InvitationToken`
 
 #### Privilege Format
 Privileges are stored as claims in the format: `{Operation}{Resource}`
@@ -420,6 +588,7 @@ Privileges are stored as claims in the format: `{Operation}{Resource}`
 **Examples**:
 - `ReadUser` - Permission to read user data
 - `CreateProduct` - Permission to create products
+- `WriteInvitationToken` - Permission to modify invitation tokens
 - `DeleteUser` - Permission to delete users
 
 ### 4.3 Protected Endpoints
@@ -437,6 +606,7 @@ Endpoints requiring `[Authorize]` attribute (JWT token required):
 - `POST /api/products`
 - `PUT /api/products/{id}`
 - `DELETE /api/products/{id}`
+- All InvitationToken endpoints
 - All SignalR hub connections
 
 ### 4.4 Allowed Anonymous Endpoints
@@ -552,6 +722,7 @@ Endpoints with `[AllowAnonymous]` attribute (no token required):
 #### Not Found Errors
 - User ID not found
 - Product ID not found
+- Invitation token not found
 
 ---
 
@@ -1067,6 +1238,277 @@ true
 
 ---
 
+### 7.4 Invitation Token Endpoints
+
+#### GET /api/invitation-token
+**Summary**: Get all invitation tokens
+**Authentication**: Required
+**Authorization**: Read permission on InvitationToken aggregate
+
+**Success Response** (200 OK):
+```json
+{
+    "invitationTokens": [
+        {
+            "invitationTokenId": "guid",
+            "value": "token-string",
+            "expiry": "2025-12-31T23:59:59Z",
+            "type": 1
+        }
+    ]
+}
+```
+
+---
+
+#### GET /api/invitation-token/{id:guid}
+**Summary**: Get invitation token by ID
+**Authentication**: Required
+**Authorization**: Read permission on InvitationToken aggregate
+
+**Path Parameters**:
+- `id` (guid): Token ID
+
+**Success Response** (200 OK): InvitationTokenDto
+**Error Response** (404 Not Found):
+```json
+{}
+```
+
+---
+
+#### POST /api/invitation-token
+**Summary**: Create new invitation token
+**Authentication**: Required
+**Authorization**: Create permission on InvitationToken aggregate
+
+**Request Body**:
+```json
+{
+    "expiry": "2025-12-31T23:59:59Z (optional)",
+    "type": 1
+}
+```
+
+**Success Response** (201 Created): InvitationTokenDto
+
+---
+
+#### PUT /api/invitation-token/{id:guid}/expiry
+**Summary**: Update token expiry date
+**Authentication**: Required
+**Authorization**: Write permission on InvitationToken aggregate
+
+**Path Parameters**:
+- `id` (guid): Token ID
+
+**Request Body**:
+```json
+{
+    "expiry": "2025-12-31T23:59:59Z or null"
+}
+```
+
+**Success Response** (200 OK): InvitationTokenDto
+**Error Response** (404 Not Found):
+```json
+{}
+```
+
+---
+
+#### DELETE /api/invitation-token/{id:guid}
+**Summary**: Delete invitation token
+**Authentication**: Required
+**Authorization**: Delete permission on InvitationToken aggregate
+
+**Path Parameters**:
+- `id` (guid): Token ID
+
+**Success Response** (204 No Content):
+```
+(empty)
+```
+
+**Error Response** (404 Not Found):
+```json
+{}
+```
+
+---
+
+### 7.5 Testimonial Endpoints
+
+#### GET /api/testimonials
+**Summary**: Get paginated list of testimonials with optional filtering
+**Authentication**: AllowAnonymous
+
+**Query Parameters**:
+- `pageNumber` (int, default: 1): Page number (must be >= 1)
+- `pageSize` (int, default: 10): Items per page (max: 100)
+- `minRating` (int, optional): Filter by minimum rating (1-5)
+- `sortBy` (string, optional): Sort field ("rating", "rating_desc", "date", "date_desc", "name", "name_desc")
+
+**Success Response** (200 OK):
+```json
+{
+    "items": [
+        {
+            "testimonialId": "guid",
+            "customerName": "Sarah M.",
+            "photoUrl": "https://example.com/photo.jpg",
+            "rating": 5,
+            "text": "Amazing quality!",
+            "createdDate": "2025-12-26T10:00:00Z",
+            "updatedDate": "2025-12-26T10:00:00Z"
+        }
+    ],
+    "totalCount": 50,
+    "pageNumber": 1,
+    "pageSize": 10,
+    "totalPages": 5
+}
+```
+
+---
+
+#### GET /api/testimonials/{id}
+**Summary**: Get testimonial details by ID
+**Authentication**: AllowAnonymous
+
+**Path Parameters**:
+- `id` (guid): Testimonial ID
+
+**Success Response** (200 OK):
+```json
+{
+    "testimonial": {
+        "testimonialId": "guid",
+        "customerName": "Sarah M.",
+        "photoUrl": "https://example.com/photo.jpg",
+        "rating": 5,
+        "text": "Amazing quality!",
+        "createdDate": "2025-12-26T10:00:00Z",
+        "updatedDate": "2025-12-26T10:00:00Z"
+    }
+}
+```
+
+**Error Response** (404 Not Found):
+```json
+{
+    "message": "Testimonial with ID {id} not found"
+}
+```
+
+---
+
+#### POST /api/testimonials
+**Summary**: Create new testimonial
+**Authentication**: Required
+
+**Request Body**:
+```json
+{
+    "customerName": "Sarah M.",
+    "photoUrl": "https://example.com/photo.jpg",
+    "rating": 5,
+    "text": "Amazing quality! The vintage jacket I bought looks brand new."
+}
+```
+
+**Success Response** (201 Created):
+```json
+{
+    "testimonial": {
+        "testimonialId": "guid",
+        "customerName": "Sarah M.",
+        "photoUrl": "https://example.com/photo.jpg",
+        "rating": 5,
+        "text": "Amazing quality! The vintage jacket I bought looks brand new.",
+        "createdDate": "2025-12-26T12:00:00Z",
+        "updatedDate": "2025-12-26T12:00:00Z"
+    },
+    "success": true,
+    "errors": []
+}
+```
+
+**Error Response** (400 Bad Request):
+```json
+{
+    "errors": ["Rating must be between 1 and 5"]
+}
+```
+
+---
+
+#### PUT /api/testimonials/{id}
+**Summary**: Update testimonial details
+**Authentication**: Required
+
+**Path Parameters**:
+- `id` (guid): Testimonial ID
+
+**Request Body**:
+```json
+{
+    "testimonialId": "guid or empty",
+    "customerName": "Sarah M.",
+    "photoUrl": "https://example.com/photo.jpg",
+    "rating": 5,
+    "text": "Updated testimonial text."
+}
+```
+
+**Validation**: If `testimonialId` in body is provided and differs from URL ID, returns 400
+
+**Success Response** (200 OK):
+```json
+{
+    "testimonial": {...},
+    "success": true,
+    "errors": []
+}
+```
+
+**Error Response** (400 Bad Request - ID mismatch):
+```json
+{
+    "errors": ["The ID in the URL does not match the ID in the request body"]
+}
+```
+
+**Error Response** (404 Not Found):
+```json
+{
+    "errors": ["Testimonial not found"]
+}
+```
+
+---
+
+#### DELETE /api/testimonials/{id}
+**Summary**: Delete testimonial
+**Authentication**: Required
+
+**Path Parameters**:
+- `id` (guid): Testimonial ID
+
+**Success Response** (204 No Content):
+```
+(empty)
+```
+
+**Error Response** (404 Not Found):
+```json
+{
+    "errors": ["Testimonial not found"]
+}
+```
+
+---
+
 ## 8. SIGNALR HUB SPECIFICATION
 
 ### 8.1 Ingestion Hub
@@ -1201,9 +1643,11 @@ true
 | Service Configuration | `src/Vult.Api/ConfigureServices.cs` |
 | User Controller | `src/Vult.Api/Controllers/UserController.cs` |
 | Products Controller | `src/Vult.Api/Controllers/ProductsController.cs` |
+| InvitationToken Controller | `src/Vult.Api/Controllers/InvitationTokenController.cs` |
 | Auth Features | `src/Vult.Api/Features/Auth/` |
 | User Features | `src/Vult.Api/Features/Users/` |
 | Product Features | `src/Vult.Api/Features/Products/` |
+| InvitationToken Features | `src/Vult.Api/Features/InvitationTokens/` |
 | Authorization Behavior | `src/Vult.Api/Behaviours/ResourceOperationAuthorizationBehavior.cs` |
 | SignalR Hub | `src/Vult.Api/Hubs/IngestionHub.cs` |
 | CORS Configuration | `src/Vult.Api/Configuration/CorsSettings.cs` |
@@ -1212,13 +1656,13 @@ true
 
 ## DOCUMENT METADATA
 
-**Document Version**: 1.0
+**Document Version**: 1.1
 **API Name**: Vult API
 **Framework**: ASP.NET Core
 **Last Updated**: 2025-12-26
 **Frameworks Supported**: .NET 10.0, .NET 8.0
-**Total Endpoints**: 16
-**Total Controllers**: 2
+**Total Endpoints**: 26
+**Total Controllers**: 4
 **Authentication Method**: JWT Bearer Token
 **Database**: SQL Server
 

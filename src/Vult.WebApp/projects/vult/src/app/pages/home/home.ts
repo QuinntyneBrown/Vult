@@ -1,7 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   HeroSection,
@@ -9,6 +9,8 @@ import {
   ProductCardData,
   TypographyDisplay,
 } from 'vult-components';
+import { TestimonialService } from '../../core/services';
+import { Testimonial as TestimonialModel } from '../../core/models';
 
 export interface Testimonial {
   id: string;
@@ -30,7 +32,10 @@ export interface Testimonial {
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Home {
+export class Home implements OnInit {
+  private testimonialService = inject(TestimonialService);
+  private router = inject(Router);
+
   heroImage = 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=1920&q=80';
   heroTitle = 'Buy Premium Used Products';
   heroOverlay = 'linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0) 100%)';
@@ -101,38 +106,37 @@ export class Home {
     },
   ]);
 
-  testimonials = signal<Testimonial[]>([
-    {
-      id: '1',
-      customerName: 'Sarah M.',
-      photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
-      rating: 5,
-      text: 'Amazing quality! The vintage jacket I bought looks brand new. Fast shipping and excellent customer service.',
-    },
-    {
-      id: '2',
-      customerName: 'James K.',
-      photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
-      rating: 5,
-      text: 'Found exactly what I was looking for. The authentication process gave me confidence in my purchase.',
-    },
-    {
-      id: '3',
-      customerName: 'Emily R.',
-      photoUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80',
-      rating: 4,
-      text: 'Great selection of premium items. Prices are fair and the condition descriptions are accurate.',
-    },
-    {
-      id: '4',
-      customerName: 'Michael T.',
-      photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80',
-      rating: 5,
-      text: 'Best marketplace for used premium goods. Everything I ordered exceeded my expectations.',
-    },
-  ]);
+  testimonials = signal<Testimonial[]>([]);
+  isLoading = signal<boolean>(true);
 
-  constructor(private router: Router) {}
+  ngOnInit(): void {
+    this.loadTestimonials();
+  }
+
+  private loadTestimonials(): void {
+    this.isLoading.set(true);
+    this.testimonialService.getTestimonials(1, 10, { sortBy: 'rating_desc' }).subscribe({
+      next: (response) => {
+        const mappedTestimonials = response.items.map(this.mapToTestimonial);
+        this.testimonials.set(mappedTestimonials);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading testimonials:', error);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  private mapToTestimonial(model: TestimonialModel): Testimonial {
+    return {
+      id: model.testimonialId,
+      customerName: model.customerName,
+      photoUrl: model.photoUrl,
+      rating: model.rating,
+      text: model.text,
+    };
+  }
 
   onShopClick(): void {
     this.router.navigate(['/products']);

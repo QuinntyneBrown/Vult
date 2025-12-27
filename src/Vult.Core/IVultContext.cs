@@ -12,6 +12,7 @@ public interface IVultContext
     DbSet<User> Users { get; set; }
     DbSet<Role> Roles { get; set; }
     DbSet<Privilege> Privileges { get; set; }
+    DbSet<Testimonial> Testimonials { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
