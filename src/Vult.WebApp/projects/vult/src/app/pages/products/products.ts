@@ -1,9 +1,10 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { BehaviorSubject, combineLatest, map, switchMap, tap, catchError, of } from 'rxjs';
 import {
   PageHeader,
   ProductGrid,
@@ -16,6 +17,8 @@ import {
   Pagination,
   ResultCounter
 } from 'vult-components';
+import { ProductService, ProductFilters } from '../../core/services/product.service';
+import { Product, ItemType, Gender } from '../../core/models';
 
 export type ProductsSortOption = 'featured' | 'newest' | 'price-asc' | 'price-desc';
 
@@ -24,6 +27,19 @@ export interface ProductsFilterState {
   colors: string[];
   sizes: string[];
   priceRanges: string[];
+  gender: number | null;
+}
+
+interface ProductsViewModel {
+  products: ProductCardData[];
+  totalProducts: number;
+  totalPages: number;
+  currentPage: number;
+  isLoading: boolean;
+  isMobileFilterOpen: boolean;
+  selectedSortId: string;
+  filterSections: FilterSection[];
+  activeFilterCount: number;
 }
 
 @Component({
@@ -45,40 +61,47 @@ export interface ProductsFilterState {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Products {
-  // State signals
-  isLoading = signal(false);
-  isMobileFilterOpen = signal(false);
-  currentPage = signal(1);
-  selectedSortId = signal<string>('featured');
+  private readonly router = inject(Router);
+  private readonly productService = inject(ProductService);
 
-  // Filter state
-  filterState = signal<ProductsFilterState>({
-    categories: [],
-    colors: [],
-    sizes: [],
-    priceRanges: []
-  });
+  readonly itemsPerPage = 12;
 
-  // Sort options
-  sortOptions: SortOption[] = [
+  // Sort options configuration
+  readonly sortOptions: SortOption[] = [
     { id: 'featured', label: 'Featured' },
     { id: 'newest', label: 'Newest' },
     { id: 'price-asc', label: 'Price: Low to High' },
     { id: 'price-desc', label: 'Price: High to Low' }
   ];
 
+  // UI state subjects
+  private currentPage$ = new BehaviorSubject<number>(1);
+  private selectedSortId$ = new BehaviorSubject<string>('featured');
+  private isMobileFilterOpen$ = new BehaviorSubject<boolean>(false);
+  private isLoading$ = new BehaviorSubject<boolean>(false);
+
+  // Filter state
+  private filterState$ = new BehaviorSubject<ProductsFilterState>({
+    categories: [],
+    colors: [],
+    sizes: [],
+    priceRanges: [],
+    gender: null
+  });
+
   // Filter sections configuration
-  filterSections = signal<FilterSection[]>([
+  private filterSections$ = new BehaviorSubject<FilterSection[]>([
     {
       id: 'category',
       title: 'Category',
       type: 'checkbox',
       expanded: true,
       options: [
-        { id: 'shoes', label: 'Shoes', count: 124, checked: false },
-        { id: 'clothing', label: 'Clothing', count: 89, checked: false },
-        { id: 'accessories', label: 'Accessories', count: 35, checked: false },
-        { id: 'equipment', label: 'Equipment', count: 12, checked: false }
+        { id: 'shoe', label: 'Shoes', count: 0, checked: false },
+        { id: 'shirt', label: 'Shirts', count: 0, checked: false },
+        { id: 'pants', label: 'Pants', count: 0, checked: false },
+        { id: 'jacket', label: 'Jackets', count: 0, checked: false },
+        { id: 'accessories', label: 'Accessories', count: 0, checked: false }
       ]
     },
     {
@@ -87,9 +110,9 @@ export class Products {
       type: 'checkbox',
       expanded: true,
       options: [
-        { id: 'men', label: 'Men', count: 248, checked: true },
+        { id: 'men', label: 'Men', count: 0, checked: false },
         { id: 'women', label: 'Women', count: 0, checked: false },
-        { id: 'unisex', label: 'Unisex', count: 42, checked: false }
+        { id: 'unisex', label: 'Unisex', count: 0, checked: false }
       ]
     },
     {
@@ -112,143 +135,177 @@ export class Products {
       type: 'checkbox',
       expanded: true,
       options: [
-        { id: 'price-0-50', label: '$0 - $50', count: 45, checked: false },
-        { id: 'price-50-100', label: '$50 - $100', count: 89, checked: false },
-        { id: 'price-100-150', label: '$100 - $150', count: 72, checked: false },
-        { id: 'price-150-plus', label: 'Over $150', count: 42, checked: false }
+        { id: 'price-0-50', label: '$0 - $50', count: 0, checked: false },
+        { id: 'price-50-100', label: '$50 - $100', count: 0, checked: false },
+        { id: 'price-100-150', label: '$100 - $150', count: 0, checked: false },
+        { id: 'price-150-plus', label: 'Over $150', count: 0, checked: false }
       ]
     }
   ]);
 
-  // Mock product data
-  products = signal<ProductCardData[]>([
-    {
-      id: 'air-max-90',
-      name: 'Air Max 90',
-      category: "Men's Shoes",
-      colorCount: 3,
-      price: 130,
-      imageUrl: 'assets/images/product-1.jpg',
-      badge: 'New',
-      badgeType: 'new'
-    },
-    {
-      id: 'dri-fit-primary',
-      name: 'Dri-FIT Primary',
-      category: "Men's Training T-Shirt",
-      colorCount: 5,
-      price: 40,
-      imageUrl: 'assets/images/product-2.jpg',
-      badge: 'Best Seller',
-      badgeType: 'sale'
-    },
-    {
-      id: 'pegasus-41',
-      name: 'Pegasus 41',
-      category: "Men's Road Running Shoes",
-      colorCount: 8,
-      price: 140,
-      imageUrl: 'assets/images/product-3.jpg'
-    },
-    {
-      id: 'windrunner',
-      name: 'Windrunner',
-      category: "Men's Running Jacket",
-      colorCount: 4,
-      price: 89,
-      originalPrice: 120,
-      imageUrl: 'assets/images/product-4.jpg',
-      badge: 'New',
-      badgeType: 'new'
-    },
-    {
-      id: 'air-force-1-07',
-      name: "Air Force 1 '07",
-      category: "Men's Shoes",
-      colorCount: 2,
-      price: 115,
-      imageUrl: 'assets/images/product-5.jpg'
-    },
-    {
-      id: 'challenger',
-      name: 'Challenger',
-      category: "Men's Running Shorts",
-      colorCount: 6,
-      price: 45,
-      imageUrl: 'assets/images/product-6.jpg'
-    },
-    {
-      id: 'dunk-low-retro',
-      name: 'Dunk Low Retro',
-      category: "Men's Shoes",
-      colorCount: 12,
-      price: 115,
-      imageUrl: 'assets/images/product-7.jpg',
-      badge: 'New',
-      badgeType: 'new'
-    },
-    {
-      id: 'brasilia-95',
-      name: 'Brasilia 9.5',
-      category: 'Training Backpack (Large)',
-      colorCount: 3,
-      price: 50,
-      imageUrl: 'assets/images/product-8.jpg'
-    }
-  ]);
+  // Products data from API
+  private productsData$ = combineLatest([
+    this.currentPage$,
+    this.selectedSortId$,
+    this.filterState$
+  ]).pipe(
+    tap(() => this.isLoading$.next(true)),
+    switchMap(([page, sortId, filterState]) => {
+      const filters = this.buildFilters(filterState);
+      const sortBy = this.mapSortIdToApiSort(sortId);
 
-  // Computed properties
-  totalProducts = computed(() => this.products().length);
-  itemsPerPage = 8;
-  totalPages = computed(() => Math.ceil(this.totalProducts() / this.itemsPerPage));
+      return this.productService.getProducts(page, this.itemsPerPage, { ...filters, sortBy }).pipe(
+        catchError(() => of({ items: [], totalCount: 0, pageNumber: 1, pageSize: this.itemsPerPage, totalPages: 0 }))
+      );
+    }),
+    tap(() => this.isLoading$.next(false)),
+    map(response => ({
+      products: response.items.map(product => this.mapProductToCard(product)),
+      totalProducts: response.totalCount,
+      totalPages: Math.ceil(response.totalCount / this.itemsPerPage),
+      currentPage: response.pageNumber
+    }))
+  );
 
-  activeFilterCount = computed(() => {
-    const state = this.filterState();
-    return state.categories.length + state.colors.length + state.sizes.length + state.priceRanges.length;
-  });
+  // Combined view model for template consumption
+  viewModel$ = combineLatest([
+    this.productsData$,
+    this.isLoading$,
+    this.isMobileFilterOpen$,
+    this.selectedSortId$,
+    this.filterSections$,
+    this.filterState$
+  ]).pipe(
+    map(([productsData, isLoading, isMobileFilterOpen, selectedSortId, filterSections, filterState]): ProductsViewModel => ({
+      products: productsData.products,
+      totalProducts: productsData.totalProducts,
+      totalPages: productsData.totalPages,
+      currentPage: productsData.currentPage,
+      isLoading,
+      isMobileFilterOpen,
+      selectedSortId,
+      filterSections,
+      activeFilterCount: this.calculateActiveFilterCount(filterState)
+    }))
+  );
 
-  filteredProducts = computed(() => {
-    const state = this.filterState();
-    let result = this.products();
+  private buildFilters(filterState: ProductsFilterState): ProductFilters {
+    const filters: ProductFilters = {};
 
-    // Apply filters (simplified - in a real app this would filter based on actual product properties)
-    if (state.categories.length > 0 || state.sizes.length > 0 || state.priceRanges.length > 0) {
-      // Filter logic would go here
-    }
-
-    // Apply sorting
-    const sortId = this.selectedSortId();
-    result = [...result].sort((a, b) => {
-      switch (sortId) {
-        case 'newest':
-          return 0; // Would sort by date in real implementation
-        case 'price-asc':
-          return a.price - b.price;
-        case 'price-desc':
-          return b.price - a.price;
-        default:
-          return 0; // Featured - default order
+    // Map category to itemType
+    if (filterState.categories.length > 0) {
+      const itemType = this.mapCategoryToItemType(filterState.categories[0]);
+      if (itemType !== null) {
+        filters.itemType = itemType;
       }
-    });
+    }
 
-    return result;
-  });
+    // Map gender filter
+    if (filterState.gender !== null) {
+      filters.gender = filterState.gender;
+    }
 
-  paginatedProducts = computed(() => {
-    const start = (this.currentPage() - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    return this.filteredProducts().slice(start, end);
-  });
+    return filters;
+  }
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  private mapCategoryToItemType(category: string): number | null {
+    const mapping: Record<string, ItemType> = {
+      'shoe': ItemType.Shoe,
+      'pants': ItemType.Pants,
+      'jacket': ItemType.Jacket,
+      'shirt': ItemType.Shirt,
+      'shorts': ItemType.Shorts,
+      'dress': ItemType.Dress,
+      'skirt': ItemType.Skirt,
+      'sweater': ItemType.Sweater,
+      'hoodie': ItemType.Hoodie,
+      'coat': ItemType.Coat,
+      'bag': ItemType.Bag,
+      'accessories': ItemType.Accessories,
+      'hat': ItemType.Hat
+    };
+    return mapping[category] ?? null;
+  }
+
+  private mapGenderIdToEnum(genderId: string): number {
+    const mapping: Record<string, Gender> = {
+      'men': Gender.Mens,
+      'women': Gender.Womens,
+      'unisex': Gender.Unisex
+    };
+    return mapping[genderId] ?? Gender.Unisex;
+  }
+
+  private mapSortIdToApiSort(sortId: string): string {
+    const mapping: Record<string, string> = {
+      'featured': 'date_desc',
+      'newest': 'date_desc',
+      'price-asc': 'price',
+      'price-desc': 'price_desc'
+    };
+    return mapping[sortId] || 'date_desc';
+  }
+
+  private mapProductToCard(product: Product): ProductCardData {
+    const itemTypeCategories: Record<ItemType, string> = {
+      [ItemType.Shoe]: 'Footwear',
+      [ItemType.Pants]: 'Bottoms',
+      [ItemType.Jacket]: 'Outerwear',
+      [ItemType.Shirt]: 'Tops',
+      [ItemType.Shorts]: 'Bottoms',
+      [ItemType.Dress]: 'Dresses',
+      [ItemType.Skirt]: 'Bottoms',
+      [ItemType.Sweater]: 'Tops',
+      [ItemType.Hoodie]: 'Tops',
+      [ItemType.Coat]: 'Outerwear',
+      [ItemType.Bag]: 'Bags',
+      [ItemType.Accessories]: 'Accessories',
+      [ItemType.Hat]: 'Accessories',
+      [ItemType.Book]: 'Books'
+    };
+
+    const genderLabels: Record<Gender, string> = {
+      [Gender.Mens]: "Men's",
+      [Gender.Womens]: "Women's",
+      [Gender.Unisex]: 'Unisex'
+    };
+
+    const imageUrl = product.productImages?.[0]?.url || 'assets/images/placeholder.jpg';
+    const category = product.itemType !== undefined ? itemTypeCategories[product.itemType] : 'General';
+    const genderLabel = product.gender !== undefined ? genderLabels[product.gender] : '';
+    const fullCategory = genderLabel ? `${genderLabel} ${category}` : category;
+
+    const hasSale = product.estimatedResaleValue &&
+                    product.estimatedMSRP &&
+                    product.estimatedResaleValue < product.estimatedMSRP;
+
+    return {
+      id: product.productId,
+      name: product.name || product.description || 'Product',
+      category: fullCategory,
+      price: product.estimatedResaleValue || product.estimatedMSRP || 0,
+      originalPrice: hasSale ? product.estimatedMSRP : undefined,
+      imageUrl,
+      badge: hasSale ? 'Sale' : undefined,
+      badgeType: hasSale ? 'sale' : undefined
+    };
+  }
+
+  private calculateActiveFilterCount(filterState: ProductsFilterState): number {
+    return filterState.categories.length +
+           filterState.colors.length +
+           filterState.sizes.length +
+           filterState.priceRanges.length +
+           (filterState.gender !== null ? 1 : 0);
+  }
 
   onSortChange(option: SortOption): void {
-    this.selectedSortId.set(option.id);
-    this.currentPage.set(1);
+    this.selectedSortId$.next(option.id);
+    this.currentPage$.next(1);
   }
 
   onFilterChange(event: { section: FilterSection; option: any; checked: boolean }): void {
-    const state = this.filterState();
+    const state = this.filterState$.getValue();
     const sectionId = event.section.id;
     const optionId = event.option.id;
 
@@ -260,6 +317,11 @@ export class Products {
         categories: event.checked
           ? [...state.categories, optionId]
           : state.categories.filter(id => id !== optionId)
+      };
+    } else if (sectionId === 'gender') {
+      updatedState = {
+        ...state,
+        gender: event.checked ? this.mapGenderIdToEnum(optionId) : null
       };
     } else if (sectionId === 'size') {
       updatedState = {
@@ -279,11 +341,11 @@ export class Products {
       updatedState = state;
     }
 
-    this.filterState.set(updatedState);
-    this.currentPage.set(1);
+    this.filterState$.next(updatedState);
+    this.currentPage$.next(1);
 
     // Update filter section options
-    const sections = this.filterSections();
+    const sections = this.filterSections$.getValue();
     const updatedSections = sections.map(section => {
       if (section.id === sectionId && section.options) {
         return {
@@ -295,33 +357,34 @@ export class Products {
       }
       return section;
     });
-    this.filterSections.set(updatedSections);
+    this.filterSections$.next(updatedSections);
   }
 
   onClearFilters(): void {
-    this.filterState.set({
+    this.filterState$.next({
       categories: [],
       colors: [],
       sizes: [],
-      priceRanges: []
+      priceRanges: [],
+      gender: null
     });
 
     // Reset all filter options
-    const sections = this.filterSections();
+    const sections = this.filterSections$.getValue();
     const resetSections = sections.map(section => ({
       ...section,
       options: section.options?.map(opt => ({ ...opt, checked: false }))
     }));
-    this.filterSections.set(resetSections);
-    this.currentPage.set(1);
+    this.filterSections$.next(resetSections);
+    this.currentPage$.next(1);
   }
 
   onMobileFilterToggle(isOpen: boolean): void {
-    this.isMobileFilterOpen.set(isOpen);
+    this.isMobileFilterOpen$.next(isOpen);
   }
 
   onCloseMobileFilter(): void {
-    this.isMobileFilterOpen.set(false);
+    this.isMobileFilterOpen$.next(false);
   }
 
   onProductClick(product: ProductCardData): void {
@@ -329,13 +392,11 @@ export class Products {
   }
 
   onFavoriteToggle(event: { product: ProductCardData; isFavorite: boolean }): void {
-    // In a real app, this would call a service to update favorites
     console.log('Favorite toggled:', event.product.id, event.isFavorite);
   }
 
   onPageChange(page: number): void {
-    this.currentPage.set(page);
-    // Scroll to top of grid (safely handle test environment)
+    this.currentPage$.next(page);
     if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
