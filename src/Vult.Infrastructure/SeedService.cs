@@ -22,18 +22,19 @@ public class SeedService : ISeedService
     private readonly IVultContext _context;
     private readonly ILogger<SeedService> _logger;
     private readonly IPasswordHasher _passwordHasher;
-
-    // Static GUIDs for seeded digital assets to ensure consistent URLs
-    private static readonly Guid FoampositeDigitalAssetId = Guid.Parse("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly Random _random = new();
 
     public SeedService(
         IVultContext context,
         ILogger<SeedService> logger,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher,
+        IHttpClientFactory httpClientFactory)
     {
         _context = context;
         _logger = logger;
         _passwordHasher = passwordHasher;
+        _httpClientFactory = httpClientFactory;
     }
 
     public async Task SeedAsync()
@@ -43,8 +44,7 @@ public class SeedService : ISeedService
         await SeedRolesAndPrivilegesAsync();
         await SeedUsersAsync();
         await SeedTestimonialsAsync();
-        await SeedDigitalAssetsAsync();
-        await SeedFeaturedProductsAsync();
+        await SeedProductsAsync();
 
         _logger.LogInformation("Database seeding completed successfully.");
     }
@@ -210,211 +210,701 @@ public class SeedService : ISeedService
         _logger.LogInformation("Testimonials seeded successfully ({Count} testimonials).", testimonials.Count);
     }
 
-    private async Task SeedDigitalAssetsAsync()
+    private async Task SeedProductsAsync()
     {
-        var digitalAssets = _context.DigitalAssets.Count();
-
-        if (await _context.DigitalAssets.AnyAsync(d => d.DigitalAssetId == FoampositeDigitalAssetId))
+        if (await _context.Products.AnyAsync())
         {
-            _logger.LogInformation("Digital assets already exist, skipping digital asset seeding.");
+            _logger.LogInformation("Products already exist, skipping product seeding.");
             return;
         }
 
-        _logger.LogInformation("Seeding digital assets...");
+        _logger.LogInformation("Seeding products with images...");
 
-        // Create a placeholder SVG image for the Nike Foamposite shoe
-        var foampositeSvg = @"<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 400 300"" width=""400"" height=""300"">
-  <defs>
-    <linearGradient id=""shoeGradient"" x1=""0%"" y1=""0%"" x2=""100%"" y2=""100%"">
-      <stop offset=""0%"" style=""stop-color:#1a1a2e;stop-opacity:1"" />
-      <stop offset=""100%"" style=""stop-color:#16213e;stop-opacity:1"" />
-    </linearGradient>
-    <linearGradient id=""soleGradient"" x1=""0%"" y1=""0%"" x2=""0%"" y2=""100%"">
-      <stop offset=""0%"" style=""stop-color:#0f3460;stop-opacity:1"" />
-      <stop offset=""100%"" style=""stop-color:#1a1a2e;stop-opacity:1"" />
-    </linearGradient>
-  </defs>
-  <rect width=""400"" height=""300"" fill=""#f5f5f5""/>
-  <!-- Shoe upper -->
-  <ellipse cx=""200"" cy=""140"" rx=""140"" ry=""70"" fill=""url(#shoeGradient)""/>
-  <!-- Toe box -->
-  <ellipse cx=""100"" cy=""150"" rx=""60"" ry=""50"" fill=""url(#shoeGradient)""/>
-  <!-- Sole -->
-  <path d=""M60 180 Q200 220 340 180 L340 200 Q200 240 60 200 Z"" fill=""url(#soleGradient)""/>
-  <!-- Air unit -->
-  <ellipse cx=""280"" cy=""190"" rx=""40"" ry=""15"" fill=""#e94560"" opacity=""0.8""/>
-  <!-- Foamposite texture lines -->
-  <path d=""M80 130 Q150 100 220 130"" stroke=""#0f3460"" stroke-width=""2"" fill=""none"" opacity=""0.5""/>
-  <path d=""M90 145 Q160 115 230 145"" stroke=""#0f3460"" stroke-width=""2"" fill=""none"" opacity=""0.5""/>
-  <path d=""M100 160 Q170 130 240 160"" stroke=""#0f3460"" stroke-width=""2"" fill=""none"" opacity=""0.5""/>
-  <!-- Brand text -->
-  <text x=""200"" y=""270"" font-family=""Arial, sans-serif"" font-size=""16"" font-weight=""bold"" fill=""#333"" text-anchor=""middle"">Nike Air Foamposite</text>
-</svg>";
+        var products = GetProductData();
 
-        var foampositeAsset = new DigitalAsset
+        // Determine number of featured products (5-15% of 40 = 2-6 products)
+        var featuredCount = _random.Next(2, 7);
+        var featuredIndices = new HashSet<int>();
+        while (featuredIndices.Count < featuredCount)
         {
-            DigitalAssetId = FoampositeDigitalAssetId,
-            Name = "nike-foamposite.svg",
-            Bytes = System.Text.Encoding.UTF8.GetBytes(foampositeSvg),
-            ContentType = "image/svg+xml",
-            Height = 300,
-            Width = 400,
-            CreatedDate = DateTime.UtcNow
-        };
+            featuredIndices.Add(_random.Next(0, products.Count));
+        }
 
-        _context.DigitalAssets.Add(foampositeAsset);
+        _logger.LogInformation("Will mark {FeaturedCount} products as featured ({Percentage:F1}%).",
+            featuredCount, (featuredCount / (double)products.Count) * 100);
+
+        var httpClient = _httpClientFactory.CreateClient();
+        httpClient.Timeout = TimeSpan.FromSeconds(30);
+
+        for (int i = 0; i < products.Count; i++)
+        {
+            var product = products[i];
+            product.IsFeatured = featuredIndices.Contains(i);
+
+            // Fetch 6 images for this product
+            var imageUrls = GetImageUrlsForProduct(product, i);
+
+            for (int j = 0; j < 6; j++)
+            {
+                try
+                {
+                    var imageUrl = imageUrls[j];
+                    var imageBytes = await FetchImageAsync(httpClient, imageUrl);
+
+                    if (imageBytes != null && imageBytes.Length > 0)
+                    {
+                        // Create DigitalAsset for this image
+                        var digitalAsset = new DigitalAsset
+                        {
+                            DigitalAssetId = Guid.NewGuid(),
+                            Name = $"{product.Description.ToLower().Replace(" ", "-")}-{j + 1}.jpg",
+                            Bytes = imageBytes,
+                            ContentType = "image/jpeg",
+                            Height = 400,
+                            Width = 400,
+                            CreatedDate = DateTime.UtcNow
+                        };
+
+                        _context.DigitalAssets.Add(digitalAsset);
+
+                        // Create ProductImage linking to the DigitalAsset
+                        var productImage = new ProductImage
+                        {
+                            ProductImageId = Guid.NewGuid(),
+                            ProductId = product.ProductId,
+                            Url = $"{ApiBaseUrl}/api/digitalassets/{digitalAsset.DigitalAssetId}/serve",
+                            Description = $"{product.Description} - Image {j + 1}",
+                            CreatedDate = DateTime.UtcNow
+                        };
+
+                        product.ProductImages.Add(productImage);
+
+                        _logger.LogDebug("Added image {ImageNumber} for product {ProductDescription}", j + 1, product.Description);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to fetch image {ImageNumber} for product {ProductDescription}", j + 1, product.Description);
+                }
+            }
+
+            _context.Products.Add(product);
+
+            _logger.LogInformation("Seeded product {Index}/{Total}: {Description} with {ImageCount} images{Featured}",
+                i + 1, products.Count, product.Description, product.ProductImages.Count,
+                product.IsFeatured ? " (Featured)" : "");
+        }
+
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation("Digital assets seeded successfully.");
+        var totalFeatured = products.Count(p => p.IsFeatured);
+        _logger.LogInformation("Products seeded successfully ({Count} products, {FeaturedCount} featured, {Percentage:F1}%).",
+            products.Count, totalFeatured, (totalFeatured / (double)products.Count) * 100);
     }
 
-    private async Task SeedFeaturedProductsAsync()
+    private async Task<byte[]?> FetchImageAsync(HttpClient httpClient, string imageUrl)
     {
-        if (await _context.Products.AnyAsync(p => p.IsFeatured))
+        try
         {
-            _logger.LogInformation("Featured products already exist, skipping featured product seeding.");
-            return;
+            var response = await httpClient.GetAsync(imageUrl);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+            _logger.LogWarning("Failed to fetch image from {Url}: {StatusCode}", imageUrl, response.StatusCode);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Exception fetching image from {Url}", imageUrl);
+        }
+        return null;
+    }
+
+    private List<string> GetImageUrlsForProduct(Product product, int productIndex)
+    {
+        // Use Unsplash source API to get relevant images based on product type
+        var searchTerms = GetSearchTermsForProduct(product);
+        var urls = new List<string>();
+
+        for (int i = 0; i < 6; i++)
+        {
+            // Use different random seeds to get different images
+            var seed = (productIndex * 100) + i;
+            var searchTerm = searchTerms[i % searchTerms.Count];
+            urls.Add($"https://source.unsplash.com/400x400/?{Uri.EscapeDataString(searchTerm)}&sig={seed}");
         }
 
-        _logger.LogInformation("Seeding featured products...");
+        return urls;
+    }
 
-        var featuredProducts = new List<Product>
+    private List<string> GetSearchTermsForProduct(Product product)
+    {
+        return product.ItemType switch
         {
+            ItemType.Shoe => new List<string> { "sneakers", "shoes", "footwear", "running shoes", "athletic shoes", "fashion shoes" },
+            ItemType.Pants => new List<string> { "jeans", "pants", "denim", "trousers", "fashion pants", "clothing" },
+            ItemType.Jacket => new List<string> { "jacket", "leather jacket", "coat", "outerwear", "fashion jacket", "blazer" },
+            ItemType.Shirt => new List<string> { "shirt", "t-shirt", "polo", "button shirt", "casual shirt", "fashion shirt" },
+            ItemType.Shorts => new List<string> { "shorts", "casual shorts", "athletic shorts", "summer shorts", "fashion shorts", "sportswear" },
+            ItemType.Dress => new List<string> { "dress", "fashion dress", "evening dress", "casual dress", "summer dress", "elegant dress" },
+            ItemType.Skirt => new List<string> { "skirt", "fashion skirt", "mini skirt", "maxi skirt", "casual skirt", "elegant skirt" },
+            ItemType.Sweater => new List<string> { "sweater", "knitwear", "pullover", "wool sweater", "fashion sweater", "casual sweater" },
+            ItemType.Hoodie => new List<string> { "hoodie", "sweatshirt", "casual hoodie", "streetwear", "fashion hoodie", "athletic hoodie" },
+            ItemType.Coat => new List<string> { "coat", "winter coat", "overcoat", "trench coat", "fashion coat", "outerwear" },
+            ItemType.Bag => new List<string> { "bag", "backpack", "handbag", "tote bag", "fashion bag", "leather bag" },
+            ItemType.Accessories => new List<string> { "accessories", "watch", "sunglasses", "jewelry", "fashion accessories", "luxury accessories" },
+            ItemType.Hat => new List<string> { "hat", "cap", "baseball cap", "beanie", "fashion hat", "headwear" },
+            ItemType.Book => new List<string> { "book", "vintage book", "novel", "literature", "classic book", "reading" },
+            _ => new List<string> { "fashion", "clothing", "style", "apparel", "wardrobe", "outfit" }
+        };
+    }
+
+    private List<Product> GetProductData()
+    {
+        var now = DateTime.UtcNow;
+
+        return new List<Product>
+        {
+            // Shoes (8 products)
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Description = "New Era Blue Jays Cap",
-                BrandName = "New Era",
-                Size = "One Size",
-                Gender = Gender.Unisex,
-                ItemType = ItemType.Hat,
-                EstimatedMSRP = 55.00m,
-                EstimatedResaleValue = 45.00m,
-                IsFeatured = true,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow
+                Description = "Air Max 90 Classic",
+                BrandName = "Nike",
+                Size = "10",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Shoe,
+                EstimatedMSRP = 140.00m,
+                EstimatedResaleValue = 120.00m,
+                CreatedDate = now,
+                UpdatedDate = now
             },
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Description = "Vintage Leather Jacket",
-                BrandName = "Vult",
+                Description = "Classic Leather Sneakers",
+                BrandName = "Adidas",
+                Size = "9",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shoe,
+                EstimatedMSRP = 100.00m,
+                EstimatedResaleValue = 85.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Old Skool Skateboard Shoes",
+                BrandName = "Vans",
+                Size = "11",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shoe,
+                EstimatedMSRP = 70.00m,
+                EstimatedResaleValue = 55.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Chuck Taylor All Star",
+                BrandName = "Converse",
+                Size = "8",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shoe,
+                EstimatedMSRP = 60.00m,
+                EstimatedResaleValue = 45.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "574 Core Classics",
+                BrandName = "New Balance",
+                Size = "10.5",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Shoe,
+                EstimatedMSRP = 90.00m,
+                EstimatedResaleValue = 75.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Suede Classic XXI",
+                BrandName = "Puma",
+                Size = "9.5",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shoe,
+                EstimatedMSRP = 75.00m,
+                EstimatedResaleValue = 60.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Classic Clog",
+                BrandName = "Crocs",
+                Size = "M8/W10",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shoe,
+                EstimatedMSRP = 50.00m,
+                EstimatedResaleValue = 35.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Air Force 1 Low",
+                BrandName = "Nike",
+                Size = "12",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Shoe,
+                EstimatedMSRP = 110.00m,
+                EstimatedResaleValue = 95.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+
+            // Pants (5 products)
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "501 Original Fit Jeans",
+                BrandName = "Levi's",
+                Size = "32x32",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Pants,
+                EstimatedMSRP = 70.00m,
+                EstimatedResaleValue = 55.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "High Rise Skinny Jeans",
+                BrandName = "Levi's",
+                Size = "28",
+                Gender = Gender.Womens,
+                ItemType = ItemType.Pants,
+                EstimatedMSRP = 98.00m,
+                EstimatedResaleValue = 75.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Chino Pants Classic",
+                BrandName = "Dockers",
+                Size = "34",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Pants,
+                EstimatedMSRP = 60.00m,
+                EstimatedResaleValue = 45.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Cargo Pants Vintage",
+                BrandName = "Carhartt",
+                Size = "L",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Pants,
+                EstimatedMSRP = 85.00m,
+                EstimatedResaleValue = 70.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Stretch Joggers",
+                BrandName = "Lululemon",
                 Size = "M",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Pants,
+                EstimatedMSRP = 128.00m,
+                EstimatedResaleValue = 95.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+
+            // Jackets (5 products)
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Classic Trucker Jacket",
+                BrandName = "Levi's",
+                Size = "L",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Jacket,
+                EstimatedMSRP = 98.00m,
+                EstimatedResaleValue = 75.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Leather Moto Jacket",
+                BrandName = "AllSaints",
+                Size = "M",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Jacket,
+                EstimatedMSRP = 520.00m,
+                EstimatedResaleValue = 350.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Puffer Jacket Retro",
+                BrandName = "The North Face",
+                Size = "XL",
                 Gender = Gender.Unisex,
                 ItemType = ItemType.Jacket,
                 EstimatedMSRP = 250.00m,
-                EstimatedResaleValue = 189.00m,
-                IsFeatured = true,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow
+                EstimatedResaleValue = 180.00m,
+                CreatedDate = now,
+                UpdatedDate = now
             },
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Description = "Classic Denim Jeans",
-                BrandName = "Levi's",
-                Size = "32",
-                Gender = Gender.Mens,
-                ItemType = ItemType.Pants,
-                EstimatedMSRP = 85.00m,
-                EstimatedResaleValue = 75.00m,
-                IsFeatured = true,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow
-            },
-            new Product
-            {
-                ProductId = Guid.NewGuid(),
-                Description = "Retro Sneakers",
-                BrandName = "Vult",
-                Size = "10",
+                Description = "Bomber Jacket Classic",
+                BrandName = "Alpha Industries",
+                Size = "M",
                 Gender = Gender.Unisex,
-                ItemType = ItemType.Shoe,
+                ItemType = ItemType.Jacket,
+                EstimatedMSRP = 175.00m,
+                EstimatedResaleValue = 130.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Denim Jacket Vintage",
+                BrandName = "Wrangler",
+                Size = "S",
+                Gender = Gender.Womens,
+                ItemType = ItemType.Jacket,
+                EstimatedMSRP = 80.00m,
+                EstimatedResaleValue = 60.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+
+            // Shirts (5 products)
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Oxford Button-Down Shirt",
+                BrandName = "Ralph Lauren",
+                Size = "M",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Shirt,
+                EstimatedMSRP = 110.00m,
+                EstimatedResaleValue = 85.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Flannel Plaid Shirt",
+                BrandName = "Pendleton",
+                Size = "L",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shirt,
                 EstimatedMSRP = 150.00m,
-                EstimatedResaleValue = 120.00m,
-                IsFeatured = true,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow
+                EstimatedResaleValue = 110.00m,
+                CreatedDate = now,
+                UpdatedDate = now
             },
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Description = "Designer Sunglasses",
-                BrandName = "Ray-Ban",
-                Size = "Standard",
+                Description = "Vintage Band T-Shirt",
+                BrandName = "Vintage",
+                Size = "M",
                 Gender = Gender.Unisex,
-                ItemType = ItemType.Accessories,
-                EstimatedMSRP = 120.00m,
-                EstimatedResaleValue = 95.00m,
-                IsFeatured = true,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow
+                ItemType = ItemType.Shirt,
+                EstimatedMSRP = 45.00m,
+                EstimatedResaleValue = 65.00m,
+                CreatedDate = now,
+                UpdatedDate = now
             },
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Description = "Vintage Watch",
-                BrandName = "Seiko",
-                Size = "40mm",
+                Description = "Polo Shirt Classic",
+                BrandName = "Lacoste",
+                Size = "S",
                 Gender = Gender.Mens,
-                ItemType = ItemType.Accessories,
-                EstimatedMSRP = 350.00m,
-                EstimatedResaleValue = 299.00m,
-                IsFeatured = true,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow
+                ItemType = ItemType.Shirt,
+                EstimatedMSRP = 95.00m,
+                EstimatedResaleValue = 70.00m,
+                CreatedDate = now,
+                UpdatedDate = now
             },
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Description = "Canvas Backpack",
+                Description = "Silk Blouse Elegant",
+                BrandName = "Equipment",
+                Size = "S",
+                Gender = Gender.Womens,
+                ItemType = ItemType.Shirt,
+                EstimatedMSRP = 280.00m,
+                EstimatedResaleValue = 150.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+
+            // Sweaters (3 products)
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Cable Knit Sweater",
+                BrandName = "J.Crew",
+                Size = "M",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Sweater,
+                EstimatedMSRP = 98.00m,
+                EstimatedResaleValue = 70.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Cashmere V-Neck Sweater",
+                BrandName = "Everlane",
+                Size = "S",
+                Gender = Gender.Womens,
+                ItemType = ItemType.Sweater,
+                EstimatedMSRP = 145.00m,
+                EstimatedResaleValue = 100.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Wool Cardigan Vintage",
+                BrandName = "Pendleton",
+                Size = "L",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Sweater,
+                EstimatedMSRP = 175.00m,
+                EstimatedResaleValue = 120.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+
+            // Hoodies (3 products)
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Classic Pullover Hoodie",
+                BrandName = "Champion",
+                Size = "L",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Hoodie,
+                EstimatedMSRP = 60.00m,
+                EstimatedResaleValue = 45.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Tech Fleece Hoodie",
+                BrandName = "Nike",
+                Size = "M",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Hoodie,
+                EstimatedMSRP = 120.00m,
+                EstimatedResaleValue = 90.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Box Logo Hoodie",
+                BrandName = "Supreme",
+                Size = "M",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Hoodie,
+                EstimatedMSRP = 168.00m,
+                EstimatedResaleValue = 450.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+
+            // Bags (3 products)
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Little America Backpack",
                 BrandName = "Herschel",
                 Size = "25L",
                 Gender = Gender.Unisex,
                 ItemType = ItemType.Bag,
                 EstimatedMSRP = 100.00m,
-                EstimatedResaleValue = 85.00m,
-                IsFeatured = true,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow
+                EstimatedResaleValue = 75.00m,
+                CreatedDate = now,
+                UpdatedDate = now
             },
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Description = "Wool Sweater",
-                BrandName = "Vult",
-                Size = "L",
+                Description = "Classic Tote Bag",
+                BrandName = "Longchamp",
+                Size = "Large",
+                Gender = Gender.Womens,
+                ItemType = ItemType.Bag,
+                EstimatedMSRP = 145.00m,
+                EstimatedResaleValue = 100.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Messenger Bag Leather",
+                BrandName = "Fossil",
+                Size = "Medium",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Bag,
+                EstimatedMSRP = 198.00m,
+                EstimatedResaleValue = 130.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+
+            // Hats (3 products)
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Yankees Baseball Cap",
+                BrandName = "New Era",
+                Size = "7 3/8",
                 Gender = Gender.Unisex,
-                ItemType = ItemType.Sweater,
-                EstimatedMSRP = 130.00m,
+                ItemType = ItemType.Hat,
+                EstimatedMSRP = 40.00m,
+                EstimatedResaleValue = 30.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Wool Beanie Classic",
+                BrandName = "Carhartt",
+                Size = "One Size",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Hat,
+                EstimatedMSRP = 25.00m,
+                EstimatedResaleValue = 18.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Fedora Hat Vintage",
+                BrandName = "Stetson",
+                Size = "M",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Hat,
+                EstimatedMSRP = 150.00m,
                 EstimatedResaleValue = 110.00m,
-                IsFeatured = true,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+
+            // Accessories (3 products)
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Aviator Sunglasses",
+                BrandName = "Ray-Ban",
+                Size = "Standard",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Accessories,
+                EstimatedMSRP = 161.00m,
+                EstimatedResaleValue = 120.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Automatic Watch SKX007",
+                BrandName = "Seiko",
+                Size = "42mm",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Accessories,
+                EstimatedMSRP = 299.00m,
+                EstimatedResaleValue = 350.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Leather Belt Classic",
+                BrandName = "Coach",
+                Size = "32",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Accessories,
+                EstimatedMSRP = 98.00m,
+                EstimatedResaleValue = 65.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+
+            // Dresses (2 products)
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Wrap Dress Elegant",
+                BrandName = "Diane von Furstenberg",
+                Size = "S",
+                Gender = Gender.Womens,
+                ItemType = ItemType.Dress,
+                EstimatedMSRP = 398.00m,
+                EstimatedResaleValue = 200.00m,
+                CreatedDate = now,
+                UpdatedDate = now
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Maxi Dress Summer",
+                BrandName = "Free People",
+                Size = "M",
+                Gender = Gender.Womens,
+                ItemType = ItemType.Dress,
+                EstimatedMSRP = 128.00m,
+                EstimatedResaleValue = 80.00m,
+                CreatedDate = now,
+                UpdatedDate = now
             }
         };
-
-        // Generate the URL for the Foamposite digital asset
-        var foampositeImageUrl = $"{ApiBaseUrl}/api/digitalassets/{FoampositeDigitalAssetId}/serve";
-
-        foreach (var product in featuredProducts)
-        {
-            // Add a ProductImage for each featured product with the Foamposite digital asset URL
-            product.ProductImages.Add(new ProductImage
-            {
-                ProductImageId = Guid.NewGuid(),
-                ProductId = product.ProductId,
-                Url = foampositeImageUrl,
-                Description = $"Image for {product.Description}",
-                CreatedDate = DateTime.UtcNow
-            });
-
-            _context.Products.Add(product);
-        }
-
-        await _context.SaveChangesAsync();
-
-        _logger.LogInformation("Featured products seeded successfully ({Count} products with images).", featuredProducts.Count);
     }
 
     private static byte[] GenerateSalt()
@@ -424,5 +914,4 @@ public class SeedService : ISeedService
         rng.GetBytes(salt);
         return salt;
     }
-
 }
