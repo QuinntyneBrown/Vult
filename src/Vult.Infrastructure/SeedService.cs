@@ -222,7 +222,7 @@ public class SeedService : ISeedService
                 BrandName = "New Era",
                 Size = "One Size",
                 Gender = Gender.Unisex,
-                ItemType = ItemType.Shoe, // Using Shoe as a stand-in for accessories
+                ItemType = ItemType.Hat,
                 EstimatedMSRP = 55.00m,
                 EstimatedResaleValue = 45.00m,
                 IsFeatured = true,
@@ -278,7 +278,7 @@ public class SeedService : ISeedService
                 BrandName = "Ray-Ban",
                 Size = "Standard",
                 Gender = Gender.Unisex,
-                ItemType = ItemType.Shoe, // Using Shoe as a stand-in for accessories
+                ItemType = ItemType.Accessories,
                 EstimatedMSRP = 120.00m,
                 EstimatedResaleValue = 95.00m,
                 IsFeatured = true,
@@ -292,7 +292,7 @@ public class SeedService : ISeedService
                 BrandName = "Seiko",
                 Size = "40mm",
                 Gender = Gender.Mens,
-                ItemType = ItemType.Shoe, // Using Shoe as a stand-in for accessories
+                ItemType = ItemType.Accessories,
                 EstimatedMSRP = 350.00m,
                 EstimatedResaleValue = 299.00m,
                 IsFeatured = true,
@@ -306,7 +306,7 @@ public class SeedService : ISeedService
                 BrandName = "Herschel",
                 Size = "25L",
                 Gender = Gender.Unisex,
-                ItemType = ItemType.Shoe, // Using Shoe as a stand-in for bags
+                ItemType = ItemType.Bag,
                 EstimatedMSRP = 100.00m,
                 EstimatedResaleValue = 85.00m,
                 IsFeatured = true,
