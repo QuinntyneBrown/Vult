@@ -1,0 +1,27 @@
+<div class="color-swatches" role="radiogroup" [attr.aria-label]="ariaLabel">
+  @for (color of colors; track color.id) {
+    <button
+      type="button"
+      class="color-swatch"
+      [class.color-swatch--selected]="selectedId() === color.id"
+      [class.color-swatch--unavailable]="color.available === false"
+      [class.color-swatch--disabled]="disabled()"
+      [style.background-color]="color.color"
+      [attr.aria-label]="color.name"
+      [attr.aria-pressed]="selectedId() === color.id"
+      [attr.aria-disabled]="color.available === false || disabled()"
+      [disabled]="disabled()"
+      (click)="selectColor(color)"
+    >
+      @if (color.imageUrl) {
+        <img [src]="color.imageUrl" [alt]="color.name" class="color-swatch__image" />
+      }
+      @if (color.available === false) {
+        <span class="color-swatch__unavailable-line" aria-hidden="true"></span>
+      }
+    </button>
+  }
+  @if (moreCount > 0) {
+    <span class="color-swatches__more">+{{ moreCount }}</span>
+  }
+</div>

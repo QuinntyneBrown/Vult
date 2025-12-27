@@ -1,5 +1,6 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, signal, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 export interface SizeOption {
   id: string;
@@ -10,77 +11,89 @@ export interface SizeOption {
 @Component({
   selector: 'v-size-selector',
   standalone: true,
-  imports: [CommonModule],
+  imports: [ReactiveFormsModule, MatButtonToggleModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SizeSelector),
+      multi: true
+    }
+  ],
   template: `
-    <div class="size-grid" role="group" [attr.aria-label]="ariaLabel">
+    <mat-button-toggle-group
+      class="size-grid"
+      [multiple]="multiSelect"
+      [value]="multiSelect ? selectedIds() : selectedIds()[0]"
+      [attr.aria-label]="ariaLabel"
+      (change)="onToggleChange($event)"
+    >
       @for (size of sizes; track size.id) {
-        <button
+        <mat-button-toggle
           class="size-button"
-          [class.size-button--selected]="selectedIds().includes(size.id)"
           [class.size-button--unavailable]="size.available === false"
           [class.size-button--strikethrough]="size.available === false && showStrikethrough"
+          [value]="size.id"
+          [disabled]="size.available === false || disabled()"
           [attr.aria-pressed]="selectedIds().includes(size.id)"
-          [attr.aria-disabled]="size.available === false"
-          (click)="toggleSize(size)"
         >
           {{ size.label }}
-        </button>
+        </mat-button-toggle>
       }
-    </div>
+    </mat-button-toggle-group>
   `,
   styles: [`
+    :host {
+      display: block;
+    }
+
     .size-grid {
-      display: grid;
+      display: grid !important;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
+      flex-wrap: wrap;
+      border: none !important;
+      overflow: visible !important;
+    }
+
+    ::ng-deep .mat-button-toggle-group-appearance-standard {
+      border: none !important;
     }
 
     .size-button {
       height: 48px;
-      padding: 8px;
-      background-color: #ffffff;
-      border: 1px solid #e5e5e5;
-      border-radius: 0;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 14px;
-      color: #111111;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.15s ease;
-    }
+      border: 1px solid #e5e5e5 !important;
+      border-radius: 0 !important;
 
-    .size-button:hover {
-      border-color: #111111;
-    }
+      &.mat-button-toggle-checked {
+        border: 1.5px solid #111111 !important;
+        background-color: transparent !important;
+      }
 
-    .size-button:focus {
-      outline: 2px solid #111111;
-      outline-offset: 2px;
-    }
+      ::ng-deep .mat-button-toggle-button {
+        font-family: var(--font-family-base, 'Helvetica Neue', Helvetica, Arial, sans-serif);
+        font-size: 14px;
+        color: #111111;
+      }
 
-    .size-button:focus:not(:focus-visible) {
-      outline: none;
-    }
-
-    .size-button:focus-visible {
-      outline: 2px solid #111111;
-      outline-offset: 2px;
-    }
-
-    .size-button--selected {
-      border: 1.5px solid #111111;
+      &:hover:not(.mat-button-toggle-disabled) {
+        border-color: #111111 !important;
+      }
     }
 
     .size-button--unavailable {
-      color: #cccccc;
-    }
+      ::ng-deep .mat-button-toggle-button {
+        color: #cccccc;
+      }
 
-    .size-button--unavailable:hover {
-      border-color: #e5e5e5;
+      &:hover {
+        border-color: #e5e5e5 !important;
+      }
     }
 
     .size-button--strikethrough {
-      text-decoration: line-through;
+      ::ng-deep .mat-button-toggle-button {
+        text-decoration: line-through;
+      }
     }
 
     @media (max-width: 200px) {
@@ -97,7 +110,7 @@ export interface SizeOption {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SizeSelector {
+export class SizeSelector implements ControlValueAccessor {
   @Input() sizes: SizeOption[] = [];
   @Input() ariaLabel = 'Filter by size';
   @Input() multiSelect = true;
@@ -109,7 +122,36 @@ export class SizeSelector {
   @Output() selectionChange = new EventEmitter<string[]>();
   @Output() sizeSelect = new EventEmitter<SizeOption>();
 
-  selectedIds = signal<string[]>([]);
+  readonly selectedIds = signal<string[]>([]);
+  readonly disabled = signal(false);
+
+  private onChange: (value: string[]) => void = () => {};
+  private onTouched: () => void = () => {};
+
+  writeValue(value: string[]): void {
+    this.selectedIds.set(value || []);
+  }
+
+  registerOnChange(fn: (value: string[]) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled.set(isDisabled);
+  }
+
+  onToggleChange(event: { value: string | string[] }): void {
+    const value = event.value;
+    const newIds = Array.isArray(value) ? value : (value ? [value] : []);
+    this.selectedIds.set(newIds);
+    this.onChange(newIds);
+    this.onTouched();
+    this.selectionChange.emit(newIds);
+  }
 
   toggleSize(size: SizeOption): void {
     this.sizeSelect.emit(size);
@@ -135,6 +177,8 @@ export class SizeSelector {
       }
     }
 
+    this.onChange(this.selectedIds());
+    this.onTouched();
     this.selectionChange.emit(this.selectedIds());
   }
 }
