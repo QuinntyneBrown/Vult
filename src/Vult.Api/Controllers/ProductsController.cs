@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vult.Api.Features.Products;
-using Vult.Core;
+using Vult.Core.Model.ProductAggregate.Enums;
 
 namespace Vult.Api.Controllers;
 

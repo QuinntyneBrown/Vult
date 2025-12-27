@@ -4,6 +4,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Vult.Core;
+using Vult.Core.Model.UserAggregate;
+using Vult.Core.Services;
 
 namespace Vult.Api.Features.Users;
 

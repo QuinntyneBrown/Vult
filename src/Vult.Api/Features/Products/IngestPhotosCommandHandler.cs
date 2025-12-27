@@ -4,7 +4,7 @@
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Vult.Api.Hubs;
-using Vult.Core;
+using Vult.Core.Services;
 
 namespace Vult.Api.Features.Products;
 

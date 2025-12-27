@@ -5,6 +5,10 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Vult.Core;
+using Vult.Core.Model.TestimonialAggregate;
+using Vult.Core.Model.UserAggregate;
+using Vult.Core.Model.UserAggregate.Enums;
+using Vult.Core.Services;
 
 namespace Vult.Infrastructure;
 

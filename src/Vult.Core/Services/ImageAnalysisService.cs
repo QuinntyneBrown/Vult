@@ -5,8 +5,10 @@ using Azure;
 using Azure.AI.Vision.ImageAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Vult.Core.Model.ProductAggregate;
+using Vult.Core.Model.ProductAggregate.Enums;
 
-namespace Vult.Core;
+namespace Vult.Core.Services;
 
 public class ImageAnalysisService : IImageAnalysisService
 {

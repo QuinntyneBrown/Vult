@@ -3,6 +3,9 @@
 
 using Microsoft.EntityFrameworkCore;
 using Vult.Core;
+using Vult.Core.Model.ProductAggregate;
+using Vult.Core.Model.TestimonialAggregate;
+using Vult.Core.Model.UserAggregate;
 using Vult.Infrastructure.Data.Configurations;
 
 namespace Vult.Infrastructure.Data;

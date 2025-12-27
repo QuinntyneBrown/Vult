@@ -2,6 +2,9 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
+using Vult.Core.Model.ProductAggregate;
+using Vult.Core.Model.TestimonialAggregate;
+using Vult.Core.Model.UserAggregate;
 
 namespace Vult.Core;
 

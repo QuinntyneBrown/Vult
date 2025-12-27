@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Vult.Core;
+using Vult.Core.Services;
 
 namespace Vult.Api.Features.Users;
 
