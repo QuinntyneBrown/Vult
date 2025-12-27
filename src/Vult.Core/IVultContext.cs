@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
+using Vult.Core.Model.DigitalAssetAggregate;
 using Vult.Core.Model.ProductAggregate;
 using Vult.Core.Model.TestimonialAggregate;
 using Vult.Core.Model.UserAggregate;
@@ -16,6 +17,7 @@ public interface IVultContext
     DbSet<Role> Roles { get; set; }
     DbSet<Privilege> Privileges { get; set; }
     DbSet<Testimonial> Testimonials { get; set; }
+    DbSet<DigitalAsset> DigitalAssets { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
