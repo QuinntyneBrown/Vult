@@ -7,7 +7,7 @@ export interface SortOption {
 }
 
 @Component({
-  selector: 'lib-sort-dropdown',
+  selector: 'v-sort-dropdown',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -229,7 +229,7 @@ export interface SortOption {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SortDropdownComponent {
+export class SortDropdown {
   @Input() options: SortOption[] = [];
   @Input() label = 'Sort By:';
   @Input() showLabel = true;

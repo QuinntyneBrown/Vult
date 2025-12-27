@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from '@storybook/angular';
-import { AddToBagButtonComponent } from './add-to-bag-button.component';
+import { AddToBagButton } from './add-to-bag-button';
 
-const meta: Meta<AddToBagButtonComponent> = {
+const meta: Meta<AddToBagButton> = {
   title: 'Components/AddToBagButton',
-  component: AddToBagButtonComponent,
+  component: AddToBagButton,
   tags: ['autodocs'],
   argTypes: {
     disabled: { control: 'boolean' },
@@ -19,7 +19,7 @@ const meta: Meta<AddToBagButtonComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<AddToBagButtonComponent>;
+type Story = StoryObj<AddToBagButton>;
 
 export const Default: Story = {
   args: {
@@ -91,12 +91,12 @@ export const AllStates: Story = {
   render: () => ({
     template: `
       <div style="display: flex; flex-direction: column; gap: 16px; max-width: 400px;">
-        <lib-add-to-bag-button [state]="'default'"></lib-add-to-bag-button>
-        <lib-add-to-bag-button [state]="'default'" [showIcon]="true"></lib-add-to-bag-button>
-        <lib-add-to-bag-button [state]="'loading'"></lib-add-to-bag-button>
-        <lib-add-to-bag-button [state]="'success'"></lib-add-to-bag-button>
-        <lib-add-to-bag-button [disabled]="true"></lib-add-to-bag-button>
-        <lib-add-to-bag-button [state]="'error'" errorMessage="Something went wrong. Please try again."></lib-add-to-bag-button>
+        <v-add-to-bag-button [state]="'default'"></v-add-to-bag-button>
+        <v-add-to-bag-button [state]="'default'" [showIcon]="true"></v-add-to-bag-button>
+        <v-add-to-bag-button [state]="'loading'"></v-add-to-bag-button>
+        <v-add-to-bag-button [state]="'success'"></v-add-to-bag-button>
+        <v-add-to-bag-button [disabled]="true"></v-add-to-bag-button>
+        <v-add-to-bag-button [state]="'error'" errorMessage="Something went wrong. Please try again."></v-add-to-bag-button>
       </div>
     `
   })

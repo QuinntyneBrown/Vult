@@ -9,7 +9,7 @@ export interface ProductImage {
 }
 
 @Component({
-  selector: 'lib-product-image-gallery',
+  selector: 'v-product-image-gallery',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -261,7 +261,7 @@ export interface ProductImage {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductImageGalleryComponent {
+export class ProductImageGallery {
   @Input() images: ProductImage[] = [];
   @Input() enableZoom = false;
   @Input() stickyOnDesktop = false;

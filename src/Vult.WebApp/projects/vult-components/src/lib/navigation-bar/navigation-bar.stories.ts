@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { NavigationBarComponent, NavItem } from './navigation-bar.component';
+import { NavigationBar, NavItem } from './navigation-bar';
 
-const meta: Meta<NavigationBarComponent> = {
+const meta: Meta<NavigationBar> = {
   title: 'Components/NavigationBar',
-  component: NavigationBarComponent,
+  component: NavigationBar,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<NavigationBarComponent>;
+type Story = StoryObj<NavigationBar>;
 
 const navItems: NavItem[] = [
   {
@@ -61,14 +61,14 @@ export const Default: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <lib-navigation-bar [items]="items" [logoHref]="logoHref">
+      <v-navigation-bar [items]="items" [logoHref]="logoHref">
         <div logo style="font-weight: bold; font-size: 24px;">VULT</div>
         <div actions style="display: flex; gap: 16px;">
           <span>Search</span>
           <span>Favorites</span>
           <span>Cart</span>
         </div>
-      </lib-navigation-bar>
+      </v-navigation-bar>
     `,
   }),
 };
@@ -82,13 +82,13 @@ export const WithActiveItem: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <lib-navigation-bar [items]="items" [logoHref]="logoHref" [activeItemId]="activeItemId">
+      <v-navigation-bar [items]="items" [logoHref]="logoHref" [activeItemId]="activeItemId">
         <div logo style="font-weight: bold; font-size: 24px;">VULT</div>
         <div actions style="display: flex; gap: 16px;">
           <span>Search</span>
           <span>Cart</span>
         </div>
-      </lib-navigation-bar>
+      </v-navigation-bar>
     `,
   }),
 };
@@ -105,9 +105,9 @@ export const SimpleNav: Story = {
   render: (args) => ({
     props: args,
     template: `
-      <lib-navigation-bar [items]="items" [logoHref]="logoHref">
+      <v-navigation-bar [items]="items" [logoHref]="logoHref">
         <div logo style="font-weight: bold; font-size: 24px;">BRAND</div>
-      </lib-navigation-bar>
+      </v-navigation-bar>
     `,
   }),
 };

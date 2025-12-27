@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { PaginationComponent } from './pagination.component';
+import { Pagination } from './pagination';
 
-const meta: Meta<PaginationComponent> = {
+const meta: Meta<Pagination> = {
   title: 'Components/Pagination',
-  component: PaginationComponent,
+  component: Pagination,
   tags: ['autodocs'],
   argTypes: {
     variant: {
@@ -14,7 +14,7 @@ const meta: Meta<PaginationComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<PaginationComponent>;
+type Story = StoryObj<Pagination>;
 
 export const Numbered: Story = {
   args: {

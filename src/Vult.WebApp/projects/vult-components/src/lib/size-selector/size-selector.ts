@@ -8,7 +8,7 @@ export interface SizeOption {
 }
 
 @Component({
-  selector: 'lib-size-selector',
+  selector: 'v-size-selector',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -97,7 +97,7 @@ export interface SizeOption {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SizeSelectorComponent {
+export class SizeSelector {
   @Input() sizes: SizeOption[] = [];
   @Input() ariaLabel = 'Filter by size';
   @Input() multiSelect = true;

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { SearchBarComponent, SearchSuggestion } from './search-bar.component';
+import { SearchBar, SearchSuggestion } from './search-bar';
 
-const meta: Meta<SearchBarComponent> = {
+const meta: Meta<SearchBar> = {
   title: 'Components/SearchBar',
-  component: SearchBarComponent,
+  component: SearchBar,
   tags: ['autodocs'],
   argTypes: {
     variant: {
@@ -14,7 +14,7 @@ const meta: Meta<SearchBarComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<SearchBarComponent>;
+type Story = StoryObj<SearchBar>;
 
 export const Compact: Story = {
   args: {

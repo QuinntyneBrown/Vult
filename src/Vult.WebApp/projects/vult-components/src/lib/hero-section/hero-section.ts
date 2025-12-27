@@ -6,7 +6,7 @@ export type HeroTextPosition = 'left' | 'center' | 'right';
 export type HeroTheme = 'light' | 'dark';
 
 @Component({
-  selector: 'lib-hero-section',
+  selector: 'v-hero-section',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -342,7 +342,7 @@ export type HeroTheme = 'light' | 'dark';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroSectionComponent {
+export class HeroSection {
   @Input() backgroundImage = '';
   @Input() videoUrl = '';
   @Input() imageAlt = '';

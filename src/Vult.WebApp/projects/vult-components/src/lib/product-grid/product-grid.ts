@@ -1,11 +1,11 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductCardComponent, ProductCardData } from '../product-card/product-card.component';
+import { ProductCard, ProductCardData } from '../product-card/product-card';
 
 @Component({
-  selector: 'lib-product-grid',
+  selector: 'v-product-grid',
   standalone: true,
-  imports: [CommonModule, ProductCardComponent],
+  imports: [CommonModule, ProductCard],
   template: `
     <div
       class="product-grid"
@@ -41,7 +41,7 @@ import { ProductCardComponent, ProductCardData } from '../product-card/product-c
         </div>
       } @else {
         @for (product of products; track product.id) {
-          <lib-product-card
+          <v-product-card
             [product]="product"
             (cardClick)="onProductClick($event)"
             (favoriteToggle)="onFavoriteToggle($event)"
@@ -197,7 +197,7 @@ import { ProductCardComponent, ProductCardData } from '../product-card/product-c
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductGridComponent {
+export class ProductGrid {
   @Input() products: ProductCardData[] = [];
   @Input() loading = false;
   @Input() singleColumn = false;

@@ -15,7 +15,7 @@
     <div class="product-container" data-testid="product-container">
       <!-- Image Gallery Section -->
       <section class="product-gallery-section" aria-label="Product images">
-        <lib-product-image-gallery
+        <v-product-image-gallery
           [images]="product().images"
           [enableZoom]="true"
           [loading]="isLoading()"
@@ -24,13 +24,13 @@
           (imageChange)="onImageChange($event)"
           (imageClick)="onImageClick($event)"
           data-testid="product-image-gallery"
-        ></lib-product-image-gallery>
+        ></v-product-image-gallery>
       </section>
 
       <!-- Product Info Section -->
       <section class="product-info-section" aria-label="Product information">
         <!-- Product Header -->
-        <lib-product-info-section
+        <v-product-info-section
           [title]="product().title"
           [subtitle]="product().subtitle"
           [price]="product().price"
@@ -38,20 +38,20 @@
           [isMemberExclusive]="product().isMemberExclusive || false"
           [promotionalMessage]="product().promotionalMessage || ''"
           data-testid="product-info"
-        ></lib-product-info-section>
+        ></v-product-info-section>
 
         <!-- Color Selector -->
         <div class="color-selector-section" data-testid="color-selector-section">
           <p class="section-label">
             Color: <strong>{{ selectedColorName() }}</strong>
           </p>
-          <lib-color-swatch-selector
+          <v-color-swatch-selector
             [colors]="product().colors"
             [selectedColorId]="selectedColorId()"
             ariaLabel="Select product color"
             (colorSelect)="onColorSelect($event)"
             data-testid="color-swatch-selector"
-          ></lib-color-swatch-selector>
+          ></v-color-swatch-selector>
         </div>
 
         <!-- Size Selector -->
@@ -67,7 +67,7 @@
               Size Guide
             </button>
           </div>
-          <lib-size-selector
+          <v-size-selector
             [sizes]="product().sizes"
             [multiSelect]="false"
             [showStrikethrough]="true"
@@ -75,12 +75,12 @@
             ariaLabel="Select product size"
             (selectionChange)="onSizeSelectionChange($event)"
             data-testid="size-selector"
-          ></lib-size-selector>
+          ></v-size-selector>
         </div>
 
         <!-- Action Buttons -->
         <div class="action-buttons" data-testid="action-buttons">
-          <lib-add-to-bag-button
+          <v-add-to-bag-button
             [disabled]="isAddToBagDisabled()"
             [state]="addToBagState()"
             [errorMessage]="addToBagError()"
@@ -88,27 +88,27 @@
             ariaLabel="Add to shopping bag"
             (addToBag)="onAddToBag()"
             data-testid="add-to-bag-button"
-          ></lib-add-to-bag-button>
+          ></v-add-to-bag-button>
 
-          <lib-favorites-button
+          <v-favorites-button
             [isFavorited]="isFavorited()"
             [loading]="isFavoriteLoading()"
             variant="full-width"
             (favoriteToggle)="onFavoriteToggle($event)"
             data-testid="favorites-button"
-          ></lib-favorites-button>
+          ></v-favorites-button>
         </div>
 
         <!-- Product Details Accordion -->
         <div class="accordion-section" data-testid="accordion-section">
-          <lib-product-details-accordion
+          <v-product-details-accordion
             [sections]="product().accordionSections"
             [mode]="'multiple'"
             [initialExpandedIds]="expandedAccordionIds()"
             ariaLabel="Product details"
             (sectionToggle)="onAccordionSectionToggle($event)"
             data-testid="product-accordion"
-          ></lib-product-details-accordion>
+          ></v-product-details-accordion>
         </div>
       </section>
     </div>

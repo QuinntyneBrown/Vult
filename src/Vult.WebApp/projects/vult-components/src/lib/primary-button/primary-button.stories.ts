@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { PrimaryButtonComponent } from './primary-button.component';
+import { PrimaryButton } from './primary-button';
 
-const meta: Meta<PrimaryButtonComponent> = {
+const meta: Meta<PrimaryButton> = {
   title: 'Components/PrimaryButton',
-  component: PrimaryButtonComponent,
+  component: PrimaryButton,
   tags: ['autodocs'],
   argTypes: {
     size: {
@@ -18,7 +18,7 @@ const meta: Meta<PrimaryButtonComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<PrimaryButtonComponent>;
+type Story = StoryObj<PrimaryButton>;
 
 export const Default: Story = {
   args: {
@@ -29,7 +29,7 @@ export const Default: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-primary-button [size]="size" [theme]="theme" [disabled]="disabled" [loading]="loading">Shop Now</lib-primary-button>`,
+    template: `<v-primary-button [size]="size" [theme]="theme" [disabled]="disabled" [loading]="loading">Shop Now</v-primary-button>`,
   }),
 };
 
@@ -40,7 +40,7 @@ export const Small: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-primary-button [size]="size" [theme]="theme">Shop</lib-primary-button>`,
+    template: `<v-primary-button [size]="size" [theme]="theme">Shop</v-primary-button>`,
   }),
 };
 
@@ -51,7 +51,7 @@ export const Large: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-primary-button [size]="size" [theme]="theme">Add to Bag</lib-primary-button>`,
+    template: `<v-primary-button [size]="size" [theme]="theme">Add to Bag</v-primary-button>`,
   }),
 };
 
@@ -62,7 +62,7 @@ export const LightTheme: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-primary-button [size]="size" [theme]="theme">Shop Now</lib-primary-button>`,
+    template: `<v-primary-button [size]="size" [theme]="theme">Shop Now</v-primary-button>`,
   }),
   parameters: {
     backgrounds: { default: 'dark' },
@@ -77,7 +77,7 @@ export const Disabled: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-primary-button [size]="size" [theme]="theme" [disabled]="disabled">Sold Out</lib-primary-button>`,
+    template: `<v-primary-button [size]="size" [theme]="theme" [disabled]="disabled">Sold Out</v-primary-button>`,
   }),
 };
 
@@ -89,7 +89,7 @@ export const Loading: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-primary-button [size]="size" [theme]="theme" [loading]="loading">Adding...</lib-primary-button>`,
+    template: `<v-primary-button [size]="size" [theme]="theme" [loading]="loading">Adding...</v-primary-button>`,
   }),
 };
 
@@ -101,6 +101,6 @@ export const FullWidth: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-primary-button [size]="size" [theme]="theme" [fullWidth]="fullWidth">Add to Bag</lib-primary-button>`,
+    template: `<v-primary-button [size]="size" [theme]="theme" [fullWidth]="fullWidth">Add to Bag</v-primary-button>`,
   }),
 };

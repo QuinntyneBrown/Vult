@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { HeroSectionComponent } from './hero-section.component';
+import { HeroSection } from './hero-section';
 
-const meta: Meta<HeroSectionComponent> = {
+const meta: Meta<HeroSection> = {
   title: 'Components/HeroSection',
-  component: HeroSectionComponent,
+  component: HeroSection,
   tags: ['autodocs'],
   argTypes: {
     size: {
@@ -22,7 +22,7 @@ const meta: Meta<HeroSectionComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<HeroSectionComponent>;
+type Story = StoryObj<HeroSection>;
 
 export const Default: Story = {
   args: {

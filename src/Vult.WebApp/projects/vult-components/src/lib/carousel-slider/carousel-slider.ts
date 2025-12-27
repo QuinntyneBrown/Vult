@@ -12,7 +12,7 @@ export interface CarouselSlide {
 }
 
 @Component({
-  selector: 'lib-carousel-slider',
+  selector: 'v-carousel-slider',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -270,7 +270,7 @@ export interface CarouselSlide {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CarouselSliderComponent {
+export class CarouselSlider {
   @Input() slides: CarouselSlide[] = [];
   @Input() autoPlay = false;
   @Input() autoPlayInterval = 5000;

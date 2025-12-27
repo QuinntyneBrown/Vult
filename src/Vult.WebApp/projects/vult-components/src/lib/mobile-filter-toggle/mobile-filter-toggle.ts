@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from 
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'lib-mobile-filter-toggle',
+  selector: 'v-mobile-filter-toggle',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -97,7 +97,7 @@ import { CommonModule } from '@angular/common';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MobileFilterToggleComponent {
+export class MobileFilterToggle {
   @Input() isActive = false;
   @Input() showText = 'Show Filters';
   @Input() hideText = 'Hide Filters';

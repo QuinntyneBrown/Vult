@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { ColorSwatchSelectorComponent, ColorOption } from './color-swatch-selector.component';
+import { ColorSwatchSelector, ColorOption } from './color-swatch-selector';
 
-const meta: Meta<ColorSwatchSelectorComponent> = {
+const meta: Meta<ColorSwatchSelector> = {
   title: 'Components/ColorSwatchSelector',
-  component: ColorSwatchSelectorComponent,
+  component: ColorSwatchSelector,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<ColorSwatchSelectorComponent>;
+type Story = StoryObj<ColorSwatchSelector>;
 
 const colors: ColorOption[] = [
   { id: 'black', name: 'Black', color: '#111111' },

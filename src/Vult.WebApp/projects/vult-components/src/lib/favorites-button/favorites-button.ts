@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 export type FavoritesButtonVariant = 'icon-only' | 'full-width';
 
 @Component({
-  selector: 'lib-favorites-button',
+  selector: 'v-favorites-button',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -218,7 +218,7 @@ export type FavoritesButtonVariant = 'icon-only' | 'full-width';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FavoritesButtonComponent {
+export class FavoritesButton {
   @Input() isFavorited = false;
   @Input() loading = false;
   @Input() variant: FavoritesButtonVariant = 'icon-only';

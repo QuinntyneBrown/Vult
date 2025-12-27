@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { BadgeComponent } from './badge.component';
+import { Badge } from './badge';
 
-const meta: Meta<BadgeComponent> = {
+const meta: Meta<Badge> = {
   title: 'Components/Badge',
-  component: BadgeComponent,
+  component: Badge,
   tags: ['autodocs'],
   argTypes: {
     variant: {
@@ -14,7 +14,7 @@ const meta: Meta<BadgeComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<BadgeComponent>;
+type Story = StoryObj<Badge>;
 
 export const Default: Story = {
   args: {
@@ -22,7 +22,7 @@ export const Default: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-badge [variant]="variant">Just In</lib-badge>`,
+    template: `<v-badge [variant]="variant">Just In</v-badge>`,
   }),
 };
 
@@ -32,7 +32,7 @@ export const New: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-badge [variant]="variant">New</lib-badge>`,
+    template: `<v-badge [variant]="variant">New</v-badge>`,
   }),
 };
 
@@ -42,7 +42,7 @@ export const Sale: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-badge [variant]="variant">20% Off</lib-badge>`,
+    template: `<v-badge [variant]="variant">20% Off</v-badge>`,
   }),
 };
 
@@ -52,7 +52,7 @@ export const Member: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-badge [variant]="variant">Member Exclusive</lib-badge>`,
+    template: `<v-badge [variant]="variant">Member Exclusive</v-badge>`,
   }),
 };
 
@@ -62,7 +62,7 @@ export const Sustainable: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-badge [variant]="variant">Sustainable</lib-badge>`,
+    template: `<v-badge [variant]="variant">Sustainable</v-badge>`,
   }),
 };
 
@@ -72,6 +72,6 @@ export const Bestseller: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-badge [variant]="variant">Best Seller</lib-badge>`,
+    template: `<v-badge [variant]="variant">Best Seller</v-badge>`,
   }),
 };

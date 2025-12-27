@@ -10,7 +10,7 @@ export interface CheckboxOption {
 }
 
 @Component({
-  selector: 'lib-checkbox-filter',
+  selector: 'v-checkbox-filter',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
@@ -176,7 +176,7 @@ export interface CheckboxOption {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CheckboxFilterComponent {
+export class CheckboxFilter {
   @Input() label = '';
   @Input() options: CheckboxOption[] = [];
   @Input() collapsible = true;

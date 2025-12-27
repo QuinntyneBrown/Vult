@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { FooterComponent, FooterColumn, FooterLink, SocialLink } from './footer.component';
+import { Footer, FooterColumn, FooterLink, SocialLink } from './footer';
 
-const meta: Meta<FooterComponent> = {
+const meta: Meta<Footer> = {
   title: 'Components/Footer',
-  component: FooterComponent,
+  component: Footer,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<FooterComponent>;
+type Story = StoryObj<Footer>;
 
 const columns: FooterColumn[] = [
   {

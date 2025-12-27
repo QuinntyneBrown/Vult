@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { SizeSelectorComponent, SizeOption } from './size-selector.component';
+import { SizeSelector, SizeOption } from './size-selector';
 
-const meta: Meta<SizeSelectorComponent> = {
+const meta: Meta<SizeSelector> = {
   title: 'Components/SizeSelector',
-  component: SizeSelectorComponent,
+  component: SizeSelector,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<SizeSelectorComponent>;
+type Story = StoryObj<SizeSelector>;
 
 const numericSizes: SizeOption[] = [
   { id: '6', label: '6' },

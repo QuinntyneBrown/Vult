@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { ProductGridComponent } from './product-grid.component';
-import { ProductCardData } from '../product-card/product-card.component';
+import { ProductGrid } from './product-grid';
+import { ProductCardData } from '../product-card/product-card';
 
-const meta: Meta<ProductGridComponent> = {
+const meta: Meta<ProductGrid> = {
   title: 'Components/ProductGrid',
-  component: ProductGridComponent,
+  component: ProductGrid,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<ProductGridComponent>;
+type Story = StoryObj<ProductGrid>;
 
 const sampleProducts: ProductCardData[] = Array.from({ length: 8 }, (_, i) => ({
   id: String(i + 1),

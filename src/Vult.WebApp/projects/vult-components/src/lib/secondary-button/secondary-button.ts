@@ -6,7 +6,7 @@ export type SecondaryButtonVariant = 'outlined' | 'text' | 'ghost';
 export type SecondaryButtonTheme = 'dark' | 'light';
 
 @Component({
-  selector: 'lib-secondary-button',
+  selector: 'v-secondary-button',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -259,7 +259,7 @@ export type SecondaryButtonTheme = 'dark' | 'light';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SecondaryButtonComponent {
+export class SecondaryButton {
   @Input() variant: SecondaryButtonVariant = 'outlined';
   @Input() size: SecondaryButtonSize = 'medium';
   @Input() theme: SecondaryButtonTheme = 'dark';

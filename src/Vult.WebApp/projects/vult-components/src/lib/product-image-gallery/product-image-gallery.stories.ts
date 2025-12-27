@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/angular';
-import { ProductImageGalleryComponent, ProductImage } from './product-image-gallery.component';
+import { ProductImageGallery, ProductImage } from './product-image-gallery';
 
 const sampleImages: ProductImage[] = [
   {
@@ -34,9 +34,9 @@ const sampleImages: ProductImage[] = [
   }
 ];
 
-const meta: Meta<ProductImageGalleryComponent> = {
+const meta: Meta<ProductImageGallery> = {
   title: 'Components/ProductImageGallery',
-  component: ProductImageGalleryComponent,
+  component: ProductImageGallery,
   tags: ['autodocs'],
   argTypes: {
     images: { control: 'object' },
@@ -48,7 +48,7 @@ const meta: Meta<ProductImageGalleryComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<ProductImageGalleryComponent>;
+type Story = StoryObj<ProductImageGallery>;
 
 export const Default: Story = {
   args: {

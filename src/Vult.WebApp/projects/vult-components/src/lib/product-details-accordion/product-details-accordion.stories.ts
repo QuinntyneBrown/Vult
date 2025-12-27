@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/angular';
-import { ProductDetailsAccordionComponent, AccordionSection } from './product-details-accordion.component';
+import { ProductDetailsAccordion, AccordionSection } from './product-details-accordion';
 
 const sampleSections: AccordionSection[] = [
   {
@@ -51,9 +51,9 @@ const sampleSections: AccordionSection[] = [
   }
 ];
 
-const meta: Meta<ProductDetailsAccordionComponent> = {
+const meta: Meta<ProductDetailsAccordion> = {
   title: 'Components/ProductDetailsAccordion',
-  component: ProductDetailsAccordionComponent,
+  component: ProductDetailsAccordion,
   tags: ['autodocs'],
   argTypes: {
     sections: { control: 'object' },
@@ -66,7 +66,7 @@ const meta: Meta<ProductDetailsAccordionComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<ProductDetailsAccordionComponent>;
+type Story = StoryObj<ProductDetailsAccordion>;
 
 export const Default: Story = {
   args: {

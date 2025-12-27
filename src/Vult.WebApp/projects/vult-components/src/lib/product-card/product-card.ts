@@ -17,7 +17,7 @@ export interface ProductCardData {
 }
 
 @Component({
-  selector: 'lib-product-card',
+  selector: 'v-product-card',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -300,7 +300,7 @@ export interface ProductCardData {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductCardComponent {
+export class ProductCard {
   @Input({ required: true }) product!: ProductCardData;
 
   @Output() cardClick = new EventEmitter<ProductCardData>();

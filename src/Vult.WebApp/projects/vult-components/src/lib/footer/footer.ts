@@ -18,7 +18,7 @@ export interface SocialLink {
 }
 
 @Component({
-  selector: 'lib-footer',
+  selector: 'v-footer',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -244,7 +244,7 @@ export interface SocialLink {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FooterComponent {
+export class Footer {
   @Input() columns: FooterColumn[] = [];
   @Input() socialLinks: SocialLink[] = [];
   @Input() legalLinks: FooterLink[] = [];

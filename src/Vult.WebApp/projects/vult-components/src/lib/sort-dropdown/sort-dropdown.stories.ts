@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { SortDropdownComponent, SortOption } from './sort-dropdown.component';
+import { SortDropdown, SortOption } from './sort-dropdown';
 
-const meta: Meta<SortDropdownComponent> = {
+const meta: Meta<SortDropdown> = {
   title: 'Components/SortDropdown',
-  component: SortDropdownComponent,
+  component: SortDropdown,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<SortDropdownComponent>;
+type Story = StoryObj<SortDropdown>;
 
 const sortOptions: SortOption[] = [
   { id: 'featured', label: 'Featured' },

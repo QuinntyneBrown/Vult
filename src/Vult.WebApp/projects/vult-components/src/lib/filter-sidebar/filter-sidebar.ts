@@ -10,7 +10,7 @@ export interface FilterSection {
 }
 
 @Component({
-  selector: 'lib-filter-sidebar',
+  selector: 'v-filter-sidebar',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -277,7 +277,7 @@ export interface FilterSection {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterSidebarComponent {
+export class FilterSidebar {
   @Input() title = 'Filters';
   @Input() sections: FilterSection[] = [];
   @Input() showCloseButton = false;

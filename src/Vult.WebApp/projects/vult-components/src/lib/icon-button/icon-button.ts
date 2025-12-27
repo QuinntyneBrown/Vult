@@ -5,7 +5,7 @@ export type IconButtonSize = 'small' | 'medium' | 'large';
 export type IconButtonVariant = 'default' | 'filled' | 'outlined';
 
 @Component({
-  selector: 'lib-icon-button',
+  selector: 'v-icon-button',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -125,7 +125,7 @@ export type IconButtonVariant = 'default' | 'filled' | 'outlined';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IconButtonComponent {
+export class IconButton {
   @Input() size: IconButtonSize = 'medium';
   @Input() variant: IconButtonVariant = 'default';
   @Input() active = false;

@@ -10,7 +10,7 @@ export interface ColorOption {
 }
 
 @Component({
-  selector: 'lib-color-swatch-selector',
+  selector: 'v-color-swatch-selector',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -110,7 +110,7 @@ export interface ColorOption {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorSwatchSelectorComponent {
+export class ColorSwatchSelector {
   @Input() colors: ColorOption[] = [];
   @Input() ariaLabel = 'Select color';
   @Input() moreCount = 0;

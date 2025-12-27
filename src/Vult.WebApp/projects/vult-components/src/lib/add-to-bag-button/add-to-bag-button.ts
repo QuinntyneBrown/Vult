@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 export type AddToBagButtonState = 'default' | 'loading' | 'success' | 'error';
 
 @Component({
-  selector: 'lib-add-to-bag-button',
+  selector: 'v-add-to-bag-button',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -199,7 +199,7 @@ export type AddToBagButtonState = 'default' | 'loading' | 'success' | 'error';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddToBagButtonComponent {
+export class AddToBagButton {
   @Input() disabled = false;
   @Input() state: AddToBagButtonState = 'default';
   @Input() fullWidth = true;

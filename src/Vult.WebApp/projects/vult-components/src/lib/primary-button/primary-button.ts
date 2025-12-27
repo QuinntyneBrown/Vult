@@ -5,7 +5,7 @@ export type ButtonSize = 'small' | 'medium' | 'large';
 export type ButtonTheme = 'dark' | 'light';
 
 @Component({
-  selector: 'lib-primary-button',
+  selector: 'v-primary-button',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -216,7 +216,7 @@ export type ButtonTheme = 'dark' | 'light';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PrimaryButtonComponent {
+export class PrimaryButton {
   @Input() size: ButtonSize = 'medium';
   @Input() theme: ButtonTheme = 'dark';
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
