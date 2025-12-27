@@ -2,8 +2,8 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using Microsoft.EntityFrameworkCore;
-using Vult.Api.Services;
 using Vult.Core;
+using Vult.Core.Services;
 using Vult.Infrastructure.Data;
 
 namespace Microsoft.Extensions.DependencyInjection;

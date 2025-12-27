@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Vult.Core.Model.UserAggregate;
 
 namespace Vult.Core.Services;
 

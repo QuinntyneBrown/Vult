@@ -3,8 +3,9 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Vult.Core.Model.ProductAggregate;
 
-namespace Vult.Core;
+namespace Vult.Core.Services;
 
 public class ProductEvaluationService : IProductEvaluationService
 {

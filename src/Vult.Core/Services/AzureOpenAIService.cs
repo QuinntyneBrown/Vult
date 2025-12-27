@@ -5,7 +5,7 @@ using Azure.AI.OpenAI;
 using OpenAI.Chat;
 using System.ClientModel;
 
-namespace Vult.Core;
+namespace Vult.Core.Services;
 
 public class AzureOpenAIService: IAzureOpenAIService
 {

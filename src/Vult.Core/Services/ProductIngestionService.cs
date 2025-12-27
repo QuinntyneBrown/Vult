@@ -3,8 +3,9 @@
 
 using Microsoft.Extensions.Logging;
 using OpenAI.Chat;
+using Vult.Core.Model.ProductAggregate;
 
-namespace Vult.Core;
+namespace Vult.Core.Services;
 
 public class ProductIngestionService : IProductIngestionService
 {

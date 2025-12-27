@@ -2,8 +2,9 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System.Security.Claims;
+using Vult.Core.Model.UserAggregate;
 
-namespace Vult.Core;
+namespace Vult.Core.Services;
 
 public interface ITokenService
 {

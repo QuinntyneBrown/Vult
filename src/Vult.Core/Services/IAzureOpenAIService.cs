@@ -3,7 +3,7 @@
 
 using OpenAI.Chat;
 
-namespace Vult.Core;
+namespace Vult.Core.Services;
 
 public interface IAzureOpenAIService
 {

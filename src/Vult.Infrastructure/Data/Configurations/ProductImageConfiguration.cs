@@ -3,7 +3,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Vult.Core;
+using Vult.Core.Model.ProductAggregate;
 
 namespace Vult.Infrastructure.Data.Configurations;
 
