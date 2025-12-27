@@ -12,6 +12,23 @@ namespace Vult.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "DigitalAssets",
+                columns: table => new
+                {
+                    DigitalAssetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Bytes = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Height = table.Column<float>(type: "real", nullable: false),
+                    Width = table.Column<float>(type: "real", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DigitalAssets", x => x.DigitalAssetId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -85,6 +102,7 @@ namespace Vult.Infrastructure.Migrations
                     ProductImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -144,6 +162,11 @@ namespace Vult.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_DigitalAssets_Name",
+                table: "DigitalAssets",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Privileges_RoleId_Aggregate_AccessRight",
                 table: "Privileges",
                 columns: new[] { "RoleId", "Aggregate", "AccessRight" },
@@ -175,6 +198,9 @@ namespace Vult.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DigitalAssets");
+
             migrationBuilder.DropTable(
                 name: "Privileges");
 

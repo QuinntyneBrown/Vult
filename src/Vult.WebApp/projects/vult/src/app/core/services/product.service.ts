@@ -3,7 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Product, IngestionResult, PaginatedResponse } from '../models';
 
 export interface ProductFilters {
@@ -52,7 +52,10 @@ export class ProductService {
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());
 
-    return this.http.get<PaginatedResponse<Product>>(`${this.API_URL}/products/featured`, { params });
+    return this.http.get<PaginatedResponse<Product>>(`${this.API_URL}/products/featured`, { params })
+    .pipe(
+      tap(response => console.log('Featured Products Response:', response))
+    );
   }
 
   createProduct(product: Partial<Product>): Observable<Product> {

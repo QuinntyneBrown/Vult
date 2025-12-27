@@ -212,6 +212,8 @@ public class SeedService : ISeedService
 
     private async Task SeedDigitalAssetsAsync()
     {
+        var digitalAssets = _context.DigitalAssets.Count();
+
         if (await _context.DigitalAssets.AnyAsync(d => d.DigitalAssetId == FoampositeDigitalAssetId))
         {
             _logger.LogInformation("Digital assets already exist, skipping digital asset seeding.");

@@ -29,7 +29,8 @@
       "Bash(python:*)",
       "Bash(dir:*)",
       "Bash(test:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(dotnet ef database drop:*)"
     ],
     "deny": [],
     "ask": []

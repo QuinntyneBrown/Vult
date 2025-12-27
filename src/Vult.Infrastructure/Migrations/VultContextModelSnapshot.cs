@@ -37,6 +37,42 @@ namespace Vult.Infrastructure.Migrations
                     b.ToTable("UserRole");
                 });
 
+            modelBuilder.Entity("Vult.Core.Model.DigitalAssetAggregate.DigitalAsset", b =>
+                {
+                    b.Property<Guid>("DigitalAssetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Bytes")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float>("Height")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<float>("Width")
+                        .HasColumnType("real");
+
+                    b.HasKey("DigitalAssetId");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("DigitalAssets", (string)null);
+                });
+
             modelBuilder.Entity("Vult.Core.Model.ProductAggregate.Product", b =>
                 {
                     b.Property<Guid>("ProductId")
