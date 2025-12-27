@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Vult.Core;
+using Vult.Core.Model.DigitalAssetAggregate;
 using Vult.Core.Model.ProductAggregate;
 using Vult.Core.Model.ProductAggregate.Enums;
 using Vult.Core.Model.TestimonialAggregate;
@@ -16,9 +17,14 @@ namespace Vult.Infrastructure;
 
 public class SeedService : ISeedService
 {
+    private const string ApiBaseUrl = "https://localhost:7266";
+
     private readonly IVultContext _context;
     private readonly ILogger<SeedService> _logger;
     private readonly IPasswordHasher _passwordHasher;
+
+    // Static GUIDs for seeded digital assets to ensure consistent URLs
+    private static readonly Guid FoampositeDigitalAssetId = Guid.Parse("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
 
     public SeedService(
         IVultContext context,
@@ -37,6 +43,7 @@ public class SeedService : ISeedService
         await SeedRolesAndPrivilegesAsync();
         await SeedUsersAsync();
         await SeedTestimonialsAsync();
+        await SeedDigitalAssetsAsync();
         await SeedFeaturedProductsAsync();
 
         _logger.LogInformation("Database seeding completed successfully.");
@@ -203,6 +210,62 @@ public class SeedService : ISeedService
         _logger.LogInformation("Testimonials seeded successfully ({Count} testimonials).", testimonials.Count);
     }
 
+    private async Task SeedDigitalAssetsAsync()
+    {
+        if (await _context.DigitalAssets.AnyAsync(d => d.DigitalAssetId == FoampositeDigitalAssetId))
+        {
+            _logger.LogInformation("Digital assets already exist, skipping digital asset seeding.");
+            return;
+        }
+
+        _logger.LogInformation("Seeding digital assets...");
+
+        // Create a placeholder SVG image for the Nike Foamposite shoe
+        var foampositeSvg = @"<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 400 300"" width=""400"" height=""300"">
+  <defs>
+    <linearGradient id=""shoeGradient"" x1=""0%"" y1=""0%"" x2=""100%"" y2=""100%"">
+      <stop offset=""0%"" style=""stop-color:#1a1a2e;stop-opacity:1"" />
+      <stop offset=""100%"" style=""stop-color:#16213e;stop-opacity:1"" />
+    </linearGradient>
+    <linearGradient id=""soleGradient"" x1=""0%"" y1=""0%"" x2=""0%"" y2=""100%"">
+      <stop offset=""0%"" style=""stop-color:#0f3460;stop-opacity:1"" />
+      <stop offset=""100%"" style=""stop-color:#1a1a2e;stop-opacity:1"" />
+    </linearGradient>
+  </defs>
+  <rect width=""400"" height=""300"" fill=""#f5f5f5""/>
+  <!-- Shoe upper -->
+  <ellipse cx=""200"" cy=""140"" rx=""140"" ry=""70"" fill=""url(#shoeGradient)""/>
+  <!-- Toe box -->
+  <ellipse cx=""100"" cy=""150"" rx=""60"" ry=""50"" fill=""url(#shoeGradient)""/>
+  <!-- Sole -->
+  <path d=""M60 180 Q200 220 340 180 L340 200 Q200 240 60 200 Z"" fill=""url(#soleGradient)""/>
+  <!-- Air unit -->
+  <ellipse cx=""280"" cy=""190"" rx=""40"" ry=""15"" fill=""#e94560"" opacity=""0.8""/>
+  <!-- Foamposite texture lines -->
+  <path d=""M80 130 Q150 100 220 130"" stroke=""#0f3460"" stroke-width=""2"" fill=""none"" opacity=""0.5""/>
+  <path d=""M90 145 Q160 115 230 145"" stroke=""#0f3460"" stroke-width=""2"" fill=""none"" opacity=""0.5""/>
+  <path d=""M100 160 Q170 130 240 160"" stroke=""#0f3460"" stroke-width=""2"" fill=""none"" opacity=""0.5""/>
+  <!-- Brand text -->
+  <text x=""200"" y=""270"" font-family=""Arial, sans-serif"" font-size=""16"" font-weight=""bold"" fill=""#333"" text-anchor=""middle"">Nike Air Foamposite</text>
+</svg>";
+
+        var foampositeAsset = new DigitalAsset
+        {
+            DigitalAssetId = FoampositeDigitalAssetId,
+            Name = "nike-foamposite.svg",
+            Bytes = System.Text.Encoding.UTF8.GetBytes(foampositeSvg),
+            ContentType = "image/svg+xml",
+            Height = 300,
+            Width = 400,
+            CreatedDate = DateTime.UtcNow
+        };
+
+        _context.DigitalAssets.Add(foampositeAsset);
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("Digital assets seeded successfully.");
+    }
+
     private async Task SeedFeaturedProductsAsync()
     {
         if (await _context.Products.AnyAsync(p => p.IsFeatured))
@@ -329,14 +392,27 @@ public class SeedService : ISeedService
             }
         };
 
+        // Generate the URL for the Foamposite digital asset
+        var foampositeImageUrl = $"{ApiBaseUrl}/api/digitalassets/{FoampositeDigitalAssetId}/serve";
+
         foreach (var product in featuredProducts)
         {
+            // Add a ProductImage for each featured product with the Foamposite digital asset URL
+            product.ProductImages.Add(new ProductImage
+            {
+                ProductImageId = Guid.NewGuid(),
+                ProductId = product.ProductId,
+                Url = foampositeImageUrl,
+                Description = $"Image for {product.Description}",
+                CreatedDate = DateTime.UtcNow
+            });
+
             _context.Products.Add(product);
         }
 
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation("Featured products seeded successfully ({Count} products).", featuredProducts.Count);
+        _logger.LogInformation("Featured products seeded successfully ({Count} products with images).", featuredProducts.Count);
     }
 
     private static byte[] GenerateSalt()
