@@ -1,0 +1,132 @@
+.cart-summary {
+  background: #ffffff;
+  padding: 24px;
+
+  &__title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #111111;
+    margin: 0 0 24px;
+  }
+
+  &__rows {
+    margin-bottom: 24px;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #111111;
+
+    &--discount {
+      color: #128a09;
+    }
+
+    &--total {
+      font-size: 16px;
+      font-weight: 500;
+      padding-top: 16px;
+      border-top: 1px solid #e5e5e5;
+      margin-top: 16px;
+    }
+  }
+
+  &__checkout-btn {
+    width: 100%;
+    padding: 18px;
+    background: #111111;
+    color: #ffffff;
+    border: none;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: background-color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background: #333333;
+    }
+
+    &:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+
+    &:focus {
+      outline: 2px solid #111111;
+      outline-offset: 2px;
+    }
+  }
+
+  &__paypal-btn {
+    width: 100%;
+    padding: 18px;
+    background: #ffc439;
+    color: #111111;
+    border: none;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: #f0b800;
+    }
+
+    &:focus {
+      outline: 2px solid #111111;
+      outline-offset: 2px;
+    }
+  }
+
+  &__paypal-logo {
+    width: 80px;
+    height: 20px;
+  }
+
+  &__delivery-info {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e5;
+
+    p {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 12px;
+      color: #707070;
+      margin: 0 0 8px;
+    }
+  }
+
+  &__free-shipping {
+    background: #f5f5f5;
+    padding: 12px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 16px;
+    color: #707070;
+
+    &--qualified {
+      background: #e8f5e9;
+      color: #128a09;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-summary {
+    &__checkout-btn,
+    &__paypal-btn {
+      transition: none;
+    }
+  }
+}

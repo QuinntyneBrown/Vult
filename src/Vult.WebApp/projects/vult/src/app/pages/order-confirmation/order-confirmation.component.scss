@@ -1,0 +1,301 @@
+.order-confirmation {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+
+  // Header
+  &__header {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 16px 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__logo {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: #111111;
+    text-decoration: none;
+  }
+
+  // Main
+  &__main {
+    flex: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    width: 100%;
+  }
+
+  // Success Header
+  &__success {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  &__success-icon {
+    width: 80px;
+    height: 80px;
+    background: #128a09;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    animation: scaleIn 0.5s ease;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  &__success-title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: #111111;
+    margin: 0 0 16px;
+  }
+
+  &__order-number {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    color: #707070;
+    margin: 0 0 8px;
+
+    strong {
+      color: #111111;
+    }
+  }
+
+  &__email {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #707070;
+    margin: 0;
+  }
+
+  // Order Details
+  &__details {
+    background: #ffffff;
+    padding: 32px;
+    margin-bottom: 24px;
+
+    h2 {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: #111111;
+      margin: 0 0 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+  }
+
+  &__details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  &__detail-section {
+    h3 {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #707070;
+      margin: 0 0 12px;
+    }
+
+    p {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: #111111;
+      line-height: 1.6;
+      margin: 0;
+    }
+  }
+
+  &__delivery-date {
+    display: inline-block;
+    background: #f5f5f5;
+    padding: 8px 16px;
+    font-weight: 500 !important;
+  }
+
+  // Actions
+  &__actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 48px;
+  }
+
+  &__primary-btn {
+    padding: 16px 48px;
+    background: #111111;
+    color: #ffffff;
+    border: none;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: #333333;
+    }
+  }
+
+  &__secondary-btn {
+    padding: 16px 48px;
+    background: #ffffff;
+    color: #111111;
+    border: 1px solid #111111;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: #f5f5f5;
+    }
+  }
+
+  // Account Prompt
+  &__account-prompt {
+    background: #ffffff;
+    padding: 32px;
+    text-align: center;
+
+    h3 {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      color: #111111;
+      margin: 0 0 12px;
+    }
+
+    p {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: #707070;
+      margin: 0 auto 24px;
+      max-width: 400px;
+    }
+  }
+
+  &__benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+
+    li {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: #111111;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &::before {
+        content: "\\2713";
+        color: #128a09;
+        font-weight: bold;
+      }
+    }
+  }
+
+  &__create-account-btn {
+    padding: 14px 32px;
+    background: #111111;
+    color: #ffffff;
+    border: none;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: #333333;
+    }
+  }
+
+  // Footer
+  &__footer {
+    background: #111111;
+    color: #ffffff;
+    padding: 32px;
+    text-align: center;
+    margin-top: 48px;
+
+    p {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 12px;
+      color: #707070;
+      margin: 0;
+    }
+
+    a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Responsive
+@media (max-width: 600px) {
+  .order-confirmation {
+    &__header {
+      padding: 16px;
+    }
+
+    &__success-title {
+      font-size: 24px;
+    }
+
+    &__actions {
+      flex-direction: column;
+    }
+
+    &__benefits-list {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .order-confirmation {
+    &__success-icon {
+      animation: none;
+    }
+  }
+}

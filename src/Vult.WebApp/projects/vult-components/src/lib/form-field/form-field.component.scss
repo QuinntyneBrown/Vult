@@ -1,0 +1,102 @@
+:host {
+  display: block;
+}
+
+.form-field {
+  position: relative;
+  width: 100%;
+
+  &__input {
+    width: 100%;
+    padding: 20px 12px 8px;
+    border: 1px solid #e5e5e5;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    color: #111111;
+    background: #ffffff;
+    transition: border-color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      border-color: #b5b5b5;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #111111;
+    }
+
+    &:disabled {
+      background-color: #f5f5f5;
+      color: #707070;
+      cursor: not-allowed;
+    }
+  }
+
+  &__label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    color: #707070;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    background: transparent;
+  }
+
+  &__required {
+    color: #d43f21;
+  }
+
+  &__check {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+  }
+
+  &__error-message {
+    margin-top: 4px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #d43f21;
+  }
+
+  // Floating label states
+  &--focused &__label,
+  &--filled &__label,
+  &__input:not(:placeholder-shown) + &__label {
+    top: 12px;
+    font-size: 12px;
+    transform: translateY(0);
+  }
+
+  &--focused &__label {
+    color: #111111;
+  }
+
+  &--valid &__input {
+    border-color: #128a09;
+    padding-right: 40px;
+  }
+
+  &--error &__input {
+    border-color: #d43f21;
+  }
+
+  &--error &__label {
+    color: #d43f21;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-field {
+    &__input,
+    &__label {
+      transition: none;
+    }
+  }
+}

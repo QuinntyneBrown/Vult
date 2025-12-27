@@ -90,10 +90,10 @@ export * from './lib/star-rating/star-rating';
 export * from './lib/testimonial-card/testimonial-card';
 
 // Cart Components
-export * from './lib/cart-notification/cart-notification';
-export * from './lib/cart-item/cart-item';
-export * from './lib/cart-summary/cart-summary';
-export * from './lib/quantity-selector/quantity-selector';
-export * from './lib/promo-code-input/promo-code-input';
-export * from './lib/checkout-step/checkout-step';
-export * from './lib/form-field/form-field';
+export * from './lib/cart-notification/cart-notification.component';
+export * from './lib/cart-item/cart-item.component';
+export * from './lib/cart-summary/cart-summary.component';
+export * from './lib/quantity-selector/quantity-selector.component';
+export * from './lib/promo-code-input/promo-code-input.component';
+export * from './lib/checkout-step/checkout-step.component';
+export * from './lib/form-field/form-field.component';

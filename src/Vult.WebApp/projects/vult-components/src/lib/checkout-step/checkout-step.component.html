@@ -1,0 +1,49 @@
+<div
+  class="checkout-step"
+  [class.checkout-step--active]="status === 'active'"
+  [class.checkout-step--completed]="status === 'completed'"
+  [attr.data-testid]="testId"
+>
+  <button
+    class="checkout-step__header"
+    [class.checkout-step__header--active]="status === 'active'"
+    [class.checkout-step__header--clickable]="status === 'completed'"
+    [disabled]="status === 'pending'"
+    [attr.aria-expanded]="status === 'active'"
+    [attr.aria-controls]="testId + '-content'"
+    (click)="onHeaderClick()"
+  >
+    <div class="checkout-step__title">
+      <span
+        class="checkout-step__number"
+        [class.checkout-step__number--completed]="status === 'completed'"
+      >
+        @if (status === 'completed') {
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        } @else {
+          {{ stepNumber }}
+        }
+      </span>
+      <span class="checkout-step__name">{{ title }}</span>
+    </div>
+
+    @if (status === 'completed' && summary) {
+      <div class="checkout-step__summary">{{ summary }}</div>
+    }
+
+    @if (status === 'completed') {
+      <span class="checkout-step__edit-link">Edit</span>
+    }
+  </button>
+
+  <div
+    class="checkout-step__content"
+    [class.checkout-step__content--active]="status === 'active'"
+    [id]="testId + '-content'"
+    [attr.aria-hidden]="status !== 'active'"
+  >
+    <ng-content></ng-content>
+  </div>
+</div>
