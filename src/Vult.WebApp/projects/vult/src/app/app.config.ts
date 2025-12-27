@@ -8,12 +8,14 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { routes } from './app.routes';
 import { authInterceptor, baseUrlInterceptor } from './core/interceptors';
+import { API_BASE_URL } from './core/config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(withInterceptors([baseUrlInterceptor, authInterceptor])),
-    provideAnimations()
+    provideAnimations(),
+    { provide: API_BASE_URL, useValue: 'https://localhost:7266' }
   ]
 };
