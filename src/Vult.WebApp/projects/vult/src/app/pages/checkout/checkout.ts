@@ -37,7 +37,7 @@ export class Checkout {
     city: '',
     state: '',
     zipCode: '',
-    country: 'US',
+    country: 'CA',
     useSameForBilling: true
   };
 

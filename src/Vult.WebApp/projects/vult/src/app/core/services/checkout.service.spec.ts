@@ -17,11 +17,11 @@ describe('CheckoutService', () => {
     firstName: 'John',
     lastName: 'Doe',
     address1: '123 Main St',
-    address2: 'Apt 4B',
-    city: 'New York',
-    state: 'NY',
-    zipCode: '10001',
-    country: 'US',
+    address2: 'Unit 4B',
+    city: 'Toronto',
+    state: 'ON',
+    zipCode: 'M5V 3A8',
+    country: 'CA',
     useSameForBilling: true
   };
 
