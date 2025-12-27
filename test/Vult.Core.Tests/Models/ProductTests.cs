@@ -244,4 +244,124 @@ public class ProductTests
         // Assert
         Assert.That(type, Is.EqualTo(ItemType.Book));
     }
+
+    [Test]
+    public void Product_ShouldHaveBenefitsProperty()
+    {
+        // Arrange & Act
+        var product = new Product { Benefits = "Premium quality materials. Comfortable fit." };
+
+        // Assert
+        Assert.That(product.Benefits, Is.EqualTo("Premium quality materials. Comfortable fit."));
+    }
+
+    [Test]
+    public void Product_ShouldHaveDetailsProperty()
+    {
+        // Arrange & Act
+        var product = new Product { Details = "100% cotton. Machine washable." };
+
+        // Assert
+        Assert.That(product.Details, Is.EqualTo("100% cotton. Machine washable."));
+    }
+
+    [Test]
+    public void Product_ShouldHaveShippingProperty()
+    {
+        // Arrange & Act
+        var product = new Product { Shipping = "Free standard shipping. Express available." };
+
+        // Assert
+        Assert.That(product.Shipping, Is.EqualTo("Free standard shipping. Express available."));
+    }
+
+    [Test]
+    public void Product_ShouldHavePromotionalMessageProperty()
+    {
+        // Arrange & Act
+        var product = new Product { PromotionalMessage = "Limited time offer!" };
+
+        // Assert
+        Assert.That(product.PromotionalMessage, Is.EqualTo("Limited time offer!"));
+    }
+
+    [Test]
+    public void Product_ShouldHaveIsMemberExclusiveProperty()
+    {
+        // Arrange & Act
+        var product = new Product { IsMemberExclusive = true };
+
+        // Assert
+        Assert.That(product.IsMemberExclusive, Is.True);
+    }
+
+    [Test]
+    public void Product_ShouldHaveIsNewProperty()
+    {
+        // Arrange & Act
+        var product = new Product { IsNew = true };
+
+        // Assert
+        Assert.That(product.IsNew, Is.True);
+    }
+
+    [Test]
+    public void Product_ShouldDefaultToFalseForIsMemberExclusive()
+    {
+        // Arrange & Act
+        var product = new Product();
+
+        // Assert
+        Assert.That(product.IsMemberExclusive, Is.False);
+    }
+
+    [Test]
+    public void Product_ShouldDefaultToFalseForIsNew()
+    {
+        // Arrange & Act
+        var product = new Product();
+
+        // Assert
+        Assert.That(product.IsNew, Is.False);
+    }
+
+    [Test]
+    public void Product_ShouldDefaultToEmptyStringForBenefits()
+    {
+        // Arrange & Act
+        var product = new Product();
+
+        // Assert
+        Assert.That(product.Benefits, Is.EqualTo(string.Empty));
+    }
+
+    [Test]
+    public void Product_ShouldDefaultToEmptyStringForDetails()
+    {
+        // Arrange & Act
+        var product = new Product();
+
+        // Assert
+        Assert.That(product.Details, Is.EqualTo(string.Empty));
+    }
+
+    [Test]
+    public void Product_ShouldDefaultToEmptyStringForShipping()
+    {
+        // Arrange & Act
+        var product = new Product();
+
+        // Assert
+        Assert.That(product.Shipping, Is.EqualTo(string.Empty));
+    }
+
+    [Test]
+    public void Product_ShouldDefaultToEmptyStringForPromotionalMessage()
+    {
+        // Arrange & Act
+        var product = new Product();
+
+        // Assert
+        Assert.That(product.PromotionalMessage, Is.EqualTo(string.Empty));
+    }
 }

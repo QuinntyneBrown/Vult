@@ -23,6 +23,12 @@ public class ProductExtensionsTests
             BrandName = "Adidas",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
+            Benefits = "Premium quality materials",
+            Details = "100% cotton",
+            Shipping = "Free standard shipping",
+            PromotionalMessage = "Limited time offer!",
+            IsMemberExclusive = true,
+            IsNew = true,
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow,
             ProductImages = new List<ProductImage>()
@@ -40,9 +46,15 @@ public class ProductExtensionsTests
         Assert.That(dto.BrandName, Is.EqualTo(product.BrandName));
         Assert.That(dto.Gender, Is.EqualTo(product.Gender));
         Assert.That(dto.ItemType, Is.EqualTo(product.ItemType));
+        Assert.That(dto.Benefits, Is.EqualTo(product.Benefits));
+        Assert.That(dto.Details, Is.EqualTo(product.Details));
+        Assert.That(dto.Shipping, Is.EqualTo(product.Shipping));
+        Assert.That(dto.PromotionalMessage, Is.EqualTo(product.PromotionalMessage));
+        Assert.That(dto.IsMemberExclusive, Is.EqualTo(product.IsMemberExclusive));
+        Assert.That(dto.IsNew, Is.EqualTo(product.IsNew));
         Assert.That(dto.CreatedDate, Is.EqualTo(product.CreatedDate));
         Assert.That(dto.UpdatedDate, Is.EqualTo(product.UpdatedDate));
-        Assert.That(dto.Images, Is.Not.Null);
+        Assert.That(dto.ProductImages, Is.Not.Null);
     }
 
     [Test]
@@ -61,6 +73,12 @@ public class ProductExtensionsTests
             BrandName = "Puma",
             Gender = Gender.Mens,
             ItemType = ItemType.Shoe,
+            Benefits = "Premium quality",
+            Details = "100% cotton",
+            Shipping = "Free shipping",
+            PromotionalMessage = "",
+            IsMemberExclusive = false,
+            IsNew = false,
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow,
             ProductImages = new List<ProductImage>
@@ -80,10 +98,10 @@ public class ProductExtensionsTests
         var dto = product.ToDto();
 
         // Assert
-        Assert.That(dto.Images, Has.Count.EqualTo(1));
-        Assert.That(dto.Images[0].ProductImageId, Is.EqualTo(imageId));
-        Assert.That(dto.Images[0].ProductId, Is.EqualTo(productId));
-        Assert.That(dto.Images[0].ImageData, Is.EqualTo(new byte[] { 1, 2, 3 }));
+        Assert.That(dto.ProductImages, Has.Count.EqualTo(1));
+        Assert.That(dto.ProductImages[0].ProductImageId, Is.EqualTo(imageId));
+        Assert.That(dto.ProductImages[0].ProductId, Is.EqualTo(productId));
+        Assert.That(dto.ProductImages[0].ImageData, Is.EqualTo(new byte[] { 1, 2, 3 }));
     }
 
     [Test]
@@ -122,7 +140,13 @@ public class ProductExtensionsTests
             Size = "M",
             BrandName = "Reebok",
             Gender = Gender.Mens,
-            ItemType = ItemType.Shoe
+            ItemType = ItemType.Shoe,
+            Benefits = "Premium quality materials",
+            Details = "100% cotton",
+            Shipping = "Free standard shipping",
+            PromotionalMessage = "Limited time offer!",
+            IsMemberExclusive = true,
+            IsNew = true
         };
 
         // Act
@@ -137,6 +161,12 @@ public class ProductExtensionsTests
         Assert.That(product.BrandName, Is.EqualTo(dto.BrandName));
         Assert.That(product.Gender, Is.EqualTo(dto.Gender));
         Assert.That(product.ItemType, Is.EqualTo(dto.ItemType));
+        Assert.That(product.Benefits, Is.EqualTo(dto.Benefits));
+        Assert.That(product.Details, Is.EqualTo(dto.Details));
+        Assert.That(product.Shipping, Is.EqualTo(dto.Shipping));
+        Assert.That(product.PromotionalMessage, Is.EqualTo(dto.PromotionalMessage));
+        Assert.That(product.IsMemberExclusive, Is.EqualTo(dto.IsMemberExclusive));
+        Assert.That(product.IsNew, Is.EqualTo(dto.IsNew));
         Assert.That(product.CreatedDate, Is.Not.EqualTo(default(DateTime)));
         Assert.That(product.UpdatedDate, Is.Not.EqualTo(default(DateTime)));
     }
@@ -155,6 +185,12 @@ public class ProductExtensionsTests
             BrandName = "Old Brand",
             Gender = Gender.Womens,
             ItemType = ItemType.Shirt,
+            Benefits = "Old Benefits",
+            Details = "Old Details",
+            Shipping = "Old Shipping",
+            PromotionalMessage = "Old Message",
+            IsMemberExclusive = false,
+            IsNew = false,
             CreatedDate = DateTime.UtcNow.AddDays(-10),
             UpdatedDate = DateTime.UtcNow.AddDays(-10)
         };
@@ -168,7 +204,13 @@ public class ProductExtensionsTests
             Size = "M",
             BrandName = "New Balance",
             Gender = Gender.Mens,
-            ItemType = ItemType.Shoe
+            ItemType = ItemType.Shoe,
+            Benefits = "New Benefits",
+            Details = "New Details",
+            Shipping = "New Shipping",
+            PromotionalMessage = "New Message",
+            IsMemberExclusive = true,
+            IsNew = true
         };
 
         var originalCreatedDate = product.CreatedDate;
@@ -185,6 +227,12 @@ public class ProductExtensionsTests
         Assert.That(product.BrandName, Is.EqualTo(dto.BrandName));
         Assert.That(product.Gender, Is.EqualTo(dto.Gender));
         Assert.That(product.ItemType, Is.EqualTo(dto.ItemType));
+        Assert.That(product.Benefits, Is.EqualTo(dto.Benefits));
+        Assert.That(product.Details, Is.EqualTo(dto.Details));
+        Assert.That(product.Shipping, Is.EqualTo(dto.Shipping));
+        Assert.That(product.PromotionalMessage, Is.EqualTo(dto.PromotionalMessage));
+        Assert.That(product.IsMemberExclusive, Is.EqualTo(dto.IsMemberExclusive));
+        Assert.That(product.IsNew, Is.EqualTo(dto.IsNew));
         Assert.That(product.CreatedDate, Is.EqualTo(originalCreatedDate)); // Should not change
         Assert.That(product.UpdatedDate, Is.GreaterThan(originalUpdatedDate)); // Should be updated
     }

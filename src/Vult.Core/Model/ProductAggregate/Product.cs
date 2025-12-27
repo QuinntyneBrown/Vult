@@ -25,6 +25,18 @@ public class Product
 
     public bool IsFeatured { get; set; }
 
+    public string Benefits { get; set; } = string.Empty;
+
+    public string Details { get; set; } = string.Empty;
+
+    public string Shipping { get; set; } = string.Empty;
+
+    public string PromotionalMessage { get; set; } = string.Empty;
+
+    public bool IsMemberExclusive { get; set; }
+
+    public bool IsNew { get; set; }
+
     public DateTime CreatedDate { get; set; }
 
     public DateTime UpdatedDate { get; set; }
