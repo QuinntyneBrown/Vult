@@ -5,6 +5,8 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Vult.Core;
+using Vult.Core.Model.ProductAggregate;
+using Vult.Core.Model.ProductAggregate.Enums;
 using Vult.Core.Model.TestimonialAggregate;
 using Vult.Core.Model.UserAggregate;
 using Vult.Core.Model.UserAggregate.Enums;
@@ -35,6 +37,7 @@ public class SeedService : ISeedService
         await SeedRolesAndPrivilegesAsync();
         await SeedUsersAsync();
         await SeedTestimonialsAsync();
+        await SeedFeaturedProductsAsync();
 
         _logger.LogInformation("Database seeding completed successfully.");
     }
@@ -198,6 +201,142 @@ public class SeedService : ISeedService
         await _context.SaveChangesAsync();
 
         _logger.LogInformation("Testimonials seeded successfully ({Count} testimonials).", testimonials.Count);
+    }
+
+    private async Task SeedFeaturedProductsAsync()
+    {
+        if (await _context.Products.AnyAsync(p => p.IsFeatured))
+        {
+            _logger.LogInformation("Featured products already exist, skipping featured product seeding.");
+            return;
+        }
+
+        _logger.LogInformation("Seeding featured products...");
+
+        var featuredProducts = new List<Product>
+        {
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "New Era Blue Jays Cap",
+                BrandName = "New Era",
+                Size = "One Size",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shoe, // Using Shoe as a stand-in for accessories
+                EstimatedMSRP = 55.00m,
+                EstimatedResaleValue = 45.00m,
+                IsFeatured = true,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Vintage Leather Jacket",
+                BrandName = "Vult",
+                Size = "M",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Jacket,
+                EstimatedMSRP = 250.00m,
+                EstimatedResaleValue = 189.00m,
+                IsFeatured = true,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Classic Denim Jeans",
+                BrandName = "Levi's",
+                Size = "32",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Pants,
+                EstimatedMSRP = 85.00m,
+                EstimatedResaleValue = 75.00m,
+                IsFeatured = true,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Retro Sneakers",
+                BrandName = "Vult",
+                Size = "10",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shoe,
+                EstimatedMSRP = 150.00m,
+                EstimatedResaleValue = 120.00m,
+                IsFeatured = true,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Designer Sunglasses",
+                BrandName = "Ray-Ban",
+                Size = "Standard",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shoe, // Using Shoe as a stand-in for accessories
+                EstimatedMSRP = 120.00m,
+                EstimatedResaleValue = 95.00m,
+                IsFeatured = true,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Vintage Watch",
+                BrandName = "Seiko",
+                Size = "40mm",
+                Gender = Gender.Mens,
+                ItemType = ItemType.Shoe, // Using Shoe as a stand-in for accessories
+                EstimatedMSRP = 350.00m,
+                EstimatedResaleValue = 299.00m,
+                IsFeatured = true,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Canvas Backpack",
+                BrandName = "Herschel",
+                Size = "25L",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Shoe, // Using Shoe as a stand-in for bags
+                EstimatedMSRP = 100.00m,
+                EstimatedResaleValue = 85.00m,
+                IsFeatured = true,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            },
+            new Product
+            {
+                ProductId = Guid.NewGuid(),
+                Description = "Wool Sweater",
+                BrandName = "Vult",
+                Size = "L",
+                Gender = Gender.Unisex,
+                ItemType = ItemType.Sweater,
+                EstimatedMSRP = 130.00m,
+                EstimatedResaleValue = 110.00m,
+                IsFeatured = true,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            }
+        };
+
+        foreach (var product in featuredProducts)
+        {
+            _context.Products.Add(product);
+        }
+
+        await _context.SaveChangesAsync();
+
+        _logger.LogInformation("Featured products seeded successfully ({Count} products).", featuredProducts.Count);
     }
 
     private static byte[] GenerateSalt()

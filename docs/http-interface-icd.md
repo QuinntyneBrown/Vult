@@ -69,6 +69,7 @@ Vult.Api/
 |--------|----------|-------|------|-------------|
 | POST | UploadPhotos | `/api/products/photos` | Required | Upload and ingest product photos |
 | GET | GetProducts | `/api/products` | Public | Get paginated product list with filters |
+| GET | GetFeaturedProducts | `/api/products/featured` | Public | Get paginated list of featured products |
 | GET | GetProductById | `/api/products/{id}` | Public | Get product details by ID |
 | POST | CreateProduct | `/api/products` | Required | Create new product |
 | PUT | UpdateProduct | `/api/products/{id}` | Required | Update product details |
@@ -261,6 +262,19 @@ Vult.Api/
 
 #### GetProductsQueryResult
 **Location**: `src/Vult.Api/Features/Products/GetProductsQueryResult.cs`
+
+```json
+{
+    "items": [ProductDto],
+    "totalCount": "int",
+    "pageNumber": "int",
+    "pageSize": "int",
+    "totalPages": "int"
+}
+```
+
+#### GetFeaturedProductsQueryResult
+**Location**: `src/Vult.Api/Features/Products/GetFeaturedProductsQuery.cs`
 
 ```json
 {
@@ -1087,6 +1101,42 @@ true
 
 ---
 
+#### GET /api/products/featured
+**Summary**: Get paginated list of featured products
+**Authentication**: AllowAnonymous
+
+**Query Parameters**:
+- `pageNumber` (int, default: 1): Page number (must be >= 1)
+- `pageSize` (int, default: 10): Items per page (max: 100)
+
+**Success Response** (200 OK):
+```json
+{
+    "items": [
+        {
+            "productId": "guid",
+            "estimatedMSRP": 150.00,
+            "estimatedResaleValue": 95.00,
+            "description": "Featured Premium Shoe",
+            "size": "10",
+            "brandName": "Vult",
+            "gender": 0,
+            "itemType": 0,
+            "isFeatured": true,
+            "createdDate": "2025-12-26T10:00:00Z",
+            "updatedDate": "2025-12-26T10:00:00Z",
+            "images": []
+        }
+    ],
+    "totalCount": 8,
+    "pageNumber": 1,
+    "pageSize": 10,
+    "totalPages": 1
+}
+```
+
+---
+
 #### GET /api/products/{id}
 **Summary**: Get product details by ID
 **Authentication**: AllowAnonymous
@@ -1656,12 +1706,12 @@ true
 
 ## DOCUMENT METADATA
 
-**Document Version**: 1.1
+**Document Version**: 1.2
 **API Name**: Vult API
 **Framework**: ASP.NET Core
-**Last Updated**: 2025-12-26
+**Last Updated**: 2025-12-27
 **Frameworks Supported**: .NET 10.0, .NET 8.0
-**Total Endpoints**: 26
+**Total Endpoints**: 27
 **Total Controllers**: 4
 **Authentication Method**: JWT Bearer Token
 **Database**: SQL Server
