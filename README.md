@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo and text.svg" alt="Vult Logo" width="400">
+</p>
+
 # Vult
 
 Vult is a catalog management system with AI-powered item ingestion and evaluation, built for resale businesses that need fast, consistent pricing and rich product data.
