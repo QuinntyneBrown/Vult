@@ -3,7 +3,7 @@
   <div actions style="display: flex; gap: 16px;">
     <span>Search</span>
     <span>Favorites</span>
-    <span>Cart</span>
+    <span (click)="onCartClick()" style="cursor: pointer;">Cart</span>
   </div>
 </v-navigation-bar>
 <router-outlet></router-outlet>

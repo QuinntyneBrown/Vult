@@ -1,24 +1,4 @@
 <div class="cart-page" data-testid="cart-page">
-  <!-- Header -->
-  <header class="cart-page__header">
-    <a class="cart-page__logo" href="/home" (click)="onLogoClick($event)">VULT</a>
-    <nav class="cart-page__nav">
-      <a href="/products">New & Featured</a>
-      <a href="/products?gender=0">Men</a>
-      <a href="/products?gender=1">Women</a>
-      <a href="/products">Kids</a>
-      <a href="/products">Sale</a>
-      <div class="cart-page__cart-icon" (click)="onCartClick()">
-        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-        </svg>
-        @if (cartService.itemCount() > 0) {
-          <span class="cart-page__cart-badge">{{ cartService.itemCount() }}</span>
-        }
-      </div>
-    </nav>
-  </header>
-
   <main class="cart-page__main">
     <div class="cart-page__container">
       @if (cartService.isEmpty()) {

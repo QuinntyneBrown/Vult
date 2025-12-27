@@ -21,6 +21,7 @@ import {
   AccordionSection
 } from 'vult-components';
 import { ProductService } from '../../core/services/product.service';
+import { CartService } from '../../core/services/cart.service';
 import { Product, Gender } from '../../core/models';
 
 export interface ProductDetailData {
@@ -71,6 +72,7 @@ interface ProductDetailViewModel {
 export class ProductDetail {
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
+  private readonly cartService = inject(CartService);
 
   // UI state subjects
   private selectedColorId$ = new BehaviorSubject<string>('color-1');
@@ -82,11 +84,13 @@ export class ProductDetail {
   private addToBagError$ = new BehaviorSubject<string>('');
   private expandedAccordionIds$ = new BehaviorSubject<string[]>(['description']);
 
-  // Product data observable from route params
+  // Product data observable from route params and cached raw product
+  private rawProduct: Product | null = null;
   private product$ = this.route.paramMap.pipe(
     map(params => params.get('id') || ''),
     switchMap(id => this.productService.getProductById(id)),
     map(product => {
+      this.rawProduct = product;
       return this.mapProductToDetailData(product);
     })
   );
@@ -204,8 +208,16 @@ export class ProductDetail {
   }
 
   onAddToBag(): void {
-    if (this.selectedSizeIds$.getValue().length === 0) {
+    const selectedSizeIds = this.selectedSizeIds$.getValue();
+
+    if (selectedSizeIds.length === 0) {
       this.addToBagError$.next('Please select a size');
+      this.addToBagState$.next('error');
+      return;
+    }
+
+    if (!this.rawProduct) {
+      this.addToBagError$.next('Product not found');
       this.addToBagState$.next('error');
       return;
     }
@@ -213,12 +225,34 @@ export class ProductDetail {
     this.addToBagState$.next('loading');
     this.addToBagError$.next('');
 
-    setTimeout(() => {
+    try {
+      const selectedColorId = this.selectedColorId$.getValue();
+      const selectedColor = this.mapProductToDetailData(this.rawProduct).colors.find(c => c.id === selectedColorId);
+
+      selectedSizeIds.forEach(sizeId => {
+        const sizes = this.parseSizes(this.rawProduct!.size);
+        const selectedSize = sizes.find(s => s.id === sizeId);
+
+        if (selectedSize && selectedColor) {
+          this.cartService.addItem(
+            this.rawProduct!,
+            selectedColor.name,
+            selectedColor.id,
+            selectedSize.label,
+            selectedSize.id,
+            1
+          );
+        }
+      });
+
       this.addToBagState$.next('success');
       setTimeout(() => {
         this.addToBagState$.next('default');
       }, 2000);
-    }, 1500);
+    } catch (error) {
+      this.addToBagError$.next('Failed to add item to bag');
+      this.addToBagState$.next('error');
+    }
   }
 
   onFavoriteToggle(isFavorited: boolean): void {

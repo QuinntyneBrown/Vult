@@ -1,7 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal, inject } from '@angular/core';
 import { LocalStorageService } from './local-storage.service';
 import { Cart, CartItem, PromoCodeResult } from '../models/cart';
 import { Product } from '../models/product';
@@ -14,6 +14,7 @@ const CART_EXPIRY_DAYS = 30;
   providedIn: 'root'
 })
 export class CartService {
+  private localStorage = inject(LocalStorageService);
   private cartSignal = signal<Cart>(this.loadCart());
 
   // Observables for components that prefer RxJS
@@ -33,7 +34,7 @@ export class CartService {
   private lastAddedItemSubject = new BehaviorSubject<CartItem | null>(null);
   public lastAddedItem$ = this.lastAddedItemSubject.asObservable();
 
-  constructor(private localStorage: LocalStorageService) {
+  constructor() {
     // Sync signal changes to BehaviorSubject
     this.syncCartToSubject();
   }
