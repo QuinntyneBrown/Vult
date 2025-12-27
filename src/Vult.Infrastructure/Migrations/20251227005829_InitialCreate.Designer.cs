@@ -12,7 +12,7 @@ using Vult.Infrastructure.Data;
 namespace Vult.Infrastructure.Migrations
 {
     [DbContext(typeof(VultContext))]
-    [Migration("20251227003915_InitialCreate")]
+    [Migration("20251227005829_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -68,6 +68,9 @@ namespace Vult.Infrastructure.Migrations
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ItemType")
                         .IsRequired()

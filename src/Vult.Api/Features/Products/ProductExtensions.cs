@@ -19,6 +19,7 @@ public static class ProductExtensions
             BrandName = product.BrandName,
             Gender = product.Gender,
             ItemType = product.ItemType,
+            IsFeatured = product.IsFeatured,
             CreatedDate = product.CreatedDate,
             UpdatedDate = product.UpdatedDate,
             Images = product.ProductImages?.Select(x => x.ToDto()).ToList() ?? new List<ProductImageDto>()
@@ -49,6 +50,7 @@ public static class ProductExtensions
             BrandName = dto.BrandName,
             Gender = dto.Gender,
             ItemType = dto.ItemType,
+            IsFeatured = dto.IsFeatured,
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow
         };
@@ -63,6 +65,7 @@ public static class ProductExtensions
         product.BrandName = dto.BrandName;
         product.Gender = dto.Gender;
         product.ItemType = dto.ItemType;
+        product.IsFeatured = dto.IsFeatured;
         product.UpdatedDate = DateTime.UtcNow;
     }
 }

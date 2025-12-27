@@ -14,4 +14,5 @@ public class CreateProductDto
     public string BrandName { get; set; } = string.Empty;
     public Gender Gender { get; set; }
     public ItemType ItemType { get; set; }
+    public bool IsFeatured { get; set; }
 }

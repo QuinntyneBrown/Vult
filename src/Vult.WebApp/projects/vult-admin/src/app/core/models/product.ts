@@ -10,6 +10,7 @@ export interface Product {
   brandName?: string;
   gender?: Gender;
   itemType?: ItemType;
+  isFeatured?: boolean;
   createdDate: string;
   updatedDate: string;
   productImages?: ProductImage[];
@@ -31,6 +32,7 @@ export interface CreateProductRequest {
   brandName?: string;
   gender?: Gender;
   itemType?: ItemType;
+  isFeatured?: boolean;
   productImages?: CreateProductImageRequest[];
 }
 
@@ -47,6 +49,7 @@ export interface UpdateProductRequest {
   brandName?: string;
   gender?: Gender;
   itemType?: ItemType;
+  isFeatured?: boolean;
 }
 
 export enum Gender {

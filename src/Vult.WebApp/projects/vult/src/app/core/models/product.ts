@@ -10,6 +10,7 @@ export interface Product {
   brandName?: string;
   gender?: Gender;
   itemType?: ItemType;
+  isFeatured?: boolean;
   createdDate: string;
   updatedDate: string;
   productImages?: ProductImage[];

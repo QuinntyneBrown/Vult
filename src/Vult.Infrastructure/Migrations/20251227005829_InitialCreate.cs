@@ -23,6 +23,7 @@ namespace Vult.Infrastructure.Migrations
                     BrandName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ItemType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsFeatured = table.Column<bool>(type: "bit", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

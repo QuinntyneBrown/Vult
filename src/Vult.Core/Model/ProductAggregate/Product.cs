@@ -23,6 +23,8 @@ public class Product
 
     public ItemType ItemType { get; set; }
 
+    public bool IsFeatured { get; set; }
+
     public DateTime CreatedDate { get; set; }
 
     public DateTime UpdatedDate { get; set; }

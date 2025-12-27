@@ -15,6 +15,7 @@ public class ProductDto
     public string BrandName { get; set; } = string.Empty;
     public Gender Gender { get; set; }
     public ItemType ItemType { get; set; }
+    public bool IsFeatured { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime UpdatedDate { get; set; }
     public List<ProductImageDto> Images { get; set; } = new();

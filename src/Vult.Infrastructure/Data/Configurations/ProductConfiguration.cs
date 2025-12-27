@@ -43,6 +43,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired()
             .HasConversion<string>();
 
+        builder.Property(e => e.IsFeatured)
+            .IsRequired();
+
         builder.Property(e => e.CreatedDate)
             .IsRequired();
 

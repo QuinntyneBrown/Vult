@@ -66,6 +66,9 @@ namespace Vult.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ItemType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
