@@ -238,7 +238,7 @@ export class Products {
 
   private mapSortIdToApiSort(sortId: string): string {
     const mapping: Record<string, string> = {
-      'featured': 'date_desc',
+      'featured': 'featured',
       'newest': 'date_desc',
       'price-asc': 'price',
       'price-desc': 'price_desc'
@@ -381,10 +381,22 @@ export class Products {
 
   onMobileFilterToggle(isOpen: boolean): void {
     this.isMobileFilterOpen$.next(isOpen);
+    this.toggleBodyScroll(isOpen);
   }
 
   onCloseMobileFilter(): void {
     this.isMobileFilterOpen$.next(false);
+    this.toggleBodyScroll(false);
+  }
+
+  private toggleBodyScroll(disable: boolean): void {
+    if (typeof document !== 'undefined') {
+      if (disable) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
   }
 
   onProductClick(product: ProductCardData): void {
