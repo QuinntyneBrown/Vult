@@ -1,4 +1,4 @@
-<main class="home-page">
+<main class="home">
   <!-- Hero Section -->
   <v-hero-section
     [backgroundImage]="heroImage"
@@ -13,14 +13,14 @@
   ></v-hero-section>
 
   <!-- Featured Products Section -->
-  <section class="featured-products-section">
-    <div class="section-header">
+  <section class="featured-products">
+    <div class="featured-products__header">
       <v-typography variant="title-3">Featured Products</v-typography>
     </div>
-    <div class="products-carousel">
-      <div class="products-track">
-        @for (product of featuredProducts(); track product.id) {
-          <div class="product-item">
+    <div class="featured-products__carousel">
+      <div class="featured-products__track">
+        @for (product of featuredProducts; track product.id) {
+          <div class="featured-products__item">
             <v-product-card
               [product]="product"
               (cardClick)="onProductClick($event)"
@@ -33,44 +33,46 @@
   </section>
 
   <!-- Testimonials Section -->
-  <section class="testimonials-section">
-    <div class="section-header">
-      <v-typography variant="title-3">Our customers love us</v-typography>
-    </div>
-    <div class="testimonials-carousel">
-      <div class="testimonials-track">
-        @for (testimonial of testimonials(); track testimonial.id) {
-          <div class="testimonial-item">
-            <article class="testimonial-card">
-              <div class="testimonial-card-image">
-                <img
-                  [src]="testimonial.photoUrl"
-                  [alt]="testimonial.customerName + ' - Vult customer'"
-                  loading="lazy"
-                />
-              </div>
-              <div class="testimonial-card-content">
-                <div class="testimonial-rating" role="img" [attr.aria-label]="testimonial.rating + ' out of 5 stars'">
-                  @for (filled of getStarArray(testimonial.rating); track $index) {
-                    <svg
-                      class="testimonial-star"
-                      [class.filled]="filled"
-                      [class.empty]="!filled"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      aria-hidden="true"
-                    >
-                      <path d="M8 0L9.79611 5.52786H15.6085L10.9062 8.94427L12.7023 14.4721L8 11.0557L3.29772 14.4721L5.09383 8.94427L0.391548 5.52786H6.20389L8 0Z" fill="currentColor"/>
-                    </svg>
-                  }
-                </div>
-                <p class="testimonial-text">{{ testimonial.text }}</p>
-              </div>
-            </article>
-          </div>
-        }
+  <ng-container *ngIf="testimonials$ | async as testimonials">
+    <section class="testimonials">
+      <div class="testimonials__header">
+        <v-typography variant="title-3">Our customers love us</v-typography>
       </div>
-    </div>
-  </section>
+      <div class="testimonials__carousel">
+        <div class="testimonials__track">
+          @for (testimonial of testimonials; track testimonial.id) {
+            <div class="testimonials__item">
+              <article class="testimonial-card">
+                <div class="testimonial-card__image">
+                  <img
+                    [src]="testimonial.photoUrl"
+                    [alt]="testimonial.customerName + ' - Vult customer'"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="testimonial-card__content">
+                  <div class="testimonial-card__rating" role="img" [attr.aria-label]="testimonial.rating + ' out of 5 stars'">
+                    @for (filled of getStarArray(testimonial.rating); track $index) {
+                      <svg
+                        class="testimonial-card__star"
+                        [class.testimonial-card__star--filled]="filled"
+                        [class.testimonial-card__star--empty]="!filled"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        aria-hidden="true"
+                      >
+                        <path d="M8 0L9.79611 5.52786H15.6085L10.9062 8.94427L12.7023 14.4721L8 11.0557L3.29772 14.4721L5.09383 8.94427L0.391548 5.52786H6.20389L8 0Z" fill="currentColor"/>
+                      </svg>
+                    }
+                  </div>
+                  <p class="testimonial-card__text">{{ testimonial.text }}</p>
+                </div>
+              </article>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  </ng-container>
 </main>

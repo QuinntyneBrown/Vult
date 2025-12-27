@@ -1,8 +1,10 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, signal, ChangeDetectionStrategy, OnInit, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { map } from 'rxjs';
 import {
   HeroSection,
   ProductCard,
@@ -24,6 +26,7 @@ export interface Testimonial {
   selector: 'app-home',
   standalone: true,
   imports: [
+    CommonModule,
     HeroSection,
     ProductCard,
     TypographyDisplay,
@@ -32,15 +35,15 @@ export interface Testimonial {
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Home implements OnInit {
-  private testimonialService = inject(TestimonialService);
-  private router = inject(Router);
+export class Home {
+  private _testimonialService = inject(TestimonialService);
+  private _router = inject(Router);
 
   heroImage = 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=1920&q=80';
   heroTitle = 'Buy Premium Used Products';
   heroOverlay = 'linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0) 100%)';
 
-  featuredProducts = signal<ProductCardData[]>([
+  featuredProducts: ProductCardData[] = [
     {
       id: '1',
       name: 'New Era Blue Jays Cap',
@@ -104,29 +107,11 @@ export class Home implements OnInit {
       price: 110.00,
       imageUrl: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600&q=80',
     },
-  ]);
+  ];
 
-  testimonials = signal<Testimonial[]>([]);
-  isLoading = signal<boolean>(true);
-
-  ngOnInit(): void {
-    this.loadTestimonials();
-  }
-
-  private loadTestimonials(): void {
-    this.isLoading.set(true);
-    this.testimonialService.getTestimonials(1, 10, { sortBy: 'rating_desc' }).subscribe({
-      next: (response) => {
-        const mappedTestimonials = response.items.map(this.mapToTestimonial);
-        this.testimonials.set(mappedTestimonials);
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading testimonials:', error);
-        this.isLoading.set(false);
-      },
-    });
-  }
+  testimonials$ = this._testimonialService.getTestimonials(1, 10, { sortBy: 'rating_desc' }).pipe(
+    map(response => response.items.map(this.mapToTestimonial))
+  );
 
   private mapToTestimonial(model: TestimonialModel): Testimonial {
     return {
@@ -139,11 +124,11 @@ export class Home implements OnInit {
   }
 
   onShopClick(): void {
-    this.router.navigate(['/products']);
+    this._router.navigate(['/products']);
   }
 
   onProductClick(product: ProductCardData): void {
-    this.router.navigate(['/product', product.id]);
+    this._router.navigate(['/product', product.id]);
   }
 
   onFavoriteToggle(event: { product: ProductCardData; isFavorite: boolean }): void {

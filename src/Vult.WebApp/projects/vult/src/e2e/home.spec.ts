@@ -73,7 +73,7 @@ test.describe('Home Page', () => {
 
     // Check featured products section
     await expect(page.getByText('Featured Products')).toBeVisible();
-    await expect(page.locator('.products-carousel')).toBeVisible();
+    await expect(page.locator('.featured-products__carousel')).toBeVisible();
   });
 
   test('should display testimonials section', async ({ page }) => {
@@ -81,7 +81,7 @@ test.describe('Home Page', () => {
 
     // Check testimonials section header
     await expect(page.getByText('Our customers love us')).toBeVisible();
-    await expect(page.locator('.testimonials-section')).toBeVisible();
+    await expect(page.locator('.testimonials')).toBeVisible();
   });
 
   test('should display testimonial cards with customer information', async ({ page }) => {
@@ -106,11 +106,11 @@ test.describe('Home Page', () => {
     await page.waitForSelector('.testimonial-card');
 
     // Check that star ratings are visible
-    const starContainers = page.locator('.testimonial-rating');
+    const starContainers = page.locator('.testimonial-card__rating');
     await expect(starContainers.first()).toBeVisible();
 
     // Check that stars are rendered
-    const stars = page.locator('.testimonial-star');
+    const stars = page.locator('.testimonial-card__star');
     await expect(stars.first()).toBeVisible();
   });
 
@@ -121,7 +121,7 @@ test.describe('Home Page', () => {
     await page.waitForSelector('.testimonial-card');
 
     // Check that customer images are present
-    const testimonialImages = page.locator('.testimonial-card-image img');
+    const testimonialImages = page.locator('.testimonial-card__image img');
     await expect(testimonialImages.first()).toBeVisible();
 
     // Check alt text for accessibility
@@ -147,7 +147,7 @@ test.describe('Home Page', () => {
     await page.goto('/');
 
     // The service should fallback to mock data, so testimonials should still be visible
-    await page.waitForSelector('.testimonials-section');
+    await page.waitForSelector('.testimonials');
     await expect(page.getByText('Our customers love us')).toBeVisible();
   });
 
@@ -158,8 +158,8 @@ test.describe('Home Page', () => {
     await page.waitForSelector('.testimonial-card');
 
     // Get the first testimonial rating (should be 5 stars)
-    const firstRating = page.locator('.testimonial-rating').first();
-    const filledStars = firstRating.locator('.testimonial-star.filled');
+    const firstRating = page.locator('.testimonial-card__rating').first();
+    const filledStars = firstRating.locator('.testimonial-card__star--filled');
 
     // First testimonial has rating of 5, so all 5 stars should be filled
     await expect(filledStars).toHaveCount(5);
@@ -172,7 +172,7 @@ test.describe('Home Page', () => {
     await page.waitForSelector('.testimonial-card');
 
     // Check that rating has proper ARIA label
-    const ratingElements = page.locator('.testimonial-rating');
+    const ratingElements = page.locator('.testimonial-card__rating');
     await expect(ratingElements.first()).toHaveAttribute('aria-label', /out of 5 stars/);
   });
 
@@ -183,7 +183,7 @@ test.describe('Home Page', () => {
     await page.waitForSelector('.testimonial-card');
 
     // Check that images have lazy loading attribute
-    const images = page.locator('.testimonial-card-image img');
+    const images = page.locator('.testimonial-card__image img');
     await expect(images.first()).toHaveAttribute('loading', 'lazy');
   });
 });
