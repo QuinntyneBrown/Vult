@@ -1,0 +1,81 @@
+<div
+  class="search-container"
+  role="search"
+  [class.search-container--expanded]="expanded()"
+  [class.search-container--compact]="variant === 'compact'"
+  [class.search-container--full]="variant === 'full'"
+>
+  <mat-icon class="search-icon" aria-hidden="true">search</mat-icon>
+  <input
+    #searchInput
+    type="text"
+    class="search-input"
+    [class.search-input--expanded]="expanded()"
+    [placeholder]="placeholder"
+    [value]="searchValue()"
+    [disabled]="disabled()"
+    [attr.aria-autocomplete]="suggestions.length > 0 ? 'list' : null"
+    [attr.aria-controls]="suggestions.length > 0 ? 'search-dropdown' : null"
+    [attr.aria-expanded]="showSuggestions() && suggestions.length > 0"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    (input)="onInput($event)"
+    (keydown.enter)="onSubmit()"
+    (keydown.escape)="onEscape()"
+  />
+  @if (hasValue()) {
+    <button
+      mat-icon-button
+      class="clear-btn"
+      aria-label="Clear search"
+      (click)="clearSearch()"
+    >
+      <mat-icon>cancel</mat-icon>
+    </button>
+  }
+
+  @if (showSuggestions() && suggestions.length > 0) {
+    <div id="search-dropdown" class="search-dropdown" role="listbox">
+      @for (group of groupedSuggestions; track group.title) {
+        <div class="dropdown-section">
+          <div class="dropdown-title">
+            {{ group.title }}
+            @if (group.type === 'recent') {
+              <a href="#" class="dropdown-clear" (click)="clearRecent($event)">Clear</a>
+            }
+          </div>
+          @for (suggestion of group.items; track suggestion.id) {
+            <div
+              class="suggestion-item"
+              [class.suggestion-item--product]="suggestion.type === 'product'"
+              role="option"
+              tabindex="0"
+              (click)="selectSuggestion(suggestion)"
+              (keydown.enter)="selectSuggestion(suggestion)"
+            >
+              @if (suggestion.type === 'product' && suggestion.imageUrl) {
+                <div class="product-thumb">
+                  <img [src]="suggestion.imageUrl" [alt]="suggestion.text" />
+                </div>
+                <div class="product-info">
+                  <span class="product-name">{{ suggestion.text }}</span>
+                  @if (suggestion.category) {
+                    <span class="product-category">{{ suggestion.category }}</span>
+                  }
+                </div>
+                @if (suggestion.price) {
+                  <span class="product-price">{{ suggestion.price | currency }}</span>
+                }
+              } @else {
+                <mat-icon class="suggestion-icon">
+                  {{ suggestion.type === 'recent' ? 'history' : 'trending_up' }}
+                </mat-icon>
+                <span class="suggestion-text">{{ suggestion.text }}</span>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,20 +1,20 @@
-<div class="quantity-selector" [attr.data-testid]="testId">
+<mat-form-field
+  appearance="outline"
+  class="quantity-selector"
+  [attr.data-testid]="testId"
+>
   @if (showLabel) {
-    <label class="quantity-selector__label" [for]="selectorId">{{ label }}</label>
+    <mat-label>{{ label }}</mat-label>
   }
-  <select
-    class="quantity-selector__select"
-    [id]="selectorId"
-    [value]="quantity"
-    [disabled]="disabled"
+  <mat-select
+    [value]="quantityValue"
+    [disabled]="disabled()"
     [attr.aria-label]="ariaLabel || label"
-    (change)="onQuantityChange($event)"
+    (selectionChange)="onSelectionChange($event.value)"
+    (blur)="onBlur()"
   >
-    @for (n of quantityOptions; track n) {
-      <option [value]="n" [selected]="n === quantity">{{ n }}</option>
+    @for (n of quantityOptions(); track n) {
+      <mat-option [value]="n">{{ n }}</mat-option>
     }
-  </select>
-  <svg class="quantity-selector__chevron" viewBox="0 0 16 16" fill="currentColor">
-    <path d="M4 6l4 4 4-4"/>
-  </svg>
-</div>
+  </mat-select>
+</mat-form-field>

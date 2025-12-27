@@ -1,0 +1,79 @@
+:host {
+  display: block;
+}
+
+.checkbox-filter {
+  font-family: var(--font-family-base, 'Helvetica Neue', Helvetica, Arial, sans-serif);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 0;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #e5e5e5;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  &__label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #111111;
+  }
+
+  &__chevron {
+    transition: transform 0.2s ease;
+
+    &--rotated {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__content {
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &--collapsed {
+      display: none;
+    }
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #111111;
+
+    ::ng-deep .mdc-checkbox {
+      --mdc-checkbox-selected-checkmark-color: #ffffff;
+      --mdc-checkbox-selected-focus-icon-color: #111111;
+      --mdc-checkbox-selected-hover-icon-color: #111111;
+      --mdc-checkbox-selected-icon-color: #111111;
+      --mdc-checkbox-selected-pressed-icon-color: #111111;
+      --mdc-checkbox-unselected-focus-icon-color: #111111;
+      --mdc-checkbox-unselected-hover-icon-color: #757575;
+      --mdc-checkbox-unselected-icon-color: #111111;
+      --mdc-checkbox-unselected-pressed-icon-color: #111111;
+    }
+  }
+
+  &__text {
+    flex: 1;
+  }
+
+  &__count {
+    color: #757575;
+    margin-left: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkbox-filter__chevron {
+    transition: none;
+  }
+}

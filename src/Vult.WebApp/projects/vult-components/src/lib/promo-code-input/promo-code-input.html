@@ -1,58 +1,51 @@
 <div class="promo-code" [attr.data-testid]="testId">
-  @if (!isExpanded && !appliedCode) {
+  @if (!isExpanded() && !appliedCode) {
     <button class="promo-code__toggle" (click)="toggleExpanded()">
       <span>{{ toggleLabel }}</span>
-      <svg class="promo-code__chevron" [class.promo-code__chevron--open]="isExpanded" viewBox="0 0 16 16" fill="currentColor">
-        <path d="M4 6l4 4 4-4"/>
-      </svg>
+      <mat-icon class="promo-code__chevron" [class.promo-code__chevron--open]="isExpanded()">expand_more</mat-icon>
     </button>
   }
 
-  @if (isExpanded && !appliedCode) {
+  @if (isExpanded() && !appliedCode) {
     <div class="promo-code__form">
-      <input
-        type="text"
-        class="promo-code__input"
-        [class.promo-code__input--error]="error"
-        [(ngModel)]="promoCode"
-        [placeholder]="placeholder"
-        [disabled]="isLoading"
-        [attr.aria-invalid]="error ? 'true' : 'false'"
-        [attr.aria-describedby]="error ? testId + '-error' : null"
-        (keyup.enter)="onApply()"
-      />
+      <mat-form-field appearance="outline" class="promo-code__field">
+        <mat-label>{{ placeholder }}</mat-label>
+        <input
+          matInput
+          type="text"
+          [value]="promoCode()"
+          [disabled]="isLoading || disabled()"
+          (input)="onInput($event)"
+          (blur)="onBlur()"
+          (keyup.enter)="onApply()"
+        />
+        @if (error) {
+          <mat-error>{{ error }}</mat-error>
+        }
+      </mat-form-field>
       <button
+        mat-flat-button
         class="promo-code__apply-btn"
-        [disabled]="!promoCode || isLoading"
+        [disabled]="!promoCode() || isLoading || disabled()"
         (click)="onApply()"
       >
         @if (isLoading) {
-          <span class="promo-code__loading-spinner"></span>
+          <mat-spinner diameter="16"></mat-spinner>
         } @else {
           Apply
         }
       </button>
     </div>
-    @if (error) {
-      <div class="promo-code__error" [id]="testId + '-error'" role="alert">
-        {{ error }}
-      </div>
-    }
   }
 
   @if (appliedCode) {
     <div class="promo-code__applied">
       <div class="promo-code__applied-info">
-        <svg class="promo-code__applied-icon" viewBox="0 0 24 24" fill="none">
-          <path d="M9 12l2 2 4-4" stroke="#128a09" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="12" cy="12" r="10" stroke="#128a09" stroke-width="2"/>
-        </svg>
+        <mat-icon class="promo-code__applied-icon">check_circle</mat-icon>
         <span class="promo-code__applied-code">{{ appliedCode }}</span>
       </div>
-      <button class="promo-code__remove-btn" aria-label="Remove promo code" (click)="onRemove()">
-        <svg viewBox="0 0 16 16" fill="currentColor">
-          <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="2"/>
-        </svg>
+      <button mat-icon-button class="promo-code__remove-btn" aria-label="Remove promo code" (click)="onRemove()">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
   }
