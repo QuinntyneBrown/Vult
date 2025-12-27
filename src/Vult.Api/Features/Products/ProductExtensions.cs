@@ -33,6 +33,7 @@ public static class ProductExtensions
             ProductImageId = image.ProductImageId,
             ProductId = image.ProductId,
             ImageData = image.ImageData,
+            Url = image.Url,
             Description = image.Description,
             CreatedDate = image.CreatedDate
         };

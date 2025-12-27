@@ -21,6 +21,10 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
         builder.Property(e => e.ImageData)
             .IsRequired();
 
+        builder.Property(e => e.Url)
+            .IsRequired()
+            .HasMaxLength(2000);
+
         builder.Property(e => e.Description)
             .IsRequired()
             .HasMaxLength(1000);

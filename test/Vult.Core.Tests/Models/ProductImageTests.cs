@@ -56,6 +56,27 @@ public class ProductImageTests
     }
 
     [Test]
+    public void ProductImage_ShouldHaveUrlProperty()
+    {
+        // Arrange & Act
+        var image = new ProductImage { Url = "https://example.com/images/product.jpg" };
+
+        // Assert
+        Assert.That(image.Url, Is.EqualTo("https://example.com/images/product.jpg"));
+    }
+
+    [Test]
+    public void ProductImage_ShouldInitializeUrlAsEmptyString()
+    {
+        // Arrange & Act
+        var image = new ProductImage();
+
+        // Assert
+        Assert.That(image.Url, Is.Not.Null);
+        Assert.That(image.Url, Is.Empty);
+    }
+
+    [Test]
     public void ProductImage_ShouldHaveDescriptionProperty()
     {
         // Arrange & Act

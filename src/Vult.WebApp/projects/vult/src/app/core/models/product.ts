@@ -20,6 +20,7 @@ export interface ProductImage {
   productImageId: string;
   productId: string;
   imageData?: string;
+  url?: string;
   description?: string;
   createdDate: string;
 }

@@ -236,6 +236,7 @@ Vult.Api/
             "productImageId": "guid",
             "productId": "guid",
             "imageData": "byte[] (base64 in JSON)",
+            "url": "string",
             "description": "string",
             "createdDate": "datetime"
         }
