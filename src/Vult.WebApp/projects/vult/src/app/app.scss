@@ -1,6 +1,11 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
 .app {
   &__header {
     padding: var(--spacing-md);

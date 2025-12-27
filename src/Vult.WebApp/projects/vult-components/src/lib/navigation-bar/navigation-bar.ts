@@ -100,7 +100,11 @@ export interface NavItem {
       background-color: #ffffff;
       border-bottom: 1px solid #e5e5e5;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      position: relative;
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
     }
 
     .nav__container {

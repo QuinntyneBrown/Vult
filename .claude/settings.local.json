@@ -30,7 +30,8 @@
       "Bash(dir:*)",
       "Bash(test:*)",
       "Bash(cat:*)",
-      "Bash(dotnet ef database drop:*)"
+      "Bash(dotnet ef database drop:*)",
+      "Bash(npm start)"
     ],
     "deny": [],
     "ask": []
