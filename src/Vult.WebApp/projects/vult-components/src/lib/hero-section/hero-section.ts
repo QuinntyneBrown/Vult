@@ -156,14 +156,14 @@ export type HeroTheme = 'light' | 'dark';
     }
 
     .hero__overline {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
       font-size: 16px;
       font-weight: 500;
       margin: 0 0 8px;
     }
 
     .hero__title {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
       font-size: 84px;
       font-weight: 800;
       line-height: 1.0;
@@ -172,7 +172,7 @@ export type HeroTheme = 'light' | 'dark';
     }
 
     .hero__subtitle {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
       font-size: 18px;
       font-weight: 400;
       line-height: 1.5;
@@ -205,7 +205,7 @@ export type HeroTheme = 'light' | 'dark';
       justify-content: center;
       height: 44px;
       padding: 0 24px;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
       font-size: 16px;
       font-weight: 500;
       border-radius: 30px;

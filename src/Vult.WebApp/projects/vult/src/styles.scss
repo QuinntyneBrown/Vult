@@ -43,7 +43,7 @@ html {
         100: #ffffff,
       ),
     ),
-    typography: Roboto,
+    typography: Inter,
     density: 0,
   ));
 }
@@ -64,11 +64,15 @@ html, body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
 }
 
 // Design tokens - Monochromatic (Black & White)
 :root {
+  // Font tokens
+  --font-family-base: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-hero: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+
   // Spacing tokens
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
