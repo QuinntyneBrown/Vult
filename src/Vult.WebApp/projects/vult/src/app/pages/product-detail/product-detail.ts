@@ -1,9 +1,10 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, ChangeDetectionStrategy, signal, computed, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
 import {
   ProductImageGallery,
   ProductImage,
@@ -35,6 +36,20 @@ export interface ProductDetailData {
   promotionalMessage?: string;
 }
 
+interface ProductDetailViewModel {
+  product: ProductDetailData;
+  selectedColorId: string;
+  selectedColorName: string;
+  selectedSizeIds: string[];
+  selectedImageIndex: number;
+  isFavorited: boolean;
+  isFavoriteLoading: boolean;
+  addToBagState: AddToBagButtonState;
+  addToBagError: string;
+  isAddToBagDisabled: boolean;
+  expandedAccordionIds: string[];
+}
+
 @Component({
   selector: 'app-product-detail',
   standalone: true,
@@ -53,71 +68,56 @@ export interface ProductDetailData {
   styleUrls: ['./product-detail.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProductDetail implements OnInit {
+export class ProductDetail {
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
 
-  // State signals
-  isLoading = signal(true);
-  selectedColorId = signal<string>('color-1');
-  selectedSizeIds = signal<string[]>([]);
-  isFavorited = signal(false);
-  isFavoriteLoading = signal(false);
-  addToBagState = signal<AddToBagButtonState>('default');
-  addToBagError = signal('');
-  selectedImageIndex = signal(0);
-  expandedAccordionIds = signal<string[]>(['description']);
+  // UI state subjects
+  private selectedColorId$ = new BehaviorSubject<string>('color-1');
+  private selectedSizeIds$ = new BehaviorSubject<string[]>([]);
+  private selectedImageIndex$ = new BehaviorSubject<number>(0);
+  private isFavorited$ = new BehaviorSubject<boolean>(false);
+  private isFavoriteLoading$ = new BehaviorSubject<boolean>(false);
+  private addToBagState$ = new BehaviorSubject<AddToBagButtonState>('default');
+  private addToBagError$ = new BehaviorSubject<string>('');
+  private expandedAccordionIds$ = new BehaviorSubject<string[]>(['description']);
 
-  // Computed properties
-  selectedColorName = computed(() => {
-    const color = this.product().colors.find(c => c.id === this.selectedColorId());
-    return color?.name || '';
-  });
+  // Product data observable from route params
+  private product$ = this.route.paramMap.pipe(
+    map(params => params.get('id') || ''),
+    switchMap(id => this.productService.getProductById(id)),
+    map(product => this.mapProductToDetailData(product))
+  );
 
-  isAddToBagDisabled = computed(() => {
-    return this.selectedSizeIds().length === 0;
-  });
-
-  // Product data loaded from service
-  product = signal<ProductDetailData>({
-    id: '',
-    title: '',
-    subtitle: '',
-    price: {
-      current: 0,
-      currency: 'USD',
-      currencySymbol: '$'
-    },
-    images: [],
-    colors: [],
-    sizes: [],
-    accordionSections: []
-  });
-
-  ngOnInit(): void {
-    const productId = this.route.snapshot.paramMap.get('id');
-    if (productId) {
-      this.loadProduct(productId);
-    }
-  }
-
-  private loadProduct(id: string): void {
-    this.isLoading.set(true);
-    this.productService.getProductById(id).subscribe({
-      next: (product) => {
-        const productDetailData = this.mapProductToDetailData(product);
-        this.product.set(productDetailData);
-        if (productDetailData.colors.length > 0) {
-          this.selectedColorId.set(productDetailData.colors[0].id);
-        }
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading product:', error);
-        this.isLoading.set(false);
-      }
-    });
-  }
+  // Combined view model for template consumption
+  viewModel$ = combineLatest([
+    this.product$,
+    this.selectedColorId$,
+    this.selectedSizeIds$,
+    this.selectedImageIndex$,
+    this.isFavorited$,
+    this.isFavoriteLoading$,
+    this.addToBagState$,
+    this.addToBagError$,
+    this.expandedAccordionIds$
+  ]).pipe(
+    map(([product, selectedColorId, selectedSizeIds, selectedImageIndex, isFavorited, isFavoriteLoading, addToBagState, addToBagError, expandedAccordionIds]): ProductDetailViewModel => {
+      const selectedColor = product.colors.find(c => c.id === selectedColorId);
+      return {
+        product,
+        selectedColorId,
+        selectedColorName: selectedColor?.name || '',
+        selectedSizeIds,
+        selectedImageIndex,
+        isFavorited,
+        isFavoriteLoading,
+        addToBagState,
+        addToBagError,
+        isAddToBagDisabled: selectedSizeIds.length === 0,
+        expandedAccordionIds
+      };
+    })
+  );
 
   private mapProductToDetailData(product: Product): ProductDetailData {
     const genderLabel = this.getGenderLabel(product.gender);
@@ -167,7 +167,7 @@ export class ProductDetail implements OnInit {
 
   private parseSizes(sizeString?: string): SizeOption[] {
     if (!sizeString) return [];
-    return sizeString.split(',').map((size, index) => ({
+    return sizeString.split(',').map((size) => ({
       id: `size-${size.trim()}`,
       label: size.trim(),
       available: true
@@ -175,59 +175,51 @@ export class ProductDetail implements OnInit {
   }
 
   onColorSelect(color: ColorOption): void {
-    this.selectedColorId.set(color.id);
-    // In a real app, this would update product images based on selected color
-    this.selectedImageIndex.set(0);
+    this.selectedColorId$.next(color.id);
+    this.selectedImageIndex$.next(0);
   }
 
   onSizeSelectionChange(sizeIds: string[]): void {
-    this.selectedSizeIds.set(sizeIds);
-    // Clear any previous error when size is selected
+    this.selectedSizeIds$.next(sizeIds);
     if (sizeIds.length > 0) {
-      this.addToBagError.set('');
-      if (this.addToBagState() === 'error') {
-        this.addToBagState.set('default');
+      this.addToBagError$.next('');
+      if (this.addToBagState$.getValue() === 'error') {
+        this.addToBagState$.next('default');
       }
     }
   }
 
   onImageChange(index: number): void {
-    this.selectedImageIndex.set(index);
+    this.selectedImageIndex$.next(index);
   }
 
   onImageClick(image: ProductImage): void {
-    // In a real app, this would open a lightbox/zoom modal
     console.log('Image clicked:', image);
   }
 
   onAddToBag(): void {
-    if (this.selectedSizeIds().length === 0) {
-      this.addToBagError.set('Please select a size');
-      this.addToBagState.set('error');
+    if (this.selectedSizeIds$.getValue().length === 0) {
+      this.addToBagError$.next('Please select a size');
+      this.addToBagState$.next('error');
       return;
     }
 
-    this.addToBagState.set('loading');
-    this.addToBagError.set('');
+    this.addToBagState$.next('loading');
+    this.addToBagError$.next('');
 
-    // Simulate API call
     setTimeout(() => {
-      this.addToBagState.set('success');
-
-      // Reset to default after showing success
+      this.addToBagState$.next('success');
       setTimeout(() => {
-        this.addToBagState.set('default');
+        this.addToBagState$.next('default');
       }, 2000);
     }, 1500);
   }
 
   onFavoriteToggle(isFavorited: boolean): void {
-    this.isFavoriteLoading.set(true);
-
-    // Simulate API call
+    this.isFavoriteLoading$.next(true);
     setTimeout(() => {
-      this.isFavorited.set(isFavorited);
-      this.isFavoriteLoading.set(false);
+      this.isFavorited$.next(isFavorited);
+      this.isFavoriteLoading$.next(false);
     }, 500);
   }
 
@@ -236,7 +228,6 @@ export class ProductDetail implements OnInit {
   }
 
   onSizeGuideClick(): void {
-    // In a real app, this would open a size guide modal
     console.log('Size guide clicked');
   }
 }

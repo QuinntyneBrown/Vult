@@ -1,25 +1,13 @@
 <main class="product-page" data-testid="product-detail-page">
-  <!-- Loading State -->
-  @if (isLoading()) {
-    <div class="product-page__loading" data-testid="loading-state">
-      <div class="product-page__skeleton-container">
-        <div class="product-page__skeleton-image"></div>
-        <div class="product-page__skeleton-info">
-          <div class="skeleton-line skeleton-line--title"></div>
-          <div class="skeleton-line skeleton-line--subtitle"></div>
-          <div class="skeleton-line skeleton-line--price"></div>
-        </div>
-      </div>
-    </div>
-  } @else {
+  <ng-container *ngIf="viewModel$ | async as vm">
     <div class="product-container" data-testid="product-container">
       <!-- Image Gallery Section -->
       <section class="product-gallery-section" aria-label="Product images">
         <v-product-image-gallery
-          [images]="product().images"
+          [images]="vm.product.images"
           [enableZoom]="true"
-          [loading]="isLoading()"
-          [selectedImageIndex]="selectedImageIndex()"
+          [loading]="false"
+          [selectedImageIndex]="vm.selectedImageIndex"
           ariaLabel="Product image gallery"
           (imageChange)="onImageChange($event)"
           (imageClick)="onImageClick($event)"
@@ -31,23 +19,23 @@
       <section class="product-info-section" aria-label="Product information">
         <!-- Product Header -->
         <v-product-info-section
-          [title]="product().title"
-          [subtitle]="product().subtitle"
-          [price]="product().price"
-          [colorName]="selectedColorName()"
-          [isMemberExclusive]="product().isMemberExclusive || false"
-          [promotionalMessage]="product().promotionalMessage || ''"
+          [title]="vm.product.title"
+          [subtitle]="vm.product.subtitle"
+          [price]="vm.product.price"
+          [colorName]="vm.selectedColorName"
+          [isMemberExclusive]="vm.product.isMemberExclusive || false"
+          [promotionalMessage]="vm.product.promotionalMessage || ''"
           data-testid="product-info"
         ></v-product-info-section>
 
         <!-- Color Selector -->
         <div class="color-selector-section" data-testid="color-selector-section">
           <p class="section-label">
-            Color: <strong>{{ selectedColorName() }}</strong>
+            Color: <strong>{{ vm.selectedColorName }}</strong>
           </p>
           <v-color-swatch-selector
-            [colors]="product().colors"
-            [selectedColorId]="selectedColorId()"
+            [colors]="vm.product.colors"
+            [selectedColorId]="vm.selectedColorId"
             ariaLabel="Select product color"
             (colorSelect)="onColorSelect($event)"
             data-testid="color-swatch-selector"
@@ -68,10 +56,10 @@
             </button>
           </div>
           <v-size-selector
-            [sizes]="product().sizes"
+            [sizes]="vm.product.sizes"
             [multiSelect]="false"
             [showStrikethrough]="true"
-            [selectedSizeIds]="selectedSizeIds()"
+            [selectedSizeIds]="vm.selectedSizeIds"
             ariaLabel="Select product size"
             (selectionChange)="onSizeSelectionChange($event)"
             data-testid="size-selector"
@@ -81,9 +69,9 @@
         <!-- Action Buttons -->
         <div class="action-buttons" data-testid="action-buttons">
           <v-add-to-bag-button
-            [disabled]="isAddToBagDisabled()"
-            [state]="addToBagState()"
-            [errorMessage]="addToBagError()"
+            [disabled]="vm.isAddToBagDisabled"
+            [state]="vm.addToBagState"
+            [errorMessage]="vm.addToBagError"
             [fullWidth]="true"
             ariaLabel="Add to shopping bag"
             (addToBag)="onAddToBag()"
@@ -91,8 +79,8 @@
           ></v-add-to-bag-button>
 
           <v-favorites-button
-            [isFavorited]="isFavorited()"
-            [loading]="isFavoriteLoading()"
+            [isFavorited]="vm.isFavorited"
+            [loading]="vm.isFavoriteLoading"
             variant="full-width"
             (favoriteToggle)="onFavoriteToggle($event)"
             data-testid="favorites-button"
@@ -102,9 +90,9 @@
         <!-- Product Details Accordion -->
         <div class="accordion-section" data-testid="accordion-section">
           <v-product-details-accordion
-            [sections]="product().accordionSections"
+            [sections]="vm.product.accordionSections"
             [mode]="'multiple'"
-            [initialExpandedIds]="expandedAccordionIds()"
+            [initialExpandedIds]="vm.expandedAccordionIds"
             ariaLabel="Product details"
             (sectionToggle)="onAccordionSectionToggle($event)"
             data-testid="product-accordion"
@@ -112,5 +100,5 @@
         </div>
       </section>
     </div>
-  }
+  </ng-container>
 </main>
