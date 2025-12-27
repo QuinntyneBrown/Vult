@@ -10,9 +10,6 @@ public class Customer
     // Link to User for authentication
     public Guid? UserId { get; set; }
 
-    // Contact
-    public string Email { get; set; } = string.Empty;
-
     // Profile
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
@@ -20,7 +17,6 @@ public class Customer
     public DateTime? DateOfBirth { get; set; }
 
     // Status
-    public bool IsEmailVerified { get; set; }
     public bool IsDeleted { get; set; }
 
     // Metadata
