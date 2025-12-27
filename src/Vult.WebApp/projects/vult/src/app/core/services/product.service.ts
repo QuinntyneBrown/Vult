@@ -3,7 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, tap, of, catchError } from 'rxjs';
+import { Observable, tap, of, catchError, map } from 'rxjs';
 import { Product, IngestionResult, PaginatedResponse } from '../models';
 
 export interface ProductFilters {
@@ -51,8 +51,11 @@ export class ProductService {
       productImages: []
     };
 
-    return this.http.get<Product>(`${this.API_URL}/products/${id}`).pipe(
-      catchError(() => of(defaultProduct))
+    return this.http.get<{product: Product}>(`${this.API_URL}/products/${id}`).pipe(
+      map(x => x.product),
+      catchError((e) => {
+        return of(defaultProduct);
+      })
     );
   }
 

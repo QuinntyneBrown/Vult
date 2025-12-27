@@ -86,7 +86,9 @@ export class ProductDetail {
   private product$ = this.route.paramMap.pipe(
     map(params => params.get('id') || ''),
     switchMap(id => this.productService.getProductById(id)),
-    map(product => this.mapProductToDetailData(product))
+    map(product => {
+      return this.mapProductToDetailData(product);
+    })
   );
 
   // Combined view model for template consumption
@@ -120,40 +122,45 @@ export class ProductDetail {
   );
 
   private mapProductToDetailData(product: Product): ProductDetailData {
-    const genderLabel = this.getGenderLabel(product.gender);
-    const sizes = this.parseSizes(product.size);
 
-    return {
-      id: product.productId,
-      title: product.name || 'Unknown Product',
-      subtitle: genderLabel,
-      price: {
-        current: product.estimatedMSRP || 0,
-        original: product.estimatedResaleValue,
-        currency: 'USD',
-        currencySymbol: '$',
-        salePercentage: product.estimatedResaleValue && product.estimatedMSRP
-          ? Math.round((1 - product.estimatedMSRP / product.estimatedResaleValue) * 100)
-          : undefined
-      },
-      images: (product.productImages || []).map((img, index) => ({
-        id: img.productImageId,
-        url: img.url || '',
-        altText: img.description || `Product image ${index + 1}`
-      })),
-      colors: [
-        { id: 'color-1', name: 'Default', color: '#222222', imageUrl: product.productImages?.[0]?.url }
-      ],
-      sizes: sizes,
-      accordionSections: [
-        {
-          id: 'description',
-          title: 'Product Description',
-          content: `<p>${product.description || 'No description available.'}</p>`,
-          isExpanded: true
-        }
-      ]
-    };
+      const genderLabel = this.getGenderLabel(product.gender);
+      const sizes = this.parseSizes(product.size);
+
+      console.log((product as any).product);
+      var model = {
+        id: product.productId,
+        title: product.name || 'Unknown Product',
+        subtitle: genderLabel,
+        price: {
+          current: product.estimatedMSRP || 0,
+          original: product.estimatedResaleValue,
+          currency: 'USD',
+          currencySymbol: '$',
+          salePercentage: product.estimatedResaleValue && product.estimatedMSRP
+            ? Math.round((1 - product.estimatedMSRP / product.estimatedResaleValue) * 100)
+            : undefined
+        },
+        images: (product.productImages || []).map((img, index) => ({
+          id: img.productImageId,
+          url: img.url || '',
+          altText: img.description || `Product image ${index + 1}`
+        })),
+        colors: [
+          { id: 'color-1', name: 'Default', color: '#222222', imageUrl: product.productImages?.[0]?.url }
+        ],
+        sizes: sizes,
+        accordionSections: [
+          {
+            id: 'description',
+            title: 'Product Description',
+            content: `<p>${product.description || 'No description available.'}</p>`,
+            isExpanded: true
+          }
+        ]
+      };
+
+      return model;
+
   }
 
   private getGenderLabel(gender?: Gender): string {
