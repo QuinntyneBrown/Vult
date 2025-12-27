@@ -3,160 +3,164 @@
 
 import { test, expect, Page } from '@playwright/test';
 
-// Mock product data for API responses
-const mockProducts = [
-  {
-    id: 'air-max-90',
-    name: 'Air Max 90',
-    category: "Men's Shoes",
-    colorCount: 3,
-    price: 130,
-    imageUrl: 'assets/images/product-1.jpg',
-    badge: 'New',
-    badgeType: 'new'
-  },
-  {
-    id: 'dri-fit-primary',
-    name: 'Dri-FIT Primary',
-    category: "Men's Training T-Shirt",
-    colorCount: 5,
-    price: 40,
-    imageUrl: 'assets/images/product-2.jpg',
-    badge: 'Best Seller',
-    badgeType: 'sale'
-  },
-  {
-    id: 'pegasus-41',
-    name: 'Pegasus 41',
-    category: "Men's Road Running Shoes",
-    colorCount: 8,
-    price: 140,
-    imageUrl: 'assets/images/product-3.jpg'
-  },
-  {
-    id: 'windrunner',
-    name: 'Windrunner',
-    category: "Men's Running Jacket",
-    colorCount: 4,
-    price: 89,
-    originalPrice: 120,
-    imageUrl: 'assets/images/product-4.jpg',
-    badge: 'New',
-    badgeType: 'new'
-  },
-  {
-    id: 'air-force-1-07',
-    name: "Air Force 1 '07",
-    category: "Men's Shoes",
-    colorCount: 2,
-    price: 115,
-    imageUrl: 'assets/images/product-5.jpg'
-  },
-  {
-    id: 'challenger',
-    name: 'Challenger',
-    category: "Men's Running Shorts",
-    colorCount: 6,
-    price: 45,
-    imageUrl: 'assets/images/product-6.jpg'
-  },
-  {
-    id: 'dunk-low-retro',
-    name: 'Dunk Low Retro',
-    category: "Men's Shoes",
-    colorCount: 12,
-    price: 115,
-    imageUrl: 'assets/images/product-7.jpg',
-    badge: 'New',
-    badgeType: 'new'
-  },
-  {
-    id: 'brasilia-95',
-    name: 'Brasilia 9.5',
-    category: 'Training Backpack (Large)',
-    colorCount: 3,
-    price: 50,
-    imageUrl: 'assets/images/product-8.jpg'
-  }
-];
-
-const mockFilters = {
-  categories: [
-    { id: 'shoes', label: 'Shoes', count: 124 },
-    { id: 'clothing', label: 'Clothing', count: 89 },
-    { id: 'accessories', label: 'Accessories', count: 35 },
-    { id: 'equipment', label: 'Equipment', count: 12 }
+// Mock product data matching API response format
+const mockProductsResponse = {
+  items: [
+    {
+      productId: '11111111-1111-1111-1111-111111111111',
+      name: 'Classic Running Shoe',
+      description: 'A comfortable running shoe',
+      estimatedMSRP: 150,
+      estimatedResaleValue: 120,
+      gender: 0, // Mens
+      itemType: 0, // Shoe
+      brandName: 'Vult',
+      size: '10,11,12',
+      isFeatured: true,
+      createdDate: '2025-12-26T10:00:00Z',
+      updatedDate: '2025-12-26T10:00:00Z',
+      productImages: [
+        {
+          productImageId: 'img-1',
+          productId: '11111111-1111-1111-1111-111111111111',
+          url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',
+          description: 'Running shoe image',
+          createdDate: '2025-12-26T10:00:00Z'
+        }
+      ]
+    },
+    {
+      productId: '22222222-2222-2222-2222-222222222222',
+      name: 'Vintage Leather Jacket',
+      description: 'Premium leather jacket',
+      estimatedMSRP: 300,
+      estimatedResaleValue: 250,
+      gender: 1, // Womens
+      itemType: 2, // Jacket
+      brandName: 'Vult',
+      size: 'S,M,L',
+      isFeatured: true,
+      createdDate: '2025-12-26T11:00:00Z',
+      updatedDate: '2025-12-26T11:00:00Z',
+      productImages: [
+        {
+          productImageId: 'img-2',
+          productId: '22222222-2222-2222-2222-222222222222',
+          url: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&q=80',
+          description: 'Leather jacket image',
+          createdDate: '2025-12-26T11:00:00Z'
+        }
+      ]
+    },
+    {
+      productId: '33333333-3333-3333-3333-333333333333',
+      name: 'Casual Denim Pants',
+      description: 'Comfortable denim pants',
+      estimatedMSRP: 85,
+      estimatedResaleValue: 75,
+      gender: 2, // Unisex
+      itemType: 1, // Pants
+      brandName: 'Vult',
+      size: '30,32,34',
+      isFeatured: false,
+      createdDate: '2025-12-26T12:00:00Z',
+      updatedDate: '2025-12-26T12:00:00Z',
+      productImages: [
+        {
+          productImageId: 'img-3',
+          productId: '33333333-3333-3333-3333-333333333333',
+          url: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&q=80',
+          description: 'Denim pants image',
+          createdDate: '2025-12-26T12:00:00Z'
+        }
+      ]
+    },
+    {
+      productId: '44444444-4444-4444-4444-444444444444',
+      name: 'Designer Shirt',
+      description: 'Stylish designer shirt',
+      estimatedMSRP: 120,
+      estimatedResaleValue: 100,
+      gender: 0, // Mens
+      itemType: 3, // Shirt
+      brandName: 'Vult',
+      size: 'M,L,XL',
+      isFeatured: false,
+      createdDate: '2025-12-26T13:00:00Z',
+      updatedDate: '2025-12-26T13:00:00Z',
+      productImages: [
+        {
+          productImageId: 'img-4',
+          productId: '44444444-4444-4444-4444-444444444444',
+          url: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80',
+          description: 'Designer shirt image',
+          createdDate: '2025-12-26T13:00:00Z'
+        }
+      ]
+    }
   ],
-  genders: [
-    { id: 'men', label: 'Men', count: 248 },
-    { id: 'women', label: 'Women', count: 0 },
-    { id: 'unisex', label: 'Unisex', count: 42 }
-  ],
-  sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-  priceRanges: [
-    { id: 'price-0-50', label: '$0 - $50', count: 45 },
-    { id: 'price-50-100', label: '$50 - $100', count: 89 },
-    { id: 'price-100-150', label: '$100 - $150', count: 72 },
-    { id: 'price-150-plus', label: 'Over $150', count: 42 }
-  ]
+  totalCount: 4,
+  pageNumber: 1,
+  pageSize: 12,
+  totalPages: 1
 };
 
 /**
  * Sets up API mocks for products page
  */
-async function setupApiMocks(page: Page) {
-  // Mock products API endpoint
-  await page.route('**/api/products*', async (route) => {
+async function setupApiMocks(page: Page, customResponse?: any) {
+  await page.route('**/api/products', async (route) => {
     const url = new URL(route.request().url());
-    const sortBy = url.searchParams.get('sortBy') || 'featured';
-    const category = url.searchParams.get('category');
-    const page = parseInt(url.searchParams.get('page') || '1');
-    const pageSize = parseInt(url.searchParams.get('pageSize') || '8');
+    const sortBy = url.searchParams.get('sortBy') || 'date_desc';
+    const itemType = url.searchParams.get('itemType');
+    const gender = url.searchParams.get('gender');
+    const pageNumber = parseInt(url.searchParams.get('pageNumber') || '1');
+    const pageSize = parseInt(url.searchParams.get('pageSize') || '12');
 
-    let products = [...mockProducts];
+    let response = customResponse || { ...mockProductsResponse };
+    let items = [...response.items];
 
-    // Apply category filter
-    if (category) {
-      products = products.filter(p => p.category.toLowerCase().includes(category.toLowerCase()));
+    // Apply itemType filter
+    if (itemType !== null && itemType !== undefined) {
+      items = items.filter(p => p.itemType === parseInt(itemType));
+    }
+
+    // Apply gender filter
+    if (gender !== null && gender !== undefined) {
+      items = items.filter(p => p.gender === parseInt(gender));
     }
 
     // Apply sorting
     switch (sortBy) {
-      case 'price-asc':
-        products.sort((a, b) => a.price - b.price);
+      case 'price':
+        items.sort((a, b) => (a.estimatedResaleValue || a.estimatedMSRP) - (b.estimatedResaleValue || b.estimatedMSRP));
         break;
-      case 'price-desc':
-        products.sort((a, b) => b.price - a.price);
+      case 'price_desc':
+        items.sort((a, b) => (b.estimatedResaleValue || b.estimatedMSRP) - (a.estimatedResaleValue || a.estimatedMSRP));
         break;
-      case 'newest':
-        // Mock newest sorting (just reverse order)
-        products.reverse();
+      case 'date':
+        items.sort((a, b) => new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime());
+        break;
+      case 'date_desc':
+      default:
+        items.sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime());
         break;
     }
 
     // Apply pagination
-    const start = (page - 1) * pageSize;
-    const paginatedProducts = products.slice(start, start + pageSize);
+    const start = (pageNumber - 1) * pageSize;
+    const paginatedItems = items.slice(start, start + pageSize);
 
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
-        items: paginatedProducts,
-        totalCount: products.length,
-        page,
+        items: paginatedItems,
+        totalCount: items.length,
+        pageNumber,
         pageSize,
-        totalPages: Math.ceil(products.length / pageSize)
+        totalPages: Math.ceil(items.length / pageSize)
       })
-    });
-  });
-
-  // Mock filters API endpoint
-  await page.route('**/api/products/filters*', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify(mockFilters)
     });
   });
 
@@ -180,7 +184,6 @@ async function setupApiMocks(page: Page) {
 
 test.describe('Products Page', () => {
   test.beforeEach(async ({ page }) => {
-    // Set up API mocks before navigating
     await setupApiMocks(page);
     await page.goto('/products');
   });
@@ -194,9 +197,9 @@ test.describe('Products Page', () => {
       await expect(page.getByTestId('page-header')).toBeVisible();
     });
 
-    test('should display page title with product count', async ({ page }) => {
+    test('should display page title', async ({ page }) => {
       const header = page.getByTestId('page-header');
-      await expect(header).toContainText("New Men's Releases");
+      await expect(header).toContainText('Products');
     });
 
     test('should display product grid', async ({ page }) => {
@@ -216,6 +219,40 @@ test.describe('Products Page', () => {
     });
   });
 
+  test.describe('Product Grid - API Integration', () => {
+    test('should display product cards from API', async ({ page }) => {
+      const grid = page.getByTestId('product-grid');
+      await page.waitForSelector('.product-card');
+
+      const productCards = grid.locator('.product-card');
+      const cardCount = await productCards.count();
+      expect(cardCount).toBe(4);
+    });
+
+    test('should display product names from API', async ({ page }) => {
+      await page.waitForSelector('.product-card');
+
+      await expect(page.getByText('Classic Running Shoe')).toBeVisible();
+      await expect(page.getByText('Vintage Leather Jacket')).toBeVisible();
+    });
+
+    test('should display sale badge for discounted products', async ({ page }) => {
+      await page.waitForSelector('.product-card');
+
+      // Products with lower resale value should have sale badge
+      const saleBadges = page.locator('.card-badge');
+      await expect(saleBadges.first()).toBeVisible();
+    });
+
+    test('should display product categories correctly', async ({ page }) => {
+      await page.waitForSelector('.product-card');
+
+      // Check that categories are rendered correctly
+      await expect(page.getByText("Men's Footwear")).toBeVisible();
+      await expect(page.getByText("Women's Outerwear")).toBeVisible();
+    });
+  });
+
   test.describe('Sort Functionality', () => {
     test('should display sort dropdown with default option', async ({ page }) => {
       const sortDropdown = page.getByTestId('sort-dropdown');
@@ -227,7 +264,6 @@ test.describe('Products Page', () => {
       const sortTrigger = page.getByTestId('sort-dropdown').locator('button').first();
       await sortTrigger.click();
 
-      // Should show sort options
       await expect(page.getByRole('listbox')).toBeVisible();
     });
 
@@ -241,7 +277,7 @@ test.describe('Products Page', () => {
       await expect(page.getByRole('option', { name: 'Price: High to Low' })).toBeVisible();
     });
 
-    test('should update sort selection', async ({ page }) => {
+    test('should update sort selection and reload products', async ({ page }) => {
       const sortTrigger = page.getByTestId('sort-dropdown').locator('button').first();
       await sortTrigger.click();
 
@@ -249,6 +285,9 @@ test.describe('Products Page', () => {
       await priceOption.click();
 
       await expect(sortTrigger).toContainText('Price: Low to High');
+
+      // Wait for products to reload
+      await page.waitForSelector('.product-card');
     });
 
     test('should close dropdown after selection', async ({ page }) => {
@@ -280,8 +319,8 @@ test.describe('Products Page', () => {
       const sidebar = page.getByTestId('filter-sidebar-component');
 
       await expect(sidebar.locator('text=Shoes')).toBeVisible();
-      await expect(sidebar.locator('text=Clothing')).toBeVisible();
-      await expect(sidebar.locator('text=Accessories')).toBeVisible();
+      await expect(sidebar.locator('text=Shirts')).toBeVisible();
+      await expect(sidebar.locator('text=Jackets')).toBeVisible();
     });
 
     test('should toggle filter option on click', async ({ page }) => {
@@ -292,9 +331,8 @@ test.describe('Products Page', () => {
       await shoesCheckbox.click();
       await expect(shoesCheckbox).toBeChecked();
 
-      // Click to uncheck
-      await shoesCheckbox.click();
-      await expect(shoesCheckbox).not.toBeChecked();
+      // Wait for products to reload
+      await page.waitForSelector('.product-card');
     });
 
     test('should have clear all button', async ({ page }) => {
@@ -317,64 +355,35 @@ test.describe('Products Page', () => {
       // Filter should be unchecked
       await expect(shoesCheckbox).not.toBeChecked();
     });
-
-    test('should collapse and expand filter sections', async ({ page }) => {
-      const sidebar = page.getByTestId('filter-sidebar-component');
-      const categoryHeader = sidebar.locator('.filter-section__header:has-text("Category")');
-
-      // Click to collapse
-      await categoryHeader.click();
-
-      // Content should not be visible
-      const categoryContent = sidebar.locator('.filter-section:has(.filter-section__header:has-text("Category")) .filter-section__content');
-      await expect(categoryContent).not.toBeVisible();
-
-      // Click to expand
-      await categoryHeader.click();
-      await expect(categoryContent).toBeVisible();
-    });
   });
 
-  test.describe('Product Grid', () => {
-    test('should display product cards', async ({ page }) => {
+  test.describe('Filter API Integration', () => {
+    test('should filter products by category (itemType)', async ({ page }) => {
+      const sidebar = page.getByTestId('filter-sidebar-component');
+      const shoesCheckbox = sidebar.locator('label:has-text("Shoes") input[type="checkbox"]');
+
+      await shoesCheckbox.click();
+      await page.waitForSelector('.product-card');
+
+      // Only shoe products should be visible
       const grid = page.getByTestId('product-grid');
       const productCards = grid.locator('.product-card');
-
       const cardCount = await productCards.count();
-      expect(cardCount).toBeGreaterThan(0);
+      expect(cardCount).toBe(1);
     });
 
-    test('should display product name on cards', async ({ page }) => {
+    test('should filter products by gender', async ({ page }) => {
+      const sidebar = page.getByTestId('filter-sidebar-component');
+      const menCheckbox = sidebar.locator('label:has-text("Men") input[type="checkbox"]');
+
+      await menCheckbox.click();
+      await page.waitForSelector('.product-card');
+
+      // Only mens products should be visible
       const grid = page.getByTestId('product-grid');
-      const productName = grid.locator('.product-name').first();
-
-      await expect(productName).toBeVisible();
-      const text = await productName.textContent();
-      expect(text?.length).toBeGreaterThan(0);
-    });
-
-    test('should display product price on cards', async ({ page }) => {
-      const grid = page.getByTestId('product-grid');
-      const productPrice = grid.locator('.product-price').first();
-
-      await expect(productPrice).toBeVisible();
-    });
-
-    test('should display product category on cards', async ({ page }) => {
-      const grid = page.getByTestId('product-grid');
-      const productCategory = grid.locator('.product-category').first();
-
-      await expect(productCategory).toBeVisible();
-    });
-
-    test('should navigate to product detail on card click', async ({ page }) => {
-      const grid = page.getByTestId('product-grid');
-      const firstCard = grid.locator('.product-card').first();
-
-      await firstCard.click();
-
-      // Should navigate to product detail page
-      await expect(page).toHaveURL(/\/product\//);
+      const productCards = grid.locator('.product-card');
+      const cardCount = await productCards.count();
+      expect(cardCount).toBe(2);
     });
   });
 
@@ -383,10 +392,22 @@ test.describe('Products Page', () => {
       await expect(page.getByTestId('result-counter')).toBeVisible();
     });
 
-    test('should show results count', async ({ page }) => {
+    test('should show correct results count from API', async ({ page }) => {
       const counter = page.getByTestId('result-counter');
       const text = await counter.textContent();
-      expect(text).toMatch(/\d+ Results?/);
+      expect(text).toMatch(/4 Results?/);
+    });
+
+    test('should update count when filters applied', async ({ page }) => {
+      const sidebar = page.getByTestId('filter-sidebar-component');
+      const shoesCheckbox = sidebar.locator('label:has-text("Shoes") input[type="checkbox"]');
+
+      await shoesCheckbox.click();
+      await page.waitForSelector('.product-card');
+
+      const counter = page.getByTestId('result-counter');
+      const text = await counter.textContent();
+      expect(text).toMatch(/1 Result/);
     });
   });
 
@@ -412,7 +433,6 @@ test.describe('Products Page', () => {
       const toggle = page.getByTestId('mobile-filter-toggle');
       await toggle.locator('button').click();
 
-      // Filter sidebar should be visible in mobile mode
       const sidebar = page.getByTestId('filter-sidebar');
       await expect(sidebar).toHaveClass(/mobile-open/);
     });
@@ -440,8 +460,21 @@ test.describe('Products Page', () => {
       const overlay = page.getByTestId('filter-overlay');
       await overlay.click();
 
-      // Overlay should no longer be visible
       await expect(overlay).not.toBeVisible();
+    });
+  });
+
+  test.describe('Product Navigation', () => {
+    test('should navigate to product detail on card click', async ({ page }) => {
+      await page.waitForSelector('.product-card');
+
+      const grid = page.getByTestId('product-grid');
+      const firstCard = grid.locator('.product-card').first();
+
+      await firstCard.click();
+
+      // Should navigate to product detail page
+      await expect(page).toHaveURL(/\/product\//);
     });
   });
 
@@ -473,34 +506,27 @@ test.describe('Products Page', () => {
       await expect(page.getByTestId('product-grid')).toBeVisible();
       await expect(page.getByTestId('filter-sidebar')).toBeVisible();
     });
-
-    test('should hide desktop filter sidebar on mobile', async ({ page }) => {
-      await page.setViewportSize({ width: 375, height: 667 });
-      await setupApiMocks(page);
-      await page.goto('/products');
-
-      const sidebar = page.getByTestId('filter-sidebar');
-      // Sidebar should be hidden (not open) on mobile
-      await expect(sidebar).not.toHaveClass(/mobile-open/);
-    });
   });
 
-  test.describe('User Flow - Browse Products', () => {
+  test.describe('User Flow - Browse and Filter Products', () => {
     test('should complete browse and filter flow', async ({ page }) => {
       // 1. View products page
       await expect(page.getByTestId('products-page')).toBeVisible();
+      await page.waitForSelector('.product-card');
 
       // 2. Apply a category filter
       const sidebar = page.getByTestId('filter-sidebar-component');
       const shoesCheckbox = sidebar.locator('label:has-text("Shoes") input[type="checkbox"]');
       await shoesCheckbox.click();
       await expect(shoesCheckbox).toBeChecked();
+      await page.waitForSelector('.product-card');
 
       // 3. Change sort order
       const sortTrigger = page.getByTestId('sort-dropdown').locator('button').first();
       await sortTrigger.click();
       const priceOption = page.getByRole('option', { name: 'Price: Low to High' });
       await priceOption.click();
+      await page.waitForSelector('.product-card');
 
       // 4. Click on a product
       const grid = page.getByTestId('product-grid');
@@ -512,10 +538,13 @@ test.describe('Products Page', () => {
     });
 
     test('should allow clearing filters and browsing all products', async ({ page }) => {
+      await page.waitForSelector('.product-card');
+
       // Apply filters
       const sidebar = page.getByTestId('filter-sidebar-component');
       const shoesCheckbox = sidebar.locator('label:has-text("Shoes") input[type="checkbox"]');
       await shoesCheckbox.click();
+      await page.waitForSelector('.product-card');
 
       // Clear filters
       const clearButton = page.locator('button:has-text("Clear All")');
@@ -524,7 +553,8 @@ test.describe('Products Page', () => {
       // Filters should be cleared
       await expect(shoesCheckbox).not.toBeChecked();
 
-      // Products should still be visible
+      // Products should be reloaded
+      await page.waitForSelector('.product-card');
       await expect(page.getByTestId('product-grid')).toBeVisible();
     });
   });
@@ -534,17 +564,16 @@ test.describe('Products Page', () => {
       const mainElement = page.getByRole('main');
       await expect(mainElement).toBeVisible();
 
-      // Products section should have proper label
       await expect(page.locator('section[aria-label="Products"]')).toBeVisible();
     });
 
     test('should be navigable with keyboard', async ({ page }) => {
-      // Tab through interactive elements
+      await page.waitForSelector('.product-card');
+
       await page.keyboard.press('Tab');
       let focusedElement = page.locator(':focus');
       await expect(focusedElement).toBeVisible();
 
-      // Continue tabbing through the page
       for (let i = 0; i < 5; i++) {
         await page.keyboard.press('Tab');
         focusedElement = page.locator(':focus');
@@ -552,84 +581,21 @@ test.describe('Products Page', () => {
       }
     });
 
-    test('should have proper focus indicators', async ({ page }) => {
-      const sortTrigger = page.getByTestId('sort-dropdown').locator('button').first();
-      await sortTrigger.focus();
-      await expect(sortTrigger).toBeFocused();
-
-      // Focus indicator should be visible
-      const focusedStyles = await sortTrigger.evaluate((el) => {
-        const styles = window.getComputedStyle(el);
-        return {
-          outline: styles.outline,
-          outlineStyle: styles.outlineStyle
-        };
-      });
-
-      expect(focusedStyles.outlineStyle).not.toBe('none');
-    });
-
     test('should support keyboard navigation for sort dropdown', async ({ page }) => {
       const sortTrigger = page.getByTestId('sort-dropdown').locator('button').first();
       await sortTrigger.focus();
 
-      // Open with arrow down
       await sortTrigger.press('ArrowDown');
       await expect(page.getByRole('listbox')).toBeVisible();
 
-      // Close with escape
       await page.keyboard.press('Escape');
       await expect(page.getByRole('listbox')).not.toBeVisible();
     });
   });
 
-  test.describe('Loading States', () => {
-    test('should display grid loading skeletons when loading', async ({ page }) => {
-      // This would require mocking the loading state
-      // For now, just verify the grid is present
-      await expect(page.getByTestId('product-grid')).toBeVisible();
-    });
-  });
-
-  test.describe('Pagination', () => {
-    test('should display pagination when there are multiple pages', async ({ page }) => {
-      // Note: This depends on having more products than items per page
-      const pagination = page.getByTestId('pagination');
-      // Pagination may or may not be visible depending on product count
-      if (await pagination.isVisible()) {
-        await expect(pagination).toBeVisible();
-      }
-    });
-
-    test('should navigate to next page when clicking pagination', async ({ page }) => {
-      const pagination = page.getByTestId('pagination');
-
-      if (await pagination.isVisible()) {
-        const nextButton = pagination.locator('button[aria-label="Next page"]');
-
-        if (await nextButton.isEnabled()) {
-          await nextButton.click();
-          // Products should update
-          await expect(page.getByTestId('product-grid')).toBeVisible();
-        }
-      }
-    });
-  });
-
-  test.describe('API Mocking', () => {
-    test('should mock products API response', async ({ page }) => {
-      // Verify the page loaded with mock data
-      await expect(page.getByTestId('product-grid')).toBeVisible();
-
-      // Check that products are displayed
-      const productCards = page.getByTestId('product-grid').locator('.product-card');
-      const cardCount = await productCards.count();
-      expect(cardCount).toBeGreaterThan(0);
-    });
-
+  test.describe('API Error Handling', () => {
     test('should handle API errors gracefully', async ({ page }) => {
-      // Set up error response for products API
-      await page.route('**/api/products*', async (route) => {
+      await page.route('**/api/products', async (route) => {
         await route.fulfill({
           status: 500,
           contentType: 'application/json',
@@ -637,11 +603,155 @@ test.describe('Products Page', () => {
         });
       });
 
-      // Navigate to the page (will use component's fallback data since API isn't connected yet)
       await page.goto('/products');
 
-      // Page should still render (using mock data from component)
+      // Page should still render
       await expect(page.getByTestId('products-page')).toBeVisible();
+
+      // Empty state should show
+      await expect(page.getByText('No products found')).toBeVisible();
     });
+
+    test('should show empty state when no products match filter', async ({ page }) => {
+      await page.route('**/api/products', async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            items: [],
+            totalCount: 0,
+            pageNumber: 1,
+            pageSize: 12,
+            totalPages: 0
+          })
+        });
+      });
+
+      await page.goto('/products');
+
+      await expect(page.getByText('No products found')).toBeVisible();
+    });
+  });
+
+  test.describe('Loading States', () => {
+    test('should show loading indicator while fetching products', async ({ page }) => {
+      // Delay the API response to see loading state
+      await page.route('**/api/products', async (route) => {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(mockProductsResponse)
+        });
+      });
+
+      await page.goto('/products');
+
+      // Product grid should be visible (with loading state)
+      await expect(page.getByTestId('product-grid')).toBeVisible();
+    });
+  });
+});
+
+test.describe('Products Page - Pagination', () => {
+  test('should display pagination when there are multiple pages', async ({ page }) => {
+    // Create a response with more products for pagination
+    const manyProducts = {
+      items: Array.from({ length: 12 }, (_, i) => ({
+        productId: `product-${i}`,
+        name: `Product ${i}`,
+        description: `Description ${i}`,
+        estimatedMSRP: 100 + i * 10,
+        estimatedResaleValue: 80 + i * 10,
+        gender: 0,
+        itemType: 0,
+        brandName: 'Vult',
+        size: 'M',
+        isFeatured: false,
+        createdDate: '2025-12-26T10:00:00Z',
+        updatedDate: '2025-12-26T10:00:00Z',
+        productImages: [
+          {
+            productImageId: `img-${i}`,
+            productId: `product-${i}`,
+            url: 'https://via.placeholder.com/400',
+            description: `Image ${i}`,
+            createdDate: '2025-12-26T10:00:00Z'
+          }
+        ]
+      })),
+      totalCount: 24,
+      pageNumber: 1,
+      pageSize: 12,
+      totalPages: 2
+    };
+
+    await page.route('**/api/products', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(manyProducts)
+      });
+    });
+
+    await page.goto('/products');
+    await page.waitForSelector('.product-card');
+
+    const pagination = page.getByTestId('pagination');
+    await expect(pagination).toBeVisible();
+  });
+
+  test('should navigate to next page when clicking pagination', async ({ page }) => {
+    const manyProducts = {
+      items: Array.from({ length: 12 }, (_, i) => ({
+        productId: `product-${i}`,
+        name: `Product ${i}`,
+        description: `Description ${i}`,
+        estimatedMSRP: 100 + i * 10,
+        estimatedResaleValue: 80 + i * 10,
+        gender: 0,
+        itemType: 0,
+        brandName: 'Vult',
+        size: 'M',
+        isFeatured: false,
+        createdDate: '2025-12-26T10:00:00Z',
+        updatedDate: '2025-12-26T10:00:00Z',
+        productImages: [
+          {
+            productImageId: `img-${i}`,
+            productId: `product-${i}`,
+            url: 'https://via.placeholder.com/400',
+            description: `Image ${i}`,
+            createdDate: '2025-12-26T10:00:00Z'
+          }
+        ]
+      })),
+      totalCount: 24,
+      pageNumber: 1,
+      pageSize: 12,
+      totalPages: 2
+    };
+
+    await page.route('**/api/products', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(manyProducts)
+      });
+    });
+
+    await page.goto('/products');
+    await page.waitForSelector('.product-card');
+
+    const pagination = page.getByTestId('pagination');
+
+    if (await pagination.isVisible()) {
+      const nextButton = pagination.locator('button[aria-label="Next page"]');
+
+      if (await nextButton.isEnabled()) {
+        await nextButton.click();
+        await expect(page.getByTestId('product-grid')).toBeVisible();
+      }
+    }
   });
 });

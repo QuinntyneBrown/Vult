@@ -88,9 +88,11 @@ export interface FilterSection {
   `,
   styles: [`
     .filter-sidebar {
-      width: 260px;
+      width: 100%;
+      max-width: 100%;
       background-color: #ffffff;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      box-sizing: border-box;
     }
 
     .filter-sidebar--hidden {
@@ -130,7 +132,7 @@ export interface FilterSection {
     }
 
     .filter-sidebar__content {
-      padding: 16px 0;
+      padding: 16px 8px 16px 0;
     }
 
     .filter-section {
@@ -153,6 +155,10 @@ export interface FilterSection {
       font-size: 16px;
       font-weight: 500;
       color: #111111;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      flex: 1;
+      text-align: left;
     }
 
     .filter-section__chevron {
@@ -219,6 +225,9 @@ export interface FilterSection {
 
     .filter-option__text {
       flex: 1;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      min-width: 0;
     }
 
     .filter-option__count {
@@ -253,7 +262,7 @@ export interface FilterSection {
       outline-offset: 2px;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .filter-sidebar {
         position: fixed;
         top: 0;
@@ -261,8 +270,13 @@ export interface FilterSection {
         width: 100%;
         height: 100%;
         z-index: 1000;
-        padding: 16px;
+        padding: 16px 8px 16px 16px;
         overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      .filter-sidebar__content {
+        padding: 16px 8px 16px 0;
       }
     }
 
