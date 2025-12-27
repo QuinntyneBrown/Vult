@@ -126,7 +126,6 @@ export class ProductDetail {
       const genderLabel = this.getGenderLabel(product.gender);
       const sizes = this.parseSizes(product.size);
 
-      console.log((product as any).product);
       var model = {
         id: product.productId,
         title: product.name || 'Unknown Product',
