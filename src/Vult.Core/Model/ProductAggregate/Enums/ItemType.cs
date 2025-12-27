@@ -14,5 +14,7 @@ public enum ItemType
     Skirt,
     Sweater,
     Hoodie,
-    Coat
+    Coat,
+    Bag,
+    Accessories
 }

@@ -55,5 +55,7 @@ export enum ItemType {
   Skirt = 6,
   Sweater = 7,
   Hoodie = 8,
-  Coat = 9
+  Coat = 9,
+  Bag = 10,
+  Accessories = 11
 }

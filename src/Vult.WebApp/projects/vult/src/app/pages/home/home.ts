@@ -69,6 +69,8 @@ export class Home {
       [ItemType.Sweater]: 'Tops',
       [ItemType.Hoodie]: 'Tops',
       [ItemType.Coat]: 'Outerwear',
+      [ItemType.Bag]: 'Bags',
+      [ItemType.Accessories]: 'Accessories',
     };
 
     const imageUrl = product.productImages && product.productImages.length > 0 && product.productImages[0].imageData
