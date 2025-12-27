@@ -316,6 +316,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Air Max 90 Classic",
+                Name = "Air Max 90 Classic",
                 ShortDescription = "Iconic sneaker with visible Air cushioning",
                 BrandName = "Nike",
                 Size = "10",
@@ -336,6 +337,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Classic Leather Sneakers",
+                Name = "Classic Leather Sneakers",
                 ShortDescription = "Timeless leather sneakers for everyday wear",
                 BrandName = "Adidas",
                 Size = "9",
@@ -356,6 +358,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Old Skool Skateboard Shoes",
+                Name = "Old Skool Skateboard Shoes",
                 ShortDescription = "Classic skate shoe with iconic side stripe",
                 BrandName = "Vans",
                 Size = "11",
@@ -376,6 +379,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Chuck Taylor All Star",
+                Name = "Chuck Taylor All Star",
                 ShortDescription = "The original canvas high-top sneaker",
                 BrandName = "Converse",
                 Size = "8",
@@ -396,6 +400,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "574 Core Classics",
+                Name = "574 Core Classics",
                 ShortDescription = "Retro running shoe with modern comfort",
                 BrandName = "New Balance",
                 Size = "10.5",
@@ -416,6 +421,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Suede Classic XXI",
+                Name = "Suede Classic XXI",
                 ShortDescription = "Heritage suede sneaker with formstrip design",
                 BrandName = "Puma",
                 Size = "9.5",
@@ -436,6 +442,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Classic Clog",
+                Name = "Classic Clog",
                 ShortDescription = "Lightweight foam clog for casual comfort",
                 BrandName = "Crocs",
                 Size = "M8/W10",
@@ -456,6 +463,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Air Force 1 Low",
+                Name = "Air Force 1 Low",
                 ShortDescription = "Legendary basketball shoe turned streetwear icon",
                 BrandName = "Nike",
                 Size = "12",
@@ -478,6 +486,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "501 Original Fit Jeans",
+                Name = "501 Original Fit Jeans",
                 ShortDescription = "The original straight-fit button-fly jean",
                 BrandName = "Levi's",
                 Size = "32x32",
@@ -498,6 +507,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "High Rise Skinny Jeans",
+                Name = "High Rise Skinny Jeans",
                 ShortDescription = "Flattering high-rise with stretch comfort",
                 BrandName = "Levi's",
                 Size = "28",
@@ -518,6 +528,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Chino Pants Classic",
+                Name = "Chino Pants Classic",
                 ShortDescription = "Versatile wrinkle-resistant chinos",
                 BrandName = "Dockers",
                 Size = "34",
@@ -538,6 +549,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Cargo Pants Vintage",
+                Name = "Cargo Pants Vintage",
                 ShortDescription = "Durable workwear cargo with multiple pockets",
                 BrandName = "Carhartt",
                 Size = "L",
@@ -558,6 +570,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Stretch Joggers",
+                Name = "Stretch Joggers",
                 ShortDescription = "Premium technical joggers with 4-way stretch",
                 BrandName = "Lululemon",
                 Size = "M",
@@ -580,6 +593,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Classic Trucker Jacket",
+                Name = "Classic Trucker Jacket",
                 ShortDescription = "Iconic denim trucker with button front",
                 BrandName = "Levi's",
                 Size = "L",
@@ -600,6 +614,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Leather Moto Jacket",
+                Name = "Leather Moto Jacket",
                 ShortDescription = "Premium lamb leather motorcycle jacket",
                 BrandName = "AllSaints",
                 Size = "M",
@@ -620,6 +635,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Puffer Jacket Retro",
+                Name = "Puffer Jacket Retro",
                 ShortDescription = "700-fill down insulated puffer",
                 BrandName = "The North Face",
                 Size = "XL",
@@ -640,6 +656,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Bomber Jacket Classic",
+                Name = "Bomber Jacket Classic",
                 ShortDescription = "Military-spec reversible flight bomber",
                 BrandName = "Alpha Industries",
                 Size = "M",
@@ -660,6 +677,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Denim Jacket Vintage",
+                Name = "Denim Jacket Vintage",
                 ShortDescription = "Western-inspired vintage wash denim",
                 BrandName = "Wrangler",
                 Size = "S",
@@ -682,6 +700,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Oxford Button-Down Shirt",
+                Name = "Oxford Button-Down Shirt",
                 ShortDescription = "Classic cotton oxford with signature pony",
                 BrandName = "Ralph Lauren",
                 Size = "M",
@@ -702,6 +721,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Flannel Plaid Shirt",
+                Name = "Flannel Plaid Shirt",
                 ShortDescription = "Pure virgin wool plaid made in USA",
                 BrandName = "Pendleton",
                 Size = "L",
@@ -722,6 +742,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Vintage Band T-Shirt",
+                Name = "Vintage Band T-Shirt",
                 ShortDescription = "Authentic vintage concert tee from the 80s-90s",
                 BrandName = "Vintage",
                 Size = "M",
@@ -742,6 +763,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Polo Shirt Classic",
+                Name = "Polo Shirt Classic",
                 ShortDescription = "Original petit piqué polo with crocodile",
                 BrandName = "Lacoste",
                 Size = "S",
@@ -762,6 +784,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Silk Blouse Elegant",
+                Name = "Silk Blouse Elegant",
                 ShortDescription = "Luxurious 100% silk relaxed-fit blouse",
                 BrandName = "Equipment",
                 Size = "S",
@@ -784,6 +807,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Cable Knit Sweater",
+                Name = "Cable Knit Sweater",
                 ShortDescription = "Cozy cable-knit cotton crew neck",
                 BrandName = "J.Crew",
                 Size = "M",
@@ -804,6 +828,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Cashmere V-Neck Sweater",
+                Name = "Cashmere V-Neck Sweater",
                 ShortDescription = "Sustainably sourced Grade-A cashmere",
                 BrandName = "Everlane",
                 Size = "S",
@@ -824,6 +849,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Wool Cardigan Vintage",
+                Name = "Wool Cardigan Vintage",
                 ShortDescription = "Authentic vintage pure wool cardigan",
                 BrandName = "Pendleton",
                 Size = "L",
@@ -846,6 +872,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Classic Pullover Hoodie",
+                Name = "Classic Pullover Hoodie",
                 ShortDescription = "Reverse weave hoodie with minimal shrinkage",
                 BrandName = "Champion",
                 Size = "L",
@@ -866,6 +893,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Tech Fleece Hoodie",
+                Name = "Tech Fleece Hoodie",
                 ShortDescription = "Lightweight tech fleece with modern fit",
                 BrandName = "Nike",
                 Size = "M",
@@ -886,6 +914,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Box Logo Hoodie",
+                Name = "Box Logo Hoodie",
                 ShortDescription = "Highly collectible streetwear icon",
                 BrandName = "Supreme",
                 Size = "M",
@@ -908,6 +937,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Little America Backpack",
+                Name = "Little America Backpack",
                 ShortDescription = "Mountain-inspired backpack with laptop sleeve",
                 BrandName = "Herschel",
                 Size = "25L",
@@ -928,6 +958,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Classic Tote Bag",
+                Name = "Classic Tote Bag",
                 ShortDescription = "Foldable nylon tote with leather trim",
                 BrandName = "Longchamp",
                 Size = "Large",
@@ -948,6 +979,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Messenger Bag Leather",
+                Name = "Messenger Bag Leather",
                 ShortDescription = "Full-grain leather messenger for professionals",
                 BrandName = "Fossil",
                 Size = "Medium",
@@ -970,6 +1002,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Yankees Baseball Cap",
+                Name = "Yankees Baseball Cap",
                 ShortDescription = "Official MLB 59FIFTY fitted cap",
                 BrandName = "New Era",
                 Size = "7 3/8",
@@ -990,6 +1023,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Wool Beanie Classic",
+                Name = "Wool Beanie Classic",
                 ShortDescription = "Stretchable rib-knit watch cap",
                 BrandName = "Carhartt",
                 Size = "One Size",
@@ -1010,6 +1044,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Fedora Hat Vintage",
+                Name = "Fedora Hat Vintage",
                 ShortDescription = "Handcrafted fur felt fedora made in USA",
                 BrandName = "Stetson",
                 Size = "M",
@@ -1032,6 +1067,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Aviator Sunglasses",
+                Name = "Aviator Sunglasses",
                 ShortDescription = "Iconic teardrop aviators with UV protection",
                 BrandName = "Ray-Ban",
                 Size = "Standard",
@@ -1052,6 +1088,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Automatic Watch SKX007",
+                Name = "Automatic Watch SKX007",
                 ShortDescription = "Legendary discontinued diver watch",
                 BrandName = "Seiko",
                 Size = "42mm",
@@ -1072,6 +1109,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Leather Belt Classic",
+                Name = "Leather Belt Classic",
                 ShortDescription = "Reversible pebbled leather belt",
                 BrandName = "Coach",
                 Size = "32",
@@ -1094,6 +1132,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Wrap Dress Elegant",
+                Name = "Wrap Dress Elegant",
                 ShortDescription = "Iconic silk wrap dress for all body types",
                 BrandName = "Diane von Furstenberg",
                 Size = "S",
@@ -1114,6 +1153,7 @@ public class SeedService : ISeedService
             {
                 ProductId = Guid.NewGuid(),
                 Description = "Maxi Dress Summer",
+                Name = "Maxi Dress Summer",
                 ShortDescription = "Flowy bohemian maxi with adjustable straps",
                 BrandName = "Free People",
                 Size = "M",
