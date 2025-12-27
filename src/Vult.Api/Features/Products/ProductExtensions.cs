@@ -15,11 +15,18 @@ public static class ProductExtensions
             EstimatedMSRP = product.EstimatedMSRP,
             EstimatedResaleValue = product.EstimatedResaleValue,
             Description = product.Description,
+            ShortDescription = product.ShortDescription,
             Size = product.Size,
             BrandName = product.BrandName,
             Gender = product.Gender,
             ItemType = product.ItemType,
             IsFeatured = product.IsFeatured,
+            Benefits = product.Benefits,
+            Details = product.Details,
+            Shipping = product.Shipping,
+            PromotionalMessage = product.PromotionalMessage,
+            IsMemberExclusive = product.IsMemberExclusive,
+            IsNew = product.IsNew,
             CreatedDate = product.CreatedDate,
             UpdatedDate = product.UpdatedDate,
             ProductImages = product.ProductImages?.Select(x => x.ToDto()).ToList() ?? new List<ProductImageDto>()
@@ -47,11 +54,18 @@ public static class ProductExtensions
             EstimatedMSRP = dto.EstimatedMSRP,
             EstimatedResaleValue = dto.EstimatedResaleValue,
             Description = dto.Description,
+            ShortDescription = dto.ShortDescription,
             Size = dto.Size,
             BrandName = dto.BrandName,
             Gender = dto.Gender,
             ItemType = dto.ItemType,
             IsFeatured = dto.IsFeatured,
+            Benefits = dto.Benefits,
+            Details = dto.Details,
+            Shipping = dto.Shipping,
+            PromotionalMessage = dto.PromotionalMessage,
+            IsMemberExclusive = dto.IsMemberExclusive,
+            IsNew = dto.IsNew,
             CreatedDate = DateTime.UtcNow,
             UpdatedDate = DateTime.UtcNow
         };
@@ -62,11 +76,18 @@ public static class ProductExtensions
         product.EstimatedMSRP = dto.EstimatedMSRP;
         product.EstimatedResaleValue = dto.EstimatedResaleValue;
         product.Description = dto.Description;
+        product.ShortDescription = dto.ShortDescription;
         product.Size = dto.Size;
         product.BrandName = dto.BrandName;
         product.Gender = dto.Gender;
         product.ItemType = dto.ItemType;
         product.IsFeatured = dto.IsFeatured;
+        product.Benefits = dto.Benefits;
+        product.Details = dto.Details;
+        product.Shipping = dto.Shipping;
+        product.PromotionalMessage = dto.PromotionalMessage;
+        product.IsMemberExclusive = dto.IsMemberExclusive;
+        product.IsNew = dto.IsNew;
         product.UpdatedDate = DateTime.UtcNow;
     }
 }

@@ -15,6 +15,8 @@ public class Product
 
     public string Description { get; set; } = string.Empty;
 
+    public string ShortDescription { get; set; } = string.Empty;
+
     public string Size { get; set; } = string.Empty;
 
     public string BrandName { get; set; } = string.Empty;
@@ -24,6 +26,18 @@ public class Product
     public ItemType ItemType { get; set; }
 
     public bool IsFeatured { get; set; }
+
+    public string Benefits { get; set; } = string.Empty;
+
+    public string Details { get; set; } = string.Empty;
+
+    public string Shipping { get; set; } = string.Empty;
+
+    public string PromotionalMessage { get; set; } = string.Empty;
+
+    public bool IsMemberExclusive { get; set; }
+
+    public bool IsNew { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
