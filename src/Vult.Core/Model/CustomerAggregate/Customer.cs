@@ -7,31 +7,23 @@ public class Customer
 {
     public Guid CustomerId { get; set; }
 
-    // Link to User for authentication
     public Guid? UserId { get; set; }
 
-    // Profile
     public string FirstName { get; set; } = string.Empty;
+
     public string LastName { get; set; } = string.Empty;
+
     public string? Phone { get; set; }
+
     public DateTime? DateOfBirth { get; set; }
 
-    // Status
     public bool IsDeleted { get; set; }
 
-    // Metadata
-    public DateTime? LastLoginDate { get; set; }
     public DateTime CreatedDate { get; set; }
+
     public DateTime UpdatedDate { get; set; }
 
-    // Navigation
     public ICollection<CustomerAddress> Addresses { get; set; } = new List<CustomerAddress>();
-
-    // Computed properties
-    public string FullName => $"{FirstName} {LastName}".Trim();
-
-    // Business methods
-    public bool CanLogin() => !IsDeleted;
 
     public CustomerAddress? GetDefaultAddress()
     {

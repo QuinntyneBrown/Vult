@@ -1,6 +1,6 @@
 # Customer Management System - Technical Specification
 
-**Version:** 1.0
+**Version:** 1.1
 **Date:** December 2024
 **Author:** Engineering Team
 **Status:** Draft
@@ -9,7 +9,7 @@
 
 ## 1. Overview
 
-This document provides the technical implementation details for the Customer Management system, following the established patterns in the Vult codebase. The Customer system integrates with the existing authentication infrastructure and supports the Order system.
+This document provides the technical implementation details for the Customer Management system, following the established patterns in the Vult codebase. The Customer entity links to the User aggregate for authentication via a nullable UserId.
 
 ---
 
@@ -20,16 +20,15 @@ This document provides the technical implementation details for the Customer Man
 | Layer | Project | Responsibility |
 |-------|---------|----------------|
 | Domain | Vult.Core | Customer, CustomerAddress entities |
-| Infrastructure | Vult.Infrastructure | EF configurations, repositories |
+| Infrastructure | Vult.Infrastructure | EF configurations |
 | Application | Vult.Api | Commands, Queries, Handlers, DTOs, Controllers |
 
-### 2.2 Integration with Existing Services
+### 2.2 Integration with User Aggregate
 
-| Service | Location | Usage |
-|---------|----------|-------|
-| IPasswordHasher | Vult.Core | Password hashing (existing) |
-| ITokenService | Vult.Core | JWT generation (existing) |
-| VultContext | Vult.Infrastructure | Database context (extend) |
+| Aggregate | Responsibility |
+|-----------|----------------|
+| User | Authentication (email, password, login, JWT) |
+| Customer | Profile data (name, phone, addresses) |
 
 ---
 
@@ -37,47 +36,32 @@ This document provides the technical implementation details for the Customer Man
 
 ### 3.1 Customer Entity
 
-**File:** `src/Vult.Core/CustomerAggregate/Customer.cs`
+**File:** `src/Vult.Core/Model/CustomerAggregate/Customer.cs`
 
 ```csharp
-namespace Vult.Core.CustomerAggregate;
+namespace Vult.Core.Model.CustomerAggregate;
 
 public class Customer
 {
     public Guid CustomerId { get; set; }
 
-    // Authentication
-    public string Email { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
-    public string PasswordSalt { get; set; } = string.Empty;
+    public Guid? UserId { get; set; }
 
-    // Profile
     public string FirstName { get; set; } = string.Empty;
+
     public string LastName { get; set; } = string.Empty;
+
     public string? Phone { get; set; }
+
     public DateTime? DateOfBirth { get; set; }
 
-    // Status
-    public bool IsEmailVerified { get; set; }
     public bool IsDeleted { get; set; }
 
-    // Preferences
-    public bool MarketingEmailOptIn { get; set; }
-    public bool SmsOptIn { get; set; }
-
-    // Metadata
-    public DateTime? LastLoginDate { get; set; }
     public DateTime CreatedDate { get; set; }
+
     public DateTime UpdatedDate { get; set; }
 
-    // Navigation
     public ICollection<CustomerAddress> Addresses { get; set; } = new List<CustomerAddress>();
-
-    // Computed properties
-    public string FullName => $"{FirstName} {LastName}".Trim();
-
-    // Business methods
-    public bool CanLogin() => !IsDeleted;
 
     public CustomerAddress? GetDefaultAddress()
     {
@@ -102,45 +86,51 @@ public class Customer
 
 ### 3.2 CustomerAddress Entity
 
-**File:** `src/Vult.Core/CustomerAggregate/CustomerAddress.cs`
+**File:** `src/Vult.Core/Model/CustomerAggregate/CustomerAddress.cs`
 
 ```csharp
-namespace Vult.Core.CustomerAggregate;
+namespace Vult.Core.Model.CustomerAggregate;
 
 public class CustomerAddress
 {
     public Guid CustomerAddressId { get; set; }
+
     public Guid CustomerId { get; set; }
 
-    // Address details
-    public string Label { get; set; } = string.Empty;  // "Home", "Work", etc.
+    public string Label { get; set; } = string.Empty;
+
     public string FullName { get; set; } = string.Empty;
+
     public string AddressLine1 { get; set; } = string.Empty;
+
     public string? AddressLine2 { get; set; }
+
     public string City { get; set; } = string.Empty;
+
     public string State { get; set; } = string.Empty;
+
     public string PostalCode { get; set; } = string.Empty;
+
     public string Country { get; set; } = string.Empty;
+
     public string? Phone { get; set; }
 
-    // Status
     public bool IsDefault { get; set; }
 
-    // Metadata
     public DateTime CreatedDate { get; set; }
+
     public DateTime UpdatedDate { get; set; }
 
-    // Navigation
     public Customer Customer { get; set; } = null!;
 }
 ```
 
 ### 3.3 Update IVultContext Interface
 
-**Add to:** `src/Vult.Core/Data/IVultContext.cs`
+**Add to:** `src/Vult.Core/IVultContext.cs`
 
 ```csharp
-using Vult.Core.CustomerAggregate;
+using Vult.Core.Model.CustomerAggregate;
 
 // Add to interface:
 DbSet<Customer> Customers { get; }
@@ -158,7 +148,7 @@ DbSet<CustomerAddress> CustomerAddresses { get; }
 ```csharp
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Vult.Core.CustomerAggregate;
+using Vult.Core.Model.CustomerAggregate;
 
 namespace Vult.Infrastructure.Data.Configurations;
 
@@ -170,24 +160,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 
         builder.HasKey(c => c.CustomerId);
 
-        // Email - unique and indexed
-        builder.Property(c => c.Email)
-            .IsRequired()
-            .HasMaxLength(256);
-
-        builder.HasIndex(c => c.Email)
-            .IsUnique();
-
-        // Authentication
-        builder.Property(c => c.PasswordHash)
-            .IsRequired()
-            .HasMaxLength(512);
-
-        builder.Property(c => c.PasswordSalt)
-            .IsRequired()
-            .HasMaxLength(256);
-
-        // Profile
         builder.Property(c => c.FirstName)
             .IsRequired()
             .HasMaxLength(100);
@@ -199,9 +171,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(c => c.Phone)
             .HasMaxLength(50);
 
-        // Ignore computed properties
-        builder.Ignore(c => c.FullName);
-
         // Relationships
         builder.HasMany(c => c.Addresses)
             .WithOne(a => a.Customer)
@@ -209,11 +178,9 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .OnDelete(DeleteBehavior.Cascade);
 
         // Indexes
+        builder.HasIndex(c => c.UserId);
         builder.HasIndex(c => c.IsDeleted);
         builder.HasIndex(c => c.CreatedDate);
-
-        // Query filter for soft delete (optional)
-        // builder.HasQueryFilter(c => !c.IsDeleted);
     }
 }
 ```
@@ -225,7 +192,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 ```csharp
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Vult.Core.CustomerAggregate;
+using Vult.Core.Model.CustomerAggregate;
 
 namespace Vult.Infrastructure.Data.Configurations;
 
@@ -283,7 +250,7 @@ public class CustomerAddressConfiguration : IEntityTypeConfiguration<CustomerAdd
 **Add to:** `src/Vult.Infrastructure/Data/VultContext.cs`
 
 ```csharp
-using Vult.Core.CustomerAggregate;
+using Vult.Core.Model.CustomerAggregate;
 
 // Add DbSets
 public DbSet<Customer> Customers => Set<Customer>();
@@ -305,39 +272,14 @@ modelBuilder.ApplyConfiguration(new CustomerAddressConfiguration());
 ```csharp
 namespace Vult.Api.Dtos;
 
-// Registration
-public record RegisterCustomerDto(
-    string Email,
-    string Password,
-    string FirstName,
-    string LastName,
-    string? Phone
-);
-
-// Login
-public record LoginDto(
-    string Email,
-    string Password
-);
-
-public record LoginResultDto(
-    string Token,
-    DateTime ExpiresAt,
-    CustomerProfileDto Customer
-);
-
 // Profile
 public record CustomerProfileDto(
     Guid CustomerId,
-    string Email,
+    Guid? UserId,
     string FirstName,
     string LastName,
     string? Phone,
     DateTime? DateOfBirth,
-    bool IsEmailVerified,
-    bool MarketingEmailOptIn,
-    bool SmsOptIn,
-    DateTime? LastLoginDate,
     DateTime CreatedDate,
     DateTime UpdatedDate
 );
@@ -346,15 +288,7 @@ public record UpdateProfileDto(
     string? FirstName,
     string? LastName,
     string? Phone,
-    DateTime? DateOfBirth,
-    bool? MarketingEmailOptIn,
-    bool? SmsOptIn
-);
-
-// Password
-public record ChangePasswordDto(
-    string CurrentPassword,
-    string NewPassword
+    DateTime? DateOfBirth
 );
 
 // Address
@@ -420,255 +354,7 @@ public record PaginationDto(
 );
 ```
 
-### 5.2 Register Customer Command
-
-**File:** `src/Vult.Api/Features/Customers/RegisterCustomerCommand.cs`
-
-```csharp
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Vult.Api.Dtos;
-using Vult.Core.CustomerAggregate;
-using Vult.Core.Data;
-using Vult.Core.Services;
-
-namespace Vult.Api.Features.Customers;
-
-public record RegisterCustomerCommand(RegisterCustomerDto Registration)
-    : IRequest<RegisterCustomerResult>;
-
-public class RegisterCustomerResult
-{
-    public CustomerProfileDto? Customer { get; set; }
-    public bool Success { get; set; }
-    public List<string> Errors { get; set; } = new();
-}
-
-public class RegisterCustomerHandler
-    : IRequestHandler<RegisterCustomerCommand, RegisterCustomerResult>
-{
-    private readonly IVultContext _context;
-    private readonly IPasswordHasher _passwordHasher;
-
-    public RegisterCustomerHandler(
-        IVultContext context,
-        IPasswordHasher passwordHasher)
-    {
-        _context = context;
-        _passwordHasher = passwordHasher;
-    }
-
-    public async Task<RegisterCustomerResult> Handle(
-        RegisterCustomerCommand request,
-        CancellationToken cancellationToken)
-    {
-        var dto = request.Registration;
-        var result = new RegisterCustomerResult();
-
-        // Validate email format
-        if (!IsValidEmail(dto.Email))
-        {
-            result.Errors.Add("Invalid email format");
-            return result;
-        }
-
-        // Validate password strength
-        var passwordErrors = ValidatePassword(dto.Password);
-        if (passwordErrors.Any())
-        {
-            result.Errors.AddRange(passwordErrors);
-            return result;
-        }
-
-        // Check email uniqueness
-        var emailExists = await _context.Customers
-            .AnyAsync(c => c.Email.ToLower() == dto.Email.ToLower(), cancellationToken);
-
-        if (emailExists)
-        {
-            result.Errors.Add("Email address is already registered");
-            return result;
-        }
-
-        // Hash password
-        var salt = _passwordHasher.GenerateSalt();
-        var hash = _passwordHasher.HashPassword(dto.Password, salt);
-
-        // Create customer
-        var customer = new Customer
-        {
-            CustomerId = Guid.NewGuid(),
-            Email = dto.Email.ToLower().Trim(),
-            PasswordHash = hash,
-            PasswordSalt = salt,
-            FirstName = dto.FirstName.Trim(),
-            LastName = dto.LastName.Trim(),
-            Phone = dto.Phone?.Trim(),
-            IsEmailVerified = false,
-            IsDeleted = false,
-            MarketingEmailOptIn = false,
-            SmsOptIn = false,
-            CreatedDate = DateTime.UtcNow,
-            UpdatedDate = DateTime.UtcNow
-        };
-
-        _context.Customers.Add(customer);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        result.Success = true;
-        result.Customer = customer.ToProfileDto();
-
-        return result;
-    }
-
-    private static bool IsValidEmail(string email)
-    {
-        try
-        {
-            var addr = new System.Net.Mail.MailAddress(email);
-            return addr.Address == email;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private static List<string> ValidatePassword(string password)
-    {
-        var errors = new List<string>();
-
-        if (password.Length < 8)
-            errors.Add("Password must be at least 8 characters");
-
-        if (password.Length > 128)
-            errors.Add("Password must be at most 128 characters");
-
-        if (!password.Any(char.IsUpper))
-            errors.Add("Password must contain at least one uppercase letter");
-
-        if (!password.Any(char.IsLower))
-            errors.Add("Password must contain at least one lowercase letter");
-
-        if (!password.Any(char.IsDigit))
-            errors.Add("Password must contain at least one number");
-
-        return errors;
-    }
-}
-```
-
-### 5.3 Login Customer Command
-
-**File:** `src/Vult.Api/Features/Customers/LoginCustomerCommand.cs`
-
-```csharp
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Vult.Api.Dtos;
-using Vult.Core.Data;
-using Vult.Core.Services;
-
-namespace Vult.Api.Features.Customers;
-
-public record LoginCustomerCommand(LoginDto Login) : IRequest<LoginCustomerResult>;
-
-public class LoginCustomerResult
-{
-    public LoginResultDto? LoginResult { get; set; }
-    public bool Success { get; set; }
-    public string? Error { get; set; }
-}
-
-public class LoginCustomerHandler
-    : IRequestHandler<LoginCustomerCommand, LoginCustomerResult>
-{
-    private readonly IVultContext _context;
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly ITokenService _tokenService;
-
-    public LoginCustomerHandler(
-        IVultContext context,
-        IPasswordHasher passwordHasher,
-        ITokenService tokenService)
-    {
-        _context = context;
-        _passwordHasher = passwordHasher;
-        _tokenService = tokenService;
-    }
-
-    public async Task<LoginCustomerResult> Handle(
-        LoginCustomerCommand request,
-        CancellationToken cancellationToken)
-    {
-        var dto = request.Login;
-
-        // Find customer by email
-        var customer = await _context.Customers
-            .FirstOrDefaultAsync(
-                c => c.Email.ToLower() == dto.Email.ToLower().Trim(),
-                cancellationToken);
-
-        // Generic error to prevent email enumeration
-        if (customer == null)
-        {
-            return new LoginCustomerResult
-            {
-                Success = false,
-                Error = "Invalid credentials"
-            };
-        }
-
-        // Check if account is deleted
-        if (!customer.CanLogin())
-        {
-            return new LoginCustomerResult
-            {
-                Success = false,
-                Error = "Account is inactive"
-            };
-        }
-
-        // Verify password
-        var passwordValid = _passwordHasher.VerifyPassword(
-            dto.Password,
-            customer.PasswordHash,
-            customer.PasswordSalt);
-
-        if (!passwordValid)
-        {
-            return new LoginCustomerResult
-            {
-                Success = false,
-                Error = "Invalid credentials"
-            };
-        }
-
-        // Generate token
-        var expiresAt = DateTime.UtcNow.AddHours(24);
-        var token = _tokenService.GenerateToken(
-            customer.CustomerId.ToString(),
-            customer.Email,
-            expiresAt);
-
-        // Update last login
-        customer.LastLoginDate = DateTime.UtcNow;
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return new LoginCustomerResult
-        {
-            Success = true,
-            LoginResult = new LoginResultDto(
-                token,
-                expiresAt,
-                customer.ToProfileDto()
-            )
-        };
-    }
-}
-```
-
-### 5.4 Get Profile Query
+### 5.2 Get Profile Query
 
 **File:** `src/Vult.Api/Features/Customers/GetProfileQuery.cs`
 
@@ -676,7 +362,7 @@ public class LoginCustomerHandler
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Vult.Api.Dtos;
-using Vult.Core.Data;
+using Vult.Core;
 
 namespace Vult.Api.Features.Customers;
 
@@ -705,7 +391,7 @@ public class GetProfileHandler : IRequestHandler<GetProfileQuery, CustomerProfil
 }
 ```
 
-### 5.5 Update Profile Command
+### 5.3 Update Profile Command
 
 **File:** `src/Vult.Api/Features/Customers/UpdateProfileCommand.cs`
 
@@ -713,7 +399,7 @@ public class GetProfileHandler : IRequestHandler<GetProfileQuery, CustomerProfil
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Vult.Api.Dtos;
-using Vult.Core.Data;
+using Vult.Core;
 
 namespace Vult.Api.Features.Customers;
 
@@ -759,7 +445,6 @@ public class UpdateProfileHandler
 
         var dto = request.Profile;
 
-        // Update only provided fields
         if (!string.IsNullOrWhiteSpace(dto.FirstName))
             customer.FirstName = dto.FirstName.Trim();
 
@@ -771,12 +456,6 @@ public class UpdateProfileHandler
 
         if (dto.DateOfBirth.HasValue)
             customer.DateOfBirth = dto.DateOfBirth.Value;
-
-        if (dto.MarketingEmailOptIn.HasValue)
-            customer.MarketingEmailOptIn = dto.MarketingEmailOptIn.Value;
-
-        if (dto.SmsOptIn.HasValue)
-            customer.SmsOptIn = dto.SmsOptIn.Value;
 
         customer.UpdatedDate = DateTime.UtcNow;
 
@@ -791,7 +470,7 @@ public class UpdateProfileHandler
 }
 ```
 
-### 5.6 Address Commands
+### 5.4 Address Commands
 
 **File:** `src/Vult.Api/Features/Customers/AddressCommands.cs`
 
@@ -799,8 +478,8 @@ public class UpdateProfileHandler
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Vult.Api.Dtos;
-using Vult.Core.CustomerAggregate;
-using Vult.Core.Data;
+using Vult.Core.Model.CustomerAggregate;
+using Vult.Core;
 
 namespace Vult.Api.Features.Customers;
 
@@ -884,7 +563,6 @@ public class AddAddressHandler : IRequestHandler<AddAddressCommand, AddAddressRe
         var dto = request.Address;
         var isFirstAddress = !customer.Addresses.Any();
 
-        // If setting as default, unset existing default
         if (dto.IsDefault || isFirstAddress)
         {
             foreach (var addr in customer.Addresses)
@@ -915,90 +593,6 @@ public class AddAddressHandler : IRequestHandler<AddAddressCommand, AddAddressRe
         await _context.SaveChangesAsync(cancellationToken);
 
         return new AddAddressResult
-        {
-            Success = true,
-            Address = address.ToDto()
-        };
-    }
-}
-
-// Update Address Command
-public record UpdateAddressCommand(
-    Guid CustomerId,
-    Guid AddressId,
-    UpdateAddressDto Address
-) : IRequest<UpdateAddressResult>;
-
-public class UpdateAddressResult
-{
-    public CustomerAddressDto? Address { get; set; }
-    public bool Success { get; set; }
-    public string? Error { get; set; }
-}
-
-public class UpdateAddressHandler
-    : IRequestHandler<UpdateAddressCommand, UpdateAddressResult>
-{
-    private readonly IVultContext _context;
-
-    public UpdateAddressHandler(IVultContext context)
-    {
-        _context = context;
-    }
-
-    public async Task<UpdateAddressResult> Handle(
-        UpdateAddressCommand request,
-        CancellationToken cancellationToken)
-    {
-        var address = await _context.CustomerAddresses
-            .FirstOrDefaultAsync(
-                a => a.CustomerAddressId == request.AddressId
-                    && a.CustomerId == request.CustomerId,
-                cancellationToken);
-
-        if (address == null)
-        {
-            return new UpdateAddressResult
-            {
-                Success = false,
-                Error = "Address not found"
-            };
-        }
-
-        var dto = request.Address;
-
-        if (!string.IsNullOrWhiteSpace(dto.Label))
-            address.Label = dto.Label.Trim();
-
-        if (!string.IsNullOrWhiteSpace(dto.FullName))
-            address.FullName = dto.FullName.Trim();
-
-        if (!string.IsNullOrWhiteSpace(dto.AddressLine1))
-            address.AddressLine1 = dto.AddressLine1.Trim();
-
-        if (dto.AddressLine2 != null)
-            address.AddressLine2 = dto.AddressLine2.Trim();
-
-        if (!string.IsNullOrWhiteSpace(dto.City))
-            address.City = dto.City.Trim();
-
-        if (!string.IsNullOrWhiteSpace(dto.State))
-            address.State = dto.State.Trim();
-
-        if (!string.IsNullOrWhiteSpace(dto.PostalCode))
-            address.PostalCode = dto.PostalCode.Trim();
-
-        if (!string.IsNullOrWhiteSpace(dto.Country))
-            address.Country = dto.Country.Trim();
-
-        if (dto.Phone != null)
-            address.Phone = dto.Phone.Trim();
-
-        address.UpdatedDate = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return new UpdateAddressResult
         {
             Success = true,
             Address = address.ToDto()
@@ -1126,7 +720,7 @@ public class SetDefaultAddressHandler
 }
 ```
 
-### 5.7 Order History Query
+### 5.5 Order History Query
 
 **File:** `src/Vult.Api/Features/Customers/GetOrderHistoryQuery.cs`
 
@@ -1134,7 +728,7 @@ public class SetDefaultAddressHandler
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Vult.Api.Dtos;
-using Vult.Core.Data;
+using Vult.Core;
 
 namespace Vult.Api.Features.Customers;
 
@@ -1162,16 +756,13 @@ public class GetOrderHistoryHandler
         var query = _context.Orders
             .Where(o => o.CustomerId == request.CustomerId);
 
-        // Filter by status if provided
         if (!string.IsNullOrWhiteSpace(request.Status))
         {
             query = query.Where(o => o.Status.ToString() == request.Status);
         }
 
-        // Get total count
         var totalItems = await query.CountAsync(cancellationToken);
 
-        // Get paginated results
         var orders = await query
             .OrderByDescending(o => o.CreatedDate)
             .Skip((request.Page - 1) * request.PageSize)
@@ -1196,7 +787,7 @@ public class GetOrderHistoryHandler
 }
 ```
 
-### 5.8 Customers Controller
+### 5.6 Customers Controller
 
 **File:** `src/Vult.Api/Controllers/CustomersController.cs`
 
@@ -1225,37 +816,6 @@ public class CustomersController : ControllerBase
     {
         var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return Guid.Parse(claim!);
-    }
-
-    // ============ Authentication ============
-
-    [HttpPost("register")]
-    [ProducesResponseType(typeof(CustomerProfileDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Register([FromBody] RegisterCustomerDto dto)
-    {
-        var result = await _mediator.Send(new RegisterCustomerCommand(dto));
-
-        if (!result.Success)
-            return BadRequest(new { errors = result.Errors });
-
-        return CreatedAtAction(
-            nameof(GetProfile),
-            new { },
-            result.Customer);
-    }
-
-    [HttpPost("login")]
-    [ProducesResponseType(typeof(LoginResultDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> Login([FromBody] LoginDto dto)
-    {
-        var result = await _mediator.Send(new LoginCustomerCommand(dto));
-
-        if (!result.Success)
-            return Unauthorized(new { error = result.Error });
-
-        return Ok(result.LoginResult);
     }
 
     // ============ Profile ============
@@ -1288,22 +848,6 @@ public class CustomersController : ControllerBase
             return BadRequest(new { error = result.Error });
 
         return Ok(result.Customer);
-    }
-
-    [Authorize]
-    [HttpPut("me/password")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
-    {
-        var customerId = GetCustomerId();
-        var result = await _mediator.Send(
-            new ChangePasswordCommand(customerId, dto));
-
-        if (!result.Success)
-            return BadRequest(new { error = result.Error });
-
-        return NoContent();
     }
 
     [Authorize]
@@ -1359,30 +903,6 @@ public class CustomersController : ControllerBase
             return NotFound();
 
         return Ok(result);
-    }
-
-    [Authorize]
-    [HttpPut("me/addresses/{id:guid}")]
-    [ProducesResponseType(typeof(CustomerAddressDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateAddress(
-        Guid id,
-        [FromBody] UpdateAddressDto dto)
-    {
-        var customerId = GetCustomerId();
-        var result = await _mediator.Send(
-            new UpdateAddressCommand(customerId, id, dto));
-
-        if (!result.Success)
-        {
-            if (result.Error == "Address not found")
-                return NotFound();
-
-            return BadRequest(new { error = result.Error });
-        }
-
-        return Ok(result.Address);
     }
 
     [Authorize]
@@ -1457,13 +977,13 @@ public class CustomersController : ControllerBase
 }
 ```
 
-### 5.9 Extension Methods
+### 5.7 Extension Methods
 
 **File:** `src/Vult.Api/Extensions/CustomerExtensions.cs`
 
 ```csharp
 using Vult.Api.Dtos;
-using Vult.Core.CustomerAggregate;
+using Vult.Core.Model.CustomerAggregate;
 
 namespace Vult.Api.Extensions;
 
@@ -1473,15 +993,11 @@ public static class CustomerExtensions
     {
         return new CustomerProfileDto(
             customer.CustomerId,
-            customer.Email,
+            customer.UserId,
             customer.FirstName,
             customer.LastName,
             customer.Phone,
             customer.DateOfBirth,
-            customer.IsEmailVerified,
-            customer.MarketingEmailOptIn,
-            customer.SmsOptIn,
-            customer.LastLoginDate,
             customer.CreatedDate,
             customer.UpdatedDate
         );
@@ -1508,20 +1024,7 @@ public static class CustomerExtensions
 
 ---
 
-## 6. Configuration
-
-### 6.1 Service Registration
-
-**Add to:** `src/Vult.Api/ConfigureServices.cs`
-
-```csharp
-// Services are already registered via MediatR assembly scanning
-// No additional registration needed for Customer handlers
-```
-
----
-
-## 7. Database Migration
+## 6. Database Migration
 
 ```bash
 # Create migration
@@ -1537,147 +1040,30 @@ dotnet ef database update \
 
 ---
 
-## 8. Testing Strategy
+## 7. Testing Strategy
 
-### 8.1 Unit Tests
+### 7.1 Unit Tests
 
 | Test Class | Coverage |
 |------------|----------|
-| RegisterCustomerHandlerTests | Registration, validation, duplicate email |
-| LoginCustomerHandlerTests | Login, password verification, deleted accounts |
+| UpdateProfileHandlerTests | Profile updates, validation |
 | AddressHandlerTests | CRUD operations, default logic, max limit |
-| CustomerTests | CanLogin, GetDefaultAddress, CanAddAddress |
+| CustomerTests | GetDefaultAddress, CanAddAddress, SetDefaultAddress |
 
-### 8.2 Integration Tests
+### 7.2 Integration Tests
 
 | Test | Description |
 |------|-------------|
-| Register_WithValidData_CreatesCustomer | End-to-end registration |
-| Login_WithCorrectCredentials_ReturnsToken | Auth flow |
+| Profile_Update_Success | End-to-end profile update |
 | Address_CRUD_Operations | Full address lifecycle |
 | OrderHistory_ReturnsCustomerOrders | Order history integration |
 
-### 8.3 Sample Test
-
-```csharp
-[Test]
-public async Task Register_DuplicateEmail_ReturnsError()
-{
-    // Arrange
-    var existingEmail = "existing@example.com";
-    await CreateCustomer(existingEmail, "Password123");
-
-    var command = new RegisterCustomerCommand(
-        new RegisterCustomerDto(
-            existingEmail,
-            "Password123",
-            "Jane",
-            "Doe",
-            null
-        )
-    );
-
-    // Act
-    var result = await _handler.Handle(command, CancellationToken.None);
-
-    // Assert
-    Assert.False(result.Success);
-    Assert.Contains("already registered", result.Errors.First());
-}
-```
-
 ---
 
-## 9. Security Considerations
-
-### 9.1 Password Storage
-
-```csharp
-// Using existing IPasswordHasher with PBKDF2
-var salt = _passwordHasher.GenerateSalt();  // 32 bytes random
-var hash = _passwordHasher.HashPassword(password, salt);  // PBKDF2, 10000 iterations
-```
-
-### 9.2 JWT Claims
-
-```csharp
-// Claims included in token
-new Claim(ClaimTypes.NameIdentifier, customerId.ToString()),
-new Claim(ClaimTypes.Email, email),
-new Claim("customer", "true")  // Distinguish from admin users
-```
-
-### 9.3 Authorization
-
-- All `/me/*` endpoints require `[Authorize]` attribute
-- CustomerId extracted from JWT claims
-- Addresses filtered by CustomerId (no cross-customer access)
-- Orders filtered by CustomerId
-
----
-
-## 10. Frontend Integration
-
-### 10.1 Angular AuthService
-
-```typescript
-@Injectable({ providedIn: 'root' })
-export class CustomerAuthService {
-  private tokenKey = 'vult_customer_token';
-
-  constructor(private http: HttpClient) {}
-
-  register(data: RegisterRequest): Observable<CustomerProfile> {
-    return this.http.post<CustomerProfile>('/api/customers/register', data);
-  }
-
-  login(email: string, password: string): Observable<LoginResult> {
-    return this.http.post<LoginResult>('/api/customers/login', { email, password })
-      .pipe(tap(result => this.setToken(result.token)));
-  }
-
-  logout(): void {
-    localStorage.removeItem(this.tokenKey);
-  }
-
-  getProfile(): Observable<CustomerProfile> {
-    return this.http.get<CustomerProfile>('/api/customers/me');
-  }
-
-  private setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
-  }
-}
-```
-
-### 10.2 HTTP Interceptor
-
-```typescript
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('vult_customer_token');
-
-    if (token) {
-      req = req.clone({
-        setHeaders: { Authorization: `Bearer ${token}` }
-      });
-    }
-
-    return next.handle(req);
-  }
-}
-```
-
----
-
-## 11. Deployment Checklist
+## 8. Deployment Checklist
 
 - [ ] Run database migrations
 - [ ] Configure JWT signing key (production strength)
-- [ ] Set token expiration (24h recommended)
+- [ ] Set token expiration
 - [ ] Configure CORS for frontend domain
 - [ ] Enable HTTPS
-- [ ] Set up rate limiting on login endpoint
-- [ ] Configure password policy if different from default
-- [ ] Set up monitoring for failed login attempts
