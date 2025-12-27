@@ -8,6 +8,7 @@ public class ProductImageDto
     public Guid ProductImageId { get; set; }
     public Guid ProductId { get; set; }
     public byte[] ImageData { get; set; } = Array.Empty<byte>();
+    public string Url { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedDate { get; set; }
 }
