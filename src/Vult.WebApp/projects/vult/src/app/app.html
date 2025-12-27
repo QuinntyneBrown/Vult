@@ -1,4 +1,11 @@
-<v-page-header [title]="'Vult'"></v-page-header>
+<v-navigation-bar [items]="navItems" [logoHref]="'/'">
+  <div logo (click)="onLogoClick()" style="font-weight: bold; font-size: 24px;">VULT</div>
+  <div actions style="display: flex; gap: 16px;">
+    <span>Search</span>
+    <span>Favorites</span>
+    <span>Cart</span>
+  </div>
+</v-navigation-bar>
 <router-outlet></router-outlet>
 <v-footer
   [columns]="footerColumns"

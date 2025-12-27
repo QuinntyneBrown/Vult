@@ -1,23 +1,74 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import {
   Footer,
   FooterColumn,
   FooterLink,
   SocialLink,
-  PageHeader
+  NavigationBar,
+  NavItem
 } from 'vult-components';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Footer, PageHeader],
+  imports: [RouterOutlet, Footer, NavigationBar],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
+
+  _router = inject(Router);
+  
+  onLogoClick() {
+    this._router.navigateByUrl('/');
+  }
+
+  navItems: NavItem[] = [
+    {
+      id: 'new',
+      label: 'New & Featured',
+      href: '/new',
+      children: [
+        { id: 'new-releases', label: 'New Releases', href: '/new/releases' },
+        { id: 'best-sellers', label: 'Best Sellers', href: '/new/best-sellers' },
+        { id: 'member-exclusive', label: 'Member Exclusive', href: '/new/member' },
+      ],
+    },
+    {
+      id: 'men',
+      label: 'Men',
+      href: '/men',
+      children: [
+        { id: 'men-shoes', label: 'Shoes', href: '/men/shoes' },
+        { id: 'men-clothing', label: 'Clothing', href: '/men/clothing' },
+        { id: 'men-accessories', label: 'Accessories', href: '/men/accessories' },
+      ],
+    },
+    {
+      id: 'women',
+      label: 'Women',
+      href: '/women',
+      children: [
+        { id: 'women-shoes', label: 'Shoes', href: '/women/shoes' },
+        { id: 'women-clothing', label: 'Clothing', href: '/women/clothing' },
+        { id: 'women-accessories', label: 'Accessories', href: '/women/accessories' },
+      ],
+    },
+    {
+      id: 'kids',
+      label: 'Kids',
+      href: '/kids',
+    },
+    {
+      id: 'sale',
+      label: 'Sale',
+      href: '/sale',
+    },
+  ];
+
   footerColumns: FooterColumn[] = [
     {
       title: 'Get Help',
