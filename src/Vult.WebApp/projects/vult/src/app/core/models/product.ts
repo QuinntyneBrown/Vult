@@ -3,6 +3,7 @@
 
 export interface Product {
   productId: string;
+  name?: string;
   estimatedMSRP?: number;
   estimatedResaleValue?: number;
   description?: string;

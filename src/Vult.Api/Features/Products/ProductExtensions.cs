@@ -12,6 +12,7 @@ public static class ProductExtensions
         return new ProductDto
         {
             ProductId = product.ProductId,
+            Name = product.Name,
             EstimatedMSRP = product.EstimatedMSRP,
             EstimatedResaleValue = product.EstimatedResaleValue,
             Description = product.Description,
@@ -51,6 +52,7 @@ public static class ProductExtensions
         return new Product
         {
             ProductId = Guid.NewGuid(),
+            Name = dto.Name,
             EstimatedMSRP = dto.EstimatedMSRP,
             EstimatedResaleValue = dto.EstimatedResaleValue,
             Description = dto.Description,
@@ -73,6 +75,7 @@ public static class ProductExtensions
 
     public static void UpdateFromDto(this Product product, UpdateProductDto dto)
     {
+        product.Name = dto.Name;
         product.EstimatedMSRP = dto.EstimatedMSRP;
         product.EstimatedResaleValue = dto.EstimatedResaleValue;
         product.Description = dto.Description;

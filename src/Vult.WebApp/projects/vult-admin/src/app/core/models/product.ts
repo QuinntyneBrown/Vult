@@ -3,6 +3,7 @@
 
 export interface Product {
   productId: string;
+  name?: string;
   estimatedMSRP?: number;
   estimatedResaleValue?: number;
   description?: string;
@@ -26,6 +27,7 @@ export interface ProductImage {
 }
 
 export interface CreateProductRequest {
+  name?: string;
   estimatedMSRP?: number;
   estimatedResaleValue?: number;
   description?: string;
@@ -43,6 +45,7 @@ export interface CreateProductImageRequest {
 }
 
 export interface UpdateProductRequest {
+  name?: string;
   estimatedMSRP?: number;
   estimatedResaleValue?: number;
   description?: string;
