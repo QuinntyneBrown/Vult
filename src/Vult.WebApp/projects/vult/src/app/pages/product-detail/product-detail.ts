@@ -20,6 +20,7 @@ import {
   AccordionSection
 } from 'vult-components';
 import { ProductService } from '../../core/services/product.service';
+import { Product, Gender } from '../../core/models';
 
 export interface ProductDetailData {
   id: string;
@@ -102,11 +103,12 @@ export class ProductDetail implements OnInit {
 
   private loadProduct(id: string): void {
     this.isLoading.set(true);
-    this.productService.getMockProductById(id).subscribe({
+    this.productService.getProductById(id).subscribe({
       next: (product) => {
-        this.product.set(product);
-        if (product.colors.length > 0) {
-          this.selectedColorId.set(product.colors[0].id);
+        const productDetailData = this.mapProductToDetailData(product);
+        this.product.set(productDetailData);
+        if (productDetailData.colors.length > 0) {
+          this.selectedColorId.set(productDetailData.colors[0].id);
         }
         this.isLoading.set(false);
       },
@@ -115,6 +117,61 @@ export class ProductDetail implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  private mapProductToDetailData(product: Product): ProductDetailData {
+    const genderLabel = this.getGenderLabel(product.gender);
+    const sizes = this.parseSizes(product.size);
+
+    return {
+      id: product.productId,
+      title: product.name || 'Unknown Product',
+      subtitle: genderLabel,
+      price: {
+        current: product.estimatedMSRP || 0,
+        original: product.estimatedResaleValue,
+        currency: 'USD',
+        currencySymbol: '$',
+        salePercentage: product.estimatedResaleValue && product.estimatedMSRP
+          ? Math.round((1 - product.estimatedMSRP / product.estimatedResaleValue) * 100)
+          : undefined
+      },
+      images: (product.productImages || []).map((img, index) => ({
+        id: img.productImageId,
+        url: img.url || '',
+        altText: img.description || `Product image ${index + 1}`
+      })),
+      colors: [
+        { id: 'color-1', name: 'Default', color: '#222222', imageUrl: product.productImages?.[0]?.url }
+      ],
+      sizes: sizes,
+      accordionSections: [
+        {
+          id: 'description',
+          title: 'Product Description',
+          content: `<p>${product.description || 'No description available.'}</p>`,
+          isExpanded: true
+        }
+      ]
+    };
+  }
+
+  private getGenderLabel(gender?: Gender): string {
+    switch (gender) {
+      case Gender.Mens: return "Men's";
+      case Gender.Womens: return "Women's";
+      case Gender.Unisex: return "Unisex";
+      default: return '';
+    }
+  }
+
+  private parseSizes(sizeString?: string): SizeOption[] {
+    if (!sizeString) return [];
+    return sizeString.split(',').map((size, index) => ({
+      id: `size-${size.trim()}`,
+      label: size.trim(),
+      available: true
+    }));
   }
 
   onColorSelect(color: ColorOption): void {
