@@ -52,6 +52,11 @@ export interface SizeOption {
       gap: 8px;
       flex-wrap: wrap;
       border: none !important;
+      overflow: visible !important;
+    }
+
+    ::ng-deep .mat-button-toggle-group-appearance-standard {
+      border: none !important;
     }
 
     .size-button {
