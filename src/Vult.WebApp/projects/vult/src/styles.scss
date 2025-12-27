@@ -110,3 +110,32 @@ body {
   --color-border-light: var(--color-gray-200);
   --color-divider: var(--color-gray-200);
 }
+
+// Cart Notification Dialog Styles
+.cart-notification-backdrop {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.cart-notification-panel {
+  max-height: calc(100vh - 100px) !important;
+  overflow: visible !important;
+
+  .mat-mdc-dialog-surface {
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+
+  &--corner {
+    .mat-mdc-dialog-surface {
+      border-radius: 8px !important;
+    }
+  }
+
+  &--top-right {
+    position: absolute !important;
+  }
+
+  &--top-center {
+    position: absolute !important;
+  }
+}

@@ -91,6 +91,7 @@ export * from './lib/testimonial-card/testimonial-card';
 
 // Cart Components
 export * from './lib/cart-notification/cart-notification';
+export * from './lib/cart-notification/cart-notification.service';
 export * from './lib/cart-item/cart-item';
 export * from './lib/cart-summary/cart-summary';
 export * from './lib/quantity-selector/quantity-selector';
