@@ -99,6 +99,20 @@ Vult.Api/
 | PUT | UpdateTestimonial | `/api/testimonials/{id}` | Required | Update testimonial details |
 | DELETE | DeleteTestimonial | `/api/testimonials/{id}` | Required | Delete testimonial |
 
+### 2.5 DigitalAssetsController
+**Route Base**: `/api/digitalassets`
+**Location**: `src/Vult.Api/Controllers/DigitalAssetsController.cs`
+
+| Method | Endpoint | Route | Auth | Description |
+|--------|----------|-------|------|-------------|
+| POST | UploadDigitalAsset | `/api/digitalassets` | Required | Upload new digital asset |
+| GET | GetDigitalAssets | `/api/digitalassets` | Required | Get paginated list of digital assets |
+| GET | GetDigitalAssetById | `/api/digitalassets/{id}` | AllowAnonymous | Get digital asset metadata by ID |
+| GET | GetDigitalAssetByFilename | `/api/digitalassets/filename/{filename}` | AllowAnonymous | Get digital asset metadata by filename |
+| GET | ServeDigitalAsset | `/api/digitalassets/{id}/serve` | AllowAnonymous | Serve raw file content by ID |
+| GET | ServeDigitalAssetByFilename | `/api/digitalassets/serve/{filename}` | AllowAnonymous | Serve raw file content by filename |
+| DELETE | DeleteDigitalAsset | `/api/digitalassets/{id}` | Required | Delete digital asset |
+
 ---
 
 ## 3. DATA TRANSFER OBJECTS (DTOs)
@@ -501,6 +515,74 @@ Vult.Api/
 
 #### DeleteTestimonialCommandResult
 **Location**: `src/Vult.Api/Features/Testimonials/DeleteTestimonialCommand.cs`
+
+```json
+{
+    "success": "bool",
+    "errors": ["string array"]
+}
+```
+
+### 3.7 Digital Asset DTOs
+
+#### DigitalAssetDto
+**Location**: `src/Vult.Api/Features/DigitalAssets/DigitalAssetDto.cs`
+
+```json
+{
+    "digitalAssetId": "guid",
+    "name": "string",
+    "contentType": "string (e.g., 'image/jpeg')",
+    "height": 800.0,
+    "width": 1200.0,
+    "createdDate": "datetime"
+}
+```
+
+#### UploadDigitalAssetCommandResult
+**Location**: `src/Vult.Api/Features/DigitalAssets/UploadDigitalAssetCommand.cs`
+
+```json
+{
+    "digitalAsset": DigitalAssetDto,
+    "success": "bool",
+    "errors": ["string array"]
+}
+```
+
+#### GetDigitalAssetsQueryResult
+**Location**: `src/Vult.Api/Features/DigitalAssets/GetDigitalAssetsQuery.cs`
+
+```json
+{
+    "items": [DigitalAssetDto],
+    "totalCount": "int",
+    "pageNumber": "int",
+    "pageSize": "int",
+    "totalPages": "int"
+}
+```
+
+#### GetDigitalAssetByIdQueryResult
+**Location**: `src/Vult.Api/Features/DigitalAssets/GetDigitalAssetByIdQuery.cs`
+
+```json
+{
+    "digitalAsset": DigitalAssetDto
+}
+```
+
+#### GetDigitalAssetByFilenameQueryResult
+**Location**: `src/Vult.Api/Features/DigitalAssets/GetDigitalAssetByFilenameQuery.cs`
+
+```json
+{
+    "digitalAsset": DigitalAssetDto
+}
+```
+
+#### DeleteDigitalAssetCommandResult
+**Location**: `src/Vult.Api/Features/DigitalAssets/DeleteDigitalAssetCommand.cs`
 
 ```json
 {
@@ -1559,6 +1641,202 @@ true
 
 ---
 
+### 7.6 Digital Asset Endpoints
+
+#### POST /api/digitalassets
+**Summary**: Upload a digital asset (image file)
+**Authentication**: Required
+**Authorization**: Create permission on DigitalAsset aggregate
+**Content-Type**: multipart/form-data
+
+**Request Body**:
+- `file` (IFormFile): Image file to upload
+
+**Constraints**:
+- Maximum upload size: 10MB
+- Valid file extensions: .jpg, .jpeg, .png, .gif, .bmp, .webp
+- File signature validation: Content must match declared file type
+
+**Success Response** (201 Created):
+```json
+{
+    "digitalAsset": {
+        "digitalAssetId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "product-image.jpg",
+        "contentType": "image/jpeg",
+        "height": 800.0,
+        "width": 1200.0,
+        "createdDate": "2025-12-27T12:00:00Z"
+    },
+    "success": true,
+    "errors": []
+}
+```
+
+**Error Response** (400 Bad Request):
+```json
+{
+    "errors": ["No file provided"]
+}
+```
+
+---
+
+#### GET /api/digitalassets
+**Summary**: Get paginated list of digital assets
+**Authentication**: Required
+
+**Query Parameters**:
+- `pageNumber` (int, default: 1): Page number
+- `pageSize` (int, default: 10, max: 100): Items per page
+- `sortBy` (string, optional): Sort field ("name", "name_desc", "date", "date_desc")
+
+**Success Response** (200 OK):
+```json
+{
+    "items": [
+        {
+            "digitalAssetId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "product-image.jpg",
+            "contentType": "image/jpeg",
+            "height": 800.0,
+            "width": 1200.0,
+            "createdDate": "2025-12-27T12:00:00Z"
+        }
+    ],
+    "totalCount": 50,
+    "pageNumber": 1,
+    "pageSize": 10,
+    "totalPages": 5
+}
+```
+
+---
+
+#### GET /api/digitalassets/{id}
+**Summary**: Get digital asset metadata by ID
+**Authentication**: AllowAnonymous
+
+**Path Parameters**:
+- `id` (guid): Digital asset ID
+
+**Success Response** (200 OK):
+```json
+{
+    "digitalAsset": {
+        "digitalAssetId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "product-image.jpg",
+        "contentType": "image/jpeg",
+        "height": 800.0,
+        "width": 1200.0,
+        "createdDate": "2025-12-27T12:00:00Z"
+    }
+}
+```
+
+**Error Response** (404 Not Found):
+```json
+{
+    "message": "Digital asset with ID {id} not found"
+}
+```
+
+---
+
+#### GET /api/digitalassets/filename/{filename}
+**Summary**: Get digital asset metadata by filename
+**Authentication**: AllowAnonymous
+
+**Path Parameters**:
+- `filename` (string): Asset filename to search for (case-insensitive)
+
+**Success Response** (200 OK):
+```json
+{
+    "digitalAsset": {
+        "digitalAssetId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "product-image.jpg",
+        "contentType": "image/jpeg",
+        "height": 800.0,
+        "width": 1200.0,
+        "createdDate": "2025-12-27T12:00:00Z"
+    }
+}
+```
+
+**Error Response** (404 Not Found):
+```json
+{
+    "message": "Digital asset with filename 'product-image.jpg' not found"
+}
+```
+
+---
+
+#### GET /api/digitalassets/{id}/serve
+**Summary**: Serve digital asset file content by ID
+**Authentication**: AllowAnonymous
+
+**Path Parameters**:
+- `id` (guid): Digital asset ID
+
+**Response Headers**:
+```
+Content-Type: image/jpeg
+Cache-Control: public, max-age=86400
+```
+
+**Success Response** (200 OK):
+Raw binary content of the image file.
+
+**Error Response** (404 Not Found):
+Standard HTTP 404 response.
+
+---
+
+#### GET /api/digitalassets/serve/{filename}
+**Summary**: Serve digital asset file content by filename
+**Authentication**: AllowAnonymous
+
+**Path Parameters**:
+- `filename` (string): Asset filename to search for
+
+**Response Headers**:
+```
+Content-Type: image/jpeg
+Cache-Control: public, max-age=86400
+```
+
+**Success Response** (200 OK):
+Raw binary content of the image file.
+
+**Error Response** (404 Not Found):
+Standard HTTP 404 response.
+
+---
+
+#### DELETE /api/digitalassets/{id}
+**Summary**: Delete digital asset
+**Authentication**: Required
+**Authorization**: Delete permission on DigitalAsset aggregate
+
+**Path Parameters**:
+- `id` (guid): Digital asset ID
+
+**Success Response** (204 No Content):
+```
+(empty)
+```
+
+**Error Response** (404 Not Found):
+```json
+{
+    "errors": ["Digital asset not found"]
+}
+```
+
+---
+
 ## 8. SIGNALR HUB SPECIFICATION
 
 ### 8.1 Ingestion Hub
@@ -1694,10 +1972,14 @@ true
 | User Controller | `src/Vult.Api/Controllers/UserController.cs` |
 | Products Controller | `src/Vult.Api/Controllers/ProductsController.cs` |
 | InvitationToken Controller | `src/Vult.Api/Controllers/InvitationTokenController.cs` |
+| Testimonials Controller | `src/Vult.Api/Controllers/TestimonialsController.cs` |
+| DigitalAssets Controller | `src/Vult.Api/Controllers/DigitalAssetsController.cs` |
 | Auth Features | `src/Vult.Api/Features/Auth/` |
 | User Features | `src/Vult.Api/Features/Users/` |
 | Product Features | `src/Vult.Api/Features/Products/` |
 | InvitationToken Features | `src/Vult.Api/Features/InvitationTokens/` |
+| Testimonial Features | `src/Vult.Api/Features/Testimonials/` |
+| DigitalAsset Features | `src/Vult.Api/Features/DigitalAssets/` |
 | Authorization Behavior | `src/Vult.Api/Behaviours/ResourceOperationAuthorizationBehavior.cs` |
 | SignalR Hub | `src/Vult.Api/Hubs/IngestionHub.cs` |
 | CORS Configuration | `src/Vult.Api/Configuration/CorsSettings.cs` |
@@ -1706,13 +1988,13 @@ true
 
 ## DOCUMENT METADATA
 
-**Document Version**: 1.2
+**Document Version**: 1.3
 **API Name**: Vult API
 **Framework**: ASP.NET Core
 **Last Updated**: 2025-12-27
 **Frameworks Supported**: .NET 10.0, .NET 8.0
-**Total Endpoints**: 27
-**Total Controllers**: 4
+**Total Endpoints**: 34
+**Total Controllers**: 5
 **Authentication Method**: JWT Bearer Token
 **Database**: SQL Server
 
@@ -1760,6 +2042,30 @@ curl -X POST http://localhost:5000/api/products/photos \
   -H "Authorization: Bearer <token>" \
   -F "files=@image1.jpg" \
   -F "files=@image2.jpg"
+```
+
+#### Upload Digital Asset
+```bash
+curl -X POST http://localhost:5000/api/digitalassets \
+  -H "Authorization: Bearer <token>" \
+  -F "file=@product-image.jpg"
+```
+
+#### Get Digital Asset by Filename
+```bash
+curl -X GET "http://localhost:5000/api/digitalassets/filename/product-image.jpg"
+```
+
+#### Serve Digital Asset (Display Image)
+```bash
+curl -X GET "http://localhost:5000/api/digitalassets/serve/product-image.jpg" \
+  --output displayed-image.jpg
+```
+
+#### List Digital Assets
+```bash
+curl -X GET "http://localhost:5000/api/digitalassets?pageNumber=1&pageSize=10" \
+  -H "Authorization: Bearer <token>"
 ```
 
 ---

@@ -9,4 +9,5 @@ public static class AggregateNames
     public const string Role = "Role";
     public const string Product = "Product";
     public const string Testimonial = "Testimonial";
+    public const string DigitalAsset = "DigitalAsset";
 }
