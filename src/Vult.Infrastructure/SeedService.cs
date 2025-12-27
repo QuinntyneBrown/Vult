@@ -17,24 +17,19 @@ namespace Vult.Infrastructure;
 
 public class SeedService : ISeedService
 {
-    private const string ApiBaseUrl = "https://localhost:7266";
-
     private readonly IVultContext _context;
     private readonly ILogger<SeedService> _logger;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly Random _random = new();
 
     public SeedService(
         IVultContext context,
         ILogger<SeedService> logger,
-        IPasswordHasher passwordHasher,
-        IHttpClientFactory httpClientFactory)
+        IPasswordHasher passwordHasher)
     {
         _context = context;
         _logger = logger;
         _passwordHasher = passwordHasher;
-        _httpClientFactory = httpClientFactory;
     }
 
     public async Task SeedAsync()
@@ -218,7 +213,7 @@ public class SeedService : ISeedService
             return;
         }
 
-        _logger.LogInformation("Seeding products with images...");
+        _logger.LogInformation("Seeding products...");
 
         var products = GetProductData();
 
@@ -233,59 +228,25 @@ public class SeedService : ISeedService
         _logger.LogInformation("Will mark {FeaturedCount} products as featured ({Percentage:F1}%).",
             featuredCount, (featuredCount / (double)products.Count) * 100);
 
-        var httpClient = _httpClientFactory.CreateClient();
-        httpClient.Timeout = TimeSpan.FromSeconds(30);
-
         for (int i = 0; i < products.Count; i++)
         {
             var product = products[i];
             product.IsFeatured = featuredIndices.Contains(i);
 
-            // Fetch 6 images for this product
+            // Add 6 ProductImage entities for each product
             var imageUrls = GetImageUrlsForProduct(product, i);
-
             for (int j = 0; j < 6; j++)
             {
-                try
+                var productImage = new ProductImage
                 {
-                    var imageUrl = imageUrls[j];
-                    var imageBytes = await FetchImageAsync(httpClient, imageUrl);
+                    ProductImageId = Guid.NewGuid(),
+                    ProductId = product.ProductId,
+                    Url = imageUrls[j],
+                    Description = $"{product.Description} - Image {j + 1}",
+                    CreatedDate = DateTime.UtcNow
+                };
 
-                    if (imageBytes != null && imageBytes.Length > 0)
-                    {
-                        // Create DigitalAsset for this image
-                        var digitalAsset = new DigitalAsset
-                        {
-                            DigitalAssetId = Guid.NewGuid(),
-                            Name = $"{product.Description.ToLower().Replace(" ", "-")}-{j + 1}.jpg",
-                            Bytes = imageBytes,
-                            ContentType = "image/jpeg",
-                            Height = 400,
-                            Width = 400,
-                            CreatedDate = DateTime.UtcNow
-                        };
-
-                        _context.DigitalAssets.Add(digitalAsset);
-
-                        // Create ProductImage linking to the DigitalAsset
-                        var productImage = new ProductImage
-                        {
-                            ProductImageId = Guid.NewGuid(),
-                            ProductId = product.ProductId,
-                            Url = $"{ApiBaseUrl}/api/digitalassets/{digitalAsset.DigitalAssetId}/serve",
-                            Description = $"{product.Description} - Image {j + 1}",
-                            CreatedDate = DateTime.UtcNow
-                        };
-
-                        product.ProductImages.Add(productImage);
-
-                        _logger.LogDebug("Added image {ImageNumber} for product {ProductDescription}", j + 1, product.Description);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Failed to fetch image {ImageNumber} for product {ProductDescription}", j + 1, product.Description);
-                }
+                product.ProductImages.Add(productImage);
             }
 
             _context.Products.Add(product);
@@ -302,24 +263,6 @@ public class SeedService : ISeedService
             products.Count, totalFeatured, (totalFeatured / (double)products.Count) * 100);
     }
 
-    private async Task<byte[]?> FetchImageAsync(HttpClient httpClient, string imageUrl)
-    {
-        try
-        {
-            var response = await httpClient.GetAsync(imageUrl);
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadAsByteArrayAsync();
-            }
-            _logger.LogWarning("Failed to fetch image from {Url}: {StatusCode}", imageUrl, response.StatusCode);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "Exception fetching image from {Url}", imageUrl);
-        }
-        return null;
-    }
-
     private List<string> GetImageUrlsForProduct(Product product, int productIndex)
     {
         // Use Unsplash source API to get relevant images based on product type
@@ -331,7 +274,10 @@ public class SeedService : ISeedService
             // Use different random seeds to get different images
             var seed = (productIndex * 100) + i;
             var searchTerm = searchTerms[i % searchTerms.Count];
-            urls.Add($"https://source.unsplash.com/400x400/?{Uri.EscapeDataString(searchTerm)}&sig={seed}");
+
+            var url = $"https://images.unsplash.com/photo-1655111438936-54d0e77b9293";
+
+            urls.Add(url);
         }
 
         return urls;

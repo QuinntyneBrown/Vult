@@ -22,7 +22,7 @@ public static class ProductExtensions
             IsFeatured = product.IsFeatured,
             CreatedDate = product.CreatedDate,
             UpdatedDate = product.UpdatedDate,
-            Images = product.ProductImages?.Select(x => x.ToDto()).ToList() ?? new List<ProductImageDto>()
+            ProductImages = product.ProductImages?.Select(x => x.ToDto()).ToList() ?? new List<ProductImageDto>()
         };
     }
 

@@ -113,7 +113,7 @@ public class GetProductByIdQueryHandlerTests
 
         // Assert
         Assert.That(result.Product, Is.Not.Null);
-        Assert.That(result.Product!.Images, Has.Count.EqualTo(1));
-        Assert.That(result.Product.Images[0].ProductImageId, Is.EqualTo(imageId));
+        Assert.That(result.Product!.ProductImages, Has.Count.EqualTo(1));
+        Assert.That(result.Product.ProductImages[0].ProductImageId, Is.EqualTo(imageId));
     }
 }

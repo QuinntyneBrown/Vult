@@ -18,5 +18,5 @@ public class ProductDto
     public bool IsFeatured { get; set; }
     public DateTime CreatedDate { get; set; }
     public DateTime UpdatedDate { get; set; }
-    public List<ProductImageDto> Images { get; set; } = new();
+    public List<ProductImageDto> ProductImages { get; set; } = new();
 }

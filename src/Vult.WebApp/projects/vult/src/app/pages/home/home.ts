@@ -75,9 +75,7 @@ export class Home {
       [ItemType.Book]: 'Books',
     };
 
-    const imageUrl = product.productImages && product.productImages.length > 0 && product.productImages[0].imageData
-      ? `data:image/jpeg;base64,${product.productImages[0].imageData}`
-      : 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&q=80';
+    const imageUrl:any = product!.productImages![0].url as string;
 
     return {
       id: product.productId,
