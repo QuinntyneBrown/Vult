@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vult - Empty Bag</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #fff;
+            color: #111;
+            line-height: 1.5;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #111;
+            font-size: 14px;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        /* Empty Cart Content */
+        .empty-cart {
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+            background: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-cart h1 {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .empty-cart p {
+            color: #707070;
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+
+        .continue-shopping-btn {
+            display: inline-block;
+            padding: 16px 48px;
+            background: #111;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .continue-shopping-btn:hover {
+            background: #333;
+        }
+
+        .member-benefits {
+            background: #f5f5f5;
+            padding: 24px;
+            margin-top: 48px;
+            text-align: left;
+        }
+
+        .member-benefits h3 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .member-benefits ul {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .member-benefits li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: #707070;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .member-benefits li::before {
+            content: "✓";
+            color: #128a09;
+            font-weight: bold;
+        }
+
+        .join-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #fff;
+            color: #111;
+            border: 1px solid #111;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .sign-in-link {
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .sign-in-link a {
+            color: #111;
+        }
+
+        /* Recommended Products */
+        .recommendations {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 24px;
+        }
+
+        .recommendations h2 {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .product-card {
+            cursor: pointer;
+        }
+
+        .product-image {
+            aspect-ratio: 1;
+            background: #f5f5f5;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .product-category {
+            font-size: 14px;
+            color: #707070;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            background: #111;
+            color: #fff;
+            padding: 48px;
+            margin-top: 80px;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 48px;
+        }
+
+        .footer-column h4 {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 8px;
+        }
+
+        .footer-column a {
+            color: #707070;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-column a:hover {
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 16px;
+            }
+
+            .empty-cart {
+                margin: 40px auto;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">VULT</div>
+        <nav class="nav-links">
+            <a href="#">New & Featured</a>
+            <a href="#">Men</a>
+            <a href="#">Women</a>
+            <a href="#">Kids</a>
+            <a href="#">Sale</a>
+            <div class="cart-icon">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Empty Cart -->
+    <main class="empty-cart">
+        <div class="empty-icon">
+            <svg width="64" height="64" fill="none" viewBox="0 0 64 64" stroke="#ccc" stroke-width="2">
+                <path d="M20 20h28l2 24H18l2-24z"/>
+                <path d="M24 20v-4a8 8 0 1116 0v4"/>
+            </svg>
+        </div>
+
+        <h1>Your Bag is Empty</h1>
+        <p>Once you add something to your bag, it will appear here. Ready to get started?</p>
+
+        <a href="/products" class="continue-shopping-btn">Continue Shopping</a>
+
+        <div class="member-benefits">
+            <h3>Join Vult Membership for the best products, inspiration and stories.</h3>
+            <ul>
+                <li>Free shipping on all orders</li>
+                <li>Exclusive member-only products</li>
+                <li>Early access to new releases</li>
+                <li>Birthday rewards</li>
+            </ul>
+            <a href="/register" class="join-btn">Join Us</a>
+            <p class="sign-in-link">Already a member? <a href="/login">Sign In</a></p>
+        </div>
+    </main>
+
+    <!-- Recommendations -->
+    <section class="recommendations">
+        <h2>You Might Like</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-image">
+                    <svg width="100" height="100" viewBox="0 0 100 100" fill="#ddd">
+                        <rect x="15" y="25" width="70" height="50" rx="5"/>
+                        <circle cx="30" cy="70" r="10"/>
+                        <circle cx="70" cy="70" r="10"/>
+                    </svg>
+                </div>
+                <div class="product-name">Air Max 270</div>
+                <div class="product-category">Men's Shoes</div>
+                <div class="product-price">$150.00</div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <svg width="100" height="100" viewBox="0 0 100 100" fill="#ddd">
+                        <path d="M25 25h50v55H25z"/>
+                        <path d="M32 25c0-10 8-15 18-15s18 5 18 15"/>
+                    </svg>
+                </div>
+                <div class="product-name">Dri-FIT Running Jacket</div>
+                <div class="product-category">Men's Jacket</div>
+                <div class="product-price">$120.00</div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <svg width="100" height="100" viewBox="0 0 100 100" fill="#ddd">
+                        <ellipse cx="50" cy="55" rx="30" ry="18"/>
+                        <path d="M32 35c6-18 30-18 36 0"/>
+                    </svg>
+                </div>
+                <div class="product-name">Club Fleece Hoodie</div>
+                <div class="product-category">Men's Hoodie</div>
+                <div class="product-price">$65.00</div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <svg width="100" height="100" viewBox="0 0 100 100" fill="#ddd">
+                        <rect x="20" y="30" width="60" height="45" rx="3"/>
+                        <circle cx="35" cy="70" r="8"/>
+                        <circle cx="65" cy="70" r="8"/>
+                    </svg>
+                </div>
+                <div class="product-name">Pegasus 40</div>
+                <div class="product-category">Men's Running Shoes</div>
+                <div class="product-price">$130.00</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-column">
+                <h4>Get Help</h4>
+                <ul>
+                    <li><a href="#">Order Status</a></li>
+                    <li><a href="#">Shipping & Delivery</a></li>
+                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>About Vult</h4>
+                <ul>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Investors</a></li>
+                    <li><a href="#">Sustainability</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Join Us</h4>
+                <ul>
+                    <li><a href="#">Vult Membership</a></li>
+                    <li><a href="#">Student Discount</a></li>
+                    <li><a href="#">Military Discount</a></li>
+                    <li><a href="#">Teacher Discount</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Promotions & Discounts</h4>
+                <ul>
+                    <li><a href="#">Gift Cards</a></li>
+                    <li><a href="#">Promo Codes</a></li>
+                    <li><a href="#">Sale</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<div
+  class="form-field"
+  [class.form-field--focused]="isFocused"
+  [class.form-field--filled]="hasValue"
+  [class.form-field--valid]="isValid && showValidation"
+  [class.form-field--error]="hasError"
+  [class.form-field--disabled]="disabled"
+  [attr.data-testid]="testId"
+>
+  <input
+    class="form-field__input"
+    [type]="type"
+    [id]="fieldId"
+    [value]="value"
+    [disabled]="disabled"
+    [required]="required"
+    [autocomplete]="autocomplete"
+    [attr.aria-invalid]="hasError"
+    [attr.aria-describedby]="hasError ? fieldId + '-error' : null"
+    placeholder=" "
+    (input)="onInput($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+  />
+  <label class="form-field__label" [for]="fieldId">
+    {{ label }}
+    @if (required) {
+      <span class="form-field__required">*</span>
+    }
+  </label>
+  @if (isValid && showValidation && !isFocused) {
+    <svg class="form-field__check" viewBox="0 0 24 24" fill="none">
+      <path d="M5 13l4 4L19 7" stroke="#128a09" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  }
+</div>
+@if (hasError && errorMessage) {
+  <div class="form-field__error-message" [id]="fieldId + '-error'" role="alert">
+    {{ errorMessage }}
+  </div>
+}

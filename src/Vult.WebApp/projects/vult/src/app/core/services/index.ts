@@ -6,3 +6,5 @@ export * from './product.service';
 export * from './local-storage.service';
 export * from './signalr.service';
 export * from './testimonial.service';
+export * from './cart.service';
+export * from './checkout.service';

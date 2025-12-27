@@ -21,6 +21,18 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/product-detail/product-detail').then(m => m.ProductDetail)
   },
   {
+    path: 'cart',
+    loadComponent: () => import('./pages/cart/cart').then(m => m.Cart)
+  },
+  {
+    path: 'checkout',
+    loadComponent: () => import('./pages/checkout/checkout').then(m => m.Checkout)
+  },
+  {
+    path: 'order-confirmation/:orderId',
+    loadComponent: () => import('./pages/order-confirmation/order-confirmation').then(m => m.OrderConfirmation)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'

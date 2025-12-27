@@ -1,0 +1,426 @@
+<div class="checkout-page" data-testid="checkout-page">
+  <!-- Header -->
+  <header class="checkout-page__header">
+    <a class="checkout-page__logo" href="/home" (click)="onLogoClick($event)">VULT</a>
+    <div class="checkout-page__header-right">
+      <a href="/help" class="checkout-page__help-link">Need Help?</a>
+      <div class="checkout-page__secure-badge">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 1L2 3v5c0 3.5 2.5 6.5 6 7.5 3.5-1 6-4 6-7.5V3L8 1zm0 7.5V4l4 1.5v3c0 2-1.5 4-4 5V8.5z"/>
+        </svg>
+        Secure Checkout
+      </div>
+    </div>
+  </header>
+
+  <main class="checkout-page__main">
+    <div class="checkout-page__container">
+      <!-- Checkout Steps -->
+      <section class="checkout-page__steps">
+        <h1 class="checkout-page__title">Checkout</h1>
+
+        <!-- Step 1: Delivery -->
+        <v-checkout-step
+          [stepNumber]="1"
+          title="Delivery"
+          [status]="getStepStatus('delivery')"
+          [summary]="getDeliverySummary()"
+          testId="checkout-step-delivery"
+          (edit)="editStep('delivery')"
+        >
+          <div class="checkout-page__form">
+            <p class="checkout-page__sign-in-link">
+              <a href="/login">Sign in</a> for faster checkout or continue as guest
+            </p>
+
+            <!-- Contact Information -->
+            <div class="checkout-page__form-section">
+              <h3 class="checkout-page__form-section-title">Contact Information</h3>
+              <v-form-field
+                type="email"
+                label="Email Address"
+                [required]="true"
+                [(ngModel)]="deliveryForm.email"
+                [isValid]="isValidEmail(deliveryForm.email)"
+                testId="checkout-email"
+              />
+              <v-form-field
+                type="tel"
+                label="Phone Number"
+                [required]="true"
+                [(ngModel)]="deliveryForm.phone"
+                testId="checkout-phone"
+              />
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="checkout-page__form-section">
+              <h3 class="checkout-page__form-section-title">Shipping Address</h3>
+              <div class="checkout-page__form-row">
+                <v-form-field
+                  type="text"
+                  label="First Name"
+                  [required]="true"
+                  [(ngModel)]="deliveryForm.firstName"
+                  testId="checkout-firstname"
+                />
+                <v-form-field
+                  type="text"
+                  label="Last Name"
+                  [required]="true"
+                  [(ngModel)]="deliveryForm.lastName"
+                  testId="checkout-lastname"
+                />
+              </div>
+              <v-form-field
+                type="text"
+                label="Address"
+                [required]="true"
+                [(ngModel)]="deliveryForm.address1"
+                testId="checkout-address1"
+              />
+              <v-form-field
+                type="text"
+                label="Apartment, suite, etc. (optional)"
+                [(ngModel)]="deliveryForm.address2"
+                testId="checkout-address2"
+              />
+              <div class="checkout-page__form-row">
+                <v-form-field
+                  type="text"
+                  label="City"
+                  [required]="true"
+                  [(ngModel)]="deliveryForm.city"
+                  testId="checkout-city"
+                />
+                <div class="checkout-page__form-group">
+                  <select
+                    class="checkout-page__form-select"
+                    [(ngModel)]="deliveryForm.state"
+                    data-testid="checkout-state"
+                  >
+                    <option value="">Select State</option>
+                    <option value="CA">California</option>
+                    <option value="NY">New York</option>
+                    <option value="TX">Texas</option>
+                    <option value="FL">Florida</option>
+                    <option value="IL">Illinois</option>
+                    <option value="PA">Pennsylvania</option>
+                    <option value="OH">Ohio</option>
+                    <option value="GA">Georgia</option>
+                    <option value="NC">North Carolina</option>
+                    <option value="MI">Michigan</option>
+                  </select>
+                  <label class="checkout-page__select-label">State*</label>
+                </div>
+              </div>
+              <div class="checkout-page__form-row">
+                <v-form-field
+                  type="text"
+                  label="ZIP Code"
+                  [required]="true"
+                  [(ngModel)]="deliveryForm.zipCode"
+                  testId="checkout-zip"
+                />
+                <div class="checkout-page__form-group">
+                  <select
+                    class="checkout-page__form-select"
+                    [(ngModel)]="deliveryForm.country"
+                    data-testid="checkout-country"
+                  >
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                  </select>
+                  <label class="checkout-page__select-label">Country*</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipping Options -->
+            <div class="checkout-page__form-section">
+              <h3 class="checkout-page__form-section-title">Shipping Method</h3>
+              @for (option of checkoutService.shippingOptions; track option.id) {
+                <label
+                  class="checkout-page__shipping-option"
+                  [class.checkout-page__shipping-option--selected]="selectedShipping()?.id === option.id"
+                >
+                  <input
+                    type="radio"
+                    name="shipping"
+                    [value]="option.id"
+                    [checked]="selectedShipping()?.id === option.id"
+                    (change)="selectShipping(option)"
+                  />
+                  <div class="checkout-page__shipping-details">
+                    <span class="checkout-page__shipping-name">{{ option.name }}</span>
+                    <span class="checkout-page__shipping-time">{{ option.description }}</span>
+                  </div>
+                  <span class="checkout-page__shipping-price">
+                    {{ option.price === 0 ? 'Free' : (option.price | currency) }}
+                  </span>
+                </label>
+              }
+            </div>
+
+            <div class="checkout-page__checkbox-group">
+              <input
+                type="checkbox"
+                id="sameBilling"
+                [(ngModel)]="deliveryForm.useSameForBilling"
+              />
+              <label for="sameBilling">Use this address for billing</label>
+            </div>
+
+            <button
+              class="checkout-page__continue-btn"
+              [disabled]="!isDeliveryFormValid()"
+              (click)="saveDelivery()"
+              data-testid="checkout-delivery-continue"
+            >
+              Save & Continue
+            </button>
+          </div>
+        </v-checkout-step>
+
+        <!-- Step 2: Payment -->
+        <v-checkout-step
+          [stepNumber]="2"
+          title="Payment"
+          [status]="getStepStatus('payment')"
+          [summary]="getPaymentSummary()"
+          testId="checkout-step-payment"
+          (edit)="editStep('payment')"
+        >
+          <div class="checkout-page__form">
+            <!-- Payment Methods -->
+            <div class="checkout-page__payment-methods">
+              <button
+                class="checkout-page__payment-method"
+                [class.checkout-page__payment-method--selected]="paymentForm.method === 'card'"
+                (click)="paymentForm.method = 'card'"
+              >
+                <svg class="checkout-page__payment-icon" viewBox="0 0 32 32" fill="#111">
+                  <rect x="4" y="8" width="24" height="16" rx="2" stroke="#111" stroke-width="2" fill="none"/>
+                  <line x1="4" y1="14" x2="28" y2="14" stroke="#111" stroke-width="2"/>
+                </svg>
+                <span>Credit/Debit Card</span>
+              </button>
+              <button
+                class="checkout-page__payment-method"
+                [class.checkout-page__payment-method--selected]="paymentForm.method === 'paypal'"
+                (click)="paymentForm.method = 'paypal'"
+              >
+                <span class="checkout-page__paypal-text">PayPal</span>
+              </button>
+              <button
+                class="checkout-page__payment-method"
+                [class.checkout-page__payment-method--selected]="paymentForm.method === 'klarna'"
+                (click)="paymentForm.method = 'klarna'"
+              >
+                <span class="checkout-page__klarna-text">Klarna</span>
+              </button>
+            </div>
+
+            @if (paymentForm.method === 'card') {
+              <div class="checkout-page__form-section">
+                <v-form-field
+                  type="text"
+                  label="Card Number"
+                  [required]="true"
+                  [(ngModel)]="paymentForm.cardNumber"
+                  autocomplete="cc-number"
+                  testId="checkout-card-number"
+                />
+                <div class="checkout-page__form-row">
+                  <v-form-field
+                    type="text"
+                    label="Expiration (MM/YY)"
+                    [required]="true"
+                    [(ngModel)]="paymentForm.expiryDate"
+                    autocomplete="cc-exp"
+                    testId="checkout-card-expiry"
+                  />
+                  <v-form-field
+                    type="text"
+                    label="CVV"
+                    [required]="true"
+                    [(ngModel)]="paymentForm.cvv"
+                    autocomplete="cc-csc"
+                    testId="checkout-card-cvv"
+                  />
+                </div>
+                <v-form-field
+                  type="text"
+                  label="Cardholder Name"
+                  [required]="true"
+                  [(ngModel)]="paymentForm.cardholderName"
+                  autocomplete="cc-name"
+                  testId="checkout-card-name"
+                />
+              </div>
+
+              <div class="checkout-page__card-icons">
+                <span class="checkout-page__card-icon">VISA</span>
+                <span class="checkout-page__card-icon">MC</span>
+                <span class="checkout-page__card-icon">AMEX</span>
+                <span class="checkout-page__card-icon">DISC</span>
+              </div>
+            }
+
+            @if (paymentForm.method === 'paypal') {
+              <div class="checkout-page__alt-payment-info">
+                <p>You will be redirected to PayPal to complete your purchase.</p>
+              </div>
+            }
+
+            @if (paymentForm.method === 'klarna') {
+              <div class="checkout-page__alt-payment-info">
+                <p>Pay in 4 interest-free payments with Klarna.</p>
+              </div>
+            }
+
+            <button
+              class="checkout-page__continue-btn"
+              [disabled]="!isPaymentFormValid()"
+              (click)="savePayment()"
+              data-testid="checkout-payment-continue"
+            >
+              Save & Continue
+            </button>
+          </div>
+        </v-checkout-step>
+
+        <!-- Step 3: Review -->
+        <v-checkout-step
+          [stepNumber]="3"
+          title="Review & Place Order"
+          [status]="getStepStatus('review')"
+          testId="checkout-step-review"
+        >
+          <div class="checkout-page__form">
+            <div class="checkout-page__review-section">
+              <div class="checkout-page__review-header">
+                <span class="checkout-page__review-title">Shipping Address</span>
+                <button class="checkout-page__edit-btn" (click)="editStep('delivery')">Edit</button>
+              </div>
+              <div class="checkout-page__review-content">
+                {{ deliveryForm.firstName }} {{ deliveryForm.lastName }}<br/>
+                {{ deliveryForm.address1 }}
+                @if (deliveryForm.address2) {
+                  , {{ deliveryForm.address2 }}
+                }<br/>
+                {{ deliveryForm.city }}, {{ deliveryForm.state }} {{ deliveryForm.zipCode }}<br/>
+                {{ deliveryForm.country === 'US' ? 'United States' : 'Canada' }}
+              </div>
+            </div>
+
+            <div class="checkout-page__review-section">
+              <div class="checkout-page__review-header">
+                <span class="checkout-page__review-title">Shipping Method</span>
+                <button class="checkout-page__edit-btn" (click)="editStep('delivery')">Edit</button>
+              </div>
+              <div class="checkout-page__review-content">
+                {{ selectedShipping()?.name }} ({{ selectedShipping()?.price === 0 ? 'Free' : (selectedShipping()?.price | currency) }})
+                - {{ checkoutService.getEstimatedDeliveryDate() }}
+              </div>
+            </div>
+
+            <div class="checkout-page__review-section">
+              <div class="checkout-page__review-header">
+                <span class="checkout-page__review-title">Payment Method</span>
+                <button class="checkout-page__edit-btn" (click)="editStep('payment')">Edit</button>
+              </div>
+              <div class="checkout-page__review-content">
+                @if (paymentForm.method === 'card') {
+                  Card ending in {{ getLastFourDigits() }}
+                } @else if (paymentForm.method === 'paypal') {
+                  PayPal
+                } @else {
+                  Klarna
+                }
+              </div>
+            </div>
+
+            <button
+              class="checkout-page__place-order-btn"
+              [disabled]="checkoutService.isProcessing()"
+              (click)="placeOrder()"
+              data-testid="checkout-place-order"
+            >
+              @if (checkoutService.isProcessing()) {
+                <span class="checkout-page__loading-spinner"></span>
+                Processing...
+              } @else {
+                Place Order
+              }
+            </button>
+
+            <p class="checkout-page__terms">
+              By placing this order, you agree to our
+              <a href="/terms">Terms of Use</a> and
+              <a href="/privacy">Privacy Policy</a>
+            </p>
+          </div>
+        </v-checkout-step>
+      </section>
+
+      <!-- Order Summary -->
+      <aside class="checkout-page__summary">
+        <h2 class="checkout-page__summary-title">
+          Your Order
+          <span class="checkout-page__summary-count">{{ cartService.itemCount() }} items</span>
+        </h2>
+
+        <div class="checkout-page__summary-items">
+          @for (item of cartService.items(); track item.cartItemId) {
+            <div class="checkout-page__summary-item">
+              <div class="checkout-page__summary-item-image">
+                @if (item.imageUrl) {
+                  <img [src]="item.imageUrl" [alt]="item.name" />
+                } @else {
+                  <svg width="60" height="60" viewBox="0 0 60 60" fill="#ccc">
+                    <rect x="8" y="15" width="44" height="30" rx="3"/>
+                    <circle cx="20" cy="42" r="6"/>
+                    <circle cx="40" cy="42" r="6"/>
+                  </svg>
+                }
+              </div>
+              <div class="checkout-page__summary-item-details">
+                <span class="checkout-page__summary-item-name">{{ item.name }}</span>
+                <span class="checkout-page__summary-item-options">
+                  {{ item.color }} | Size: {{ item.size }} | Qty: {{ item.quantity }}
+                </span>
+              </div>
+              <span class="checkout-page__summary-item-price">{{ item.price * item.quantity | currency }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="checkout-page__summary-rows">
+          <div class="checkout-page__summary-row">
+            <span>Subtotal</span>
+            <span>{{ cartService.subtotal() | currency }}</span>
+          </div>
+          <div class="checkout-page__summary-row">
+            <span>Shipping</span>
+            <span>{{ selectedShipping()?.price === 0 ? 'Free' : (selectedShipping()?.price | currency) }}</span>
+          </div>
+          <div class="checkout-page__summary-row">
+            <span>Estimated Tax</span>
+            <span>{{ checkoutService.calculateTax(cartService.subtotal()) | currency }}</span>
+          </div>
+          @if (cartService.promoDiscount() > 0) {
+            <div class="checkout-page__summary-row checkout-page__summary-row--discount">
+              <span>Discount</span>
+              <span>-{{ cartService.promoDiscount() | currency }}</span>
+            </div>
+          }
+          <div class="checkout-page__summary-row checkout-page__summary-row--total">
+            <span>Total</span>
+            <span>{{ checkoutService.calculateTotal() | currency }}</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>

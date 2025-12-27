@@ -1,0 +1,81 @@
+<div
+  class="cart-notification"
+  [class.cart-notification--corner]="variant === 'corner'"
+  role="dialog"
+  aria-label="Added to bag notification"
+  data-testid="cart-notification"
+>
+  <!-- Header -->
+  <div class="cart-notification__header" [class.cart-notification__header--dark]="variant === 'corner'">
+    <div class="cart-notification__title">
+      <span class="cart-notification__success-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      Added to Bag
+    </div>
+    @if (variant === 'dropdown') {
+      <button class="cart-notification__close-btn" aria-label="Close notification" (click)="onClose()">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 5L5 15M5 5l10 10"/>
+        </svg>
+      </button>
+    }
+  </div>
+
+  <!-- Content -->
+  <div class="cart-notification__content">
+    <div class="cart-notification__item">
+      <div class="cart-notification__item-image">
+        @if (item.imageUrl) {
+          <img [src]="item.imageUrl" [alt]="item.name" />
+        } @else {
+          <svg width="50" height="50" viewBox="0 0 50 50" fill="#ccc">
+            <rect x="5" y="12" width="40" height="26" rx="3"/>
+            <circle cx="15" cy="35" r="5"/>
+            <circle cx="35" cy="35" r="5"/>
+          </svg>
+        }
+      </div>
+      <div class="cart-notification__item-details">
+        <div class="cart-notification__item-name">{{ item.name }}</div>
+        @if (item.subtitle) {
+          <div class="cart-notification__item-subtitle">{{ item.subtitle }}</div>
+        }
+        <div class="cart-notification__item-options">{{ item.color }} | Size: {{ item.size }}</div>
+        @if (variant === 'dropdown') {
+          <div class="cart-notification__item-price">{{ item.price | currency }}</div>
+        }
+      </div>
+      @if (variant === 'corner') {
+        <div class="cart-notification__item-price cart-notification__item-price--corner">{{ item.price | currency }}</div>
+      }
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="cart-notification__actions">
+    <a class="cart-notification__view-bag-btn" [href]="cartUrl" (click)="onViewBag($event)">
+      View Bag @if (itemCount > 0) { ({{ itemCount }}) }
+    </a>
+    <a class="cart-notification__checkout-btn" [href]="checkoutUrl" (click)="onCheckout($event)">
+      Checkout
+    </a>
+  </div>
+
+  @if (variant === 'dropdown' && freeShippingMessage) {
+    <div class="cart-notification__footer">
+      {{ freeShippingMessage }}
+    </div>
+  }
+
+  @if (variant === 'corner' && autoDismiss) {
+    <div class="cart-notification__progress-bar">
+      <div
+        class="cart-notification__progress-bar-fill"
+        [style.animation-duration.ms]="autoDismissDelay"
+      ></div>
+    </div>
+  }
+</div>

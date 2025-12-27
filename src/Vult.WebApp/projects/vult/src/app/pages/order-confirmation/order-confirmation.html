@@ -1,0 +1,67 @@
+<div class="order-confirmation" data-testid="order-confirmation-page">
+  <!-- Header -->
+  <header class="order-confirmation__header">
+    <a class="order-confirmation__logo" href="/home" (click)="onLogoClick($event)">VULT</a>
+  </header>
+
+  <main class="order-confirmation__main">
+    <!-- Success Header -->
+    <div class="order-confirmation__success">
+      <div class="order-confirmation__success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3">
+          <path d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h1 class="order-confirmation__success-title">Thank You for Your Order!</h1>
+      <p class="order-confirmation__order-number" data-testid="order-number">
+        Order Number: <strong>{{ orderNumber }}</strong>
+      </p>
+      <p class="order-confirmation__email">
+        A confirmation email has been sent to {{ email }}
+      </p>
+    </div>
+
+    <!-- Order Details -->
+    <div class="order-confirmation__details">
+      <h2>Order Details</h2>
+      <div class="order-confirmation__details-grid">
+        <div class="order-confirmation__detail-section">
+          <h3>Estimated Delivery</h3>
+          <p class="order-confirmation__delivery-date">{{ estimatedDelivery }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="order-confirmation__actions">
+      <button class="order-confirmation__primary-btn" (click)="continueShopping()">
+        Continue Shopping
+      </button>
+      <button class="order-confirmation__secondary-btn" (click)="trackOrder()">
+        Track Order
+      </button>
+    </div>
+
+    <!-- Account Prompt -->
+    <div class="order-confirmation__account-prompt">
+      <h3>Create an Account</h3>
+      <p>Save your information for faster checkout next time and get access to exclusive benefits.</p>
+      <ul class="order-confirmation__benefits-list">
+        <li>Track orders easily</li>
+        <li>Faster checkout</li>
+        <li>Exclusive offers</li>
+      </ul>
+      <button class="order-confirmation__create-account-btn" (click)="createAccount()">
+        Create Account
+      </button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="order-confirmation__footer">
+    <p>
+      Questions about your order?
+      <a href="/help/contact">Contact Us</a> or call 1-800-VULT-123
+    </p>
+  </footer>
+</div>

@@ -1,0 +1,61 @@
+<div class="cart-page" data-testid="cart-page">
+  <main class="cart-page__main">
+    <div class="cart-page__container">
+      @if (cartService.isEmpty()) {
+        <!-- Empty Cart State -->
+        <div class="cart-page__empty" data-testid="empty-cart">
+          <div class="cart-page__empty-icon">
+            <svg width="64" height="64" fill="none" viewBox="0 0 64 64" stroke="#ccc" stroke-width="2">
+              <path d="M20 20h28l2 24H18l2-24z"/>
+              <path d="M24 20v-4a8 8 0 1116 0v4"/>
+            </svg>
+          </div>
+          <h1 class="cart-page__empty-title">Your Bag is Empty</h1>
+          <p class="cart-page__empty-message">Once you add something to your bag, it will appear here. Ready to get started?</p>
+          <button class="cart-page__continue-btn" (click)="navigateTo('/products')">
+            Continue Shopping
+          </button>
+        </div>
+      } @else {
+        <!-- Cart Content -->
+        <section class="cart-page__content">
+          <h1 class="cart-page__title">Bag</h1>
+          <p class="cart-page__count" data-testid="cart-count">
+            {{ cartService.itemCount() }} {{ cartService.itemCount() === 1 ? 'Item' : 'Items' }} |
+            {{ cartService.subtotal() | currency }}
+          </p>
+
+          <div class="cart-page__items" data-testid="cart-items">
+            @for (item of cartService.items(); track item.cartItemId) {
+              <v-cart-item
+                [item]="mapToCartItemData(item)"
+                [testId]="'cart-item-' + item.cartItemId"
+                (quantityChange)="onQuantityChange($event)"
+                (remove)="onRemoveItem($event)"
+                (moveToFavorites)="onMoveToFavorites($event)"
+                (productClick)="onProductClick($event)"
+              />
+            }
+          </div>
+        </section>
+
+        <!-- Summary Section -->
+        <aside class="cart-page__summary">
+          <v-cart-summary
+            [data]="getSummaryData()"
+            [deliveryEstimate]="getDeliveryEstimate()"
+            [freeShippingMessage]="getFreeShippingMessage()"
+            [freeShippingQualified]="cartService.subtotal() >= 50"
+            [isPromoLoading]="isPromoLoading"
+            [promoError]="promoError"
+            testId="cart-summary"
+            (checkout)="onCheckout()"
+            (payPalClick)="onPayPalClick()"
+            (promoApply)="onPromoApply($event)"
+            (promoRemove)="onPromoRemove()"
+          />
+        </aside>
+      }
+    </div>
+  </main>
+</div>

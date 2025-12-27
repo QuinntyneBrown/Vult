@@ -26,6 +26,10 @@ export class App {
     this._router.navigateByUrl('/');
   }
 
+  onCartClick() {
+    this._router.navigateByUrl('/cart');
+  }
+
   navItems: NavItem[] = [
     {
       id: 'new',

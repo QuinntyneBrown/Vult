@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vult - Cart Notification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #111;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #111;
+            font-size: 14px;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #111;
+            color: #fff;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Cart Notification Popup */
+        .cart-notification {
+            position: absolute;
+            top: 100%;
+            right: 48px;
+            width: 380px;
+            background: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .success-icon {
+            width: 20px;
+            height: 20px;
+            background: #128a09;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .notification-content {
+            padding: 16px;
+        }
+
+        .added-item {
+            display: flex;
+            gap: 16px;
+        }
+
+        .added-item-image {
+            width: 100px;
+            height: 100px;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .added-item-details {
+            flex: 1;
+        }
+
+        .added-item-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .added-item-category {
+            color: #707070;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .added-item-options {
+            color: #707070;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .added-item-price {
+            font-weight: 500;
+        }
+
+        .notification-actions {
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .view-bag-btn {
+            flex: 1;
+            padding: 14px;
+            background: #fff;
+            color: #111;
+            border: 1px solid #111;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .view-bag-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .checkout-btn {
+            flex: 1;
+            padding: 14px;
+            background: #111;
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .checkout-btn:hover {
+            background: #333;
+        }
+
+        .notification-footer {
+            padding: 12px 16px;
+            background: #f5f5f5;
+            font-size: 12px;
+            color: #707070;
+            text-align: center;
+        }
+
+        /* Demo Content */
+        .demo-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        .demo-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: #707070;
+        }
+
+        .demo-description {
+            font-size: 14px;
+            color: #707070;
+            margin-bottom: 24px;
+        }
+
+        /* Alternative Mini Cart Styles */
+        .mini-cart-corner {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            width: 320px;
+            background: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            border-radius: 8px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .mini-header {
+            padding: 12px 16px;
+            background: #111;
+            color: #fff;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mini-header .success-icon {
+            background: #128a09;
+        }
+
+        .mini-content {
+            padding: 16px;
+        }
+
+        .mini-item {
+            display: flex;
+            gap: 12px;
+        }
+
+        .mini-item-image {
+            width: 60px;
+            height: 60px;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mini-item-details {
+            flex: 1;
+        }
+
+        .mini-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .mini-item-options {
+            font-size: 12px;
+            color: #707070;
+        }
+
+        .mini-item-price {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .mini-actions {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .mini-actions a {
+            flex: 1;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .mini-view-bag {
+            background: #fff;
+            color: #111;
+            border: 1px solid #111;
+        }
+
+        .mini-checkout {
+            background: #111;
+            color: #fff;
+            border: none;
+        }
+
+        .progress-bar {
+            height: 3px;
+            background: #e5e5e5;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #111;
+            animation: countdown 4s linear forwards;
+        }
+
+        @keyframes countdown {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Dropdown Notification -->
+    <header class="header">
+        <div class="logo">VULT</div>
+        <nav class="nav-links">
+            <a href="#">New & Featured</a>
+            <a href="#">Men</a>
+            <a href="#">Women</a>
+            <a href="#">Kids</a>
+            <a href="#">Sale</a>
+            <div class="cart-icon">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <span class="cart-badge">1</span>
+            </div>
+        </nav>
+
+        <!-- Cart Notification Dropdown -->
+        <div class="cart-notification">
+            <div class="notification-header">
+                <div class="notification-title">
+                    <span class="success-icon">✓</span>
+                    Added to Bag
+                </div>
+                <button class="close-btn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="notification-content">
+                <div class="added-item">
+                    <div class="added-item-image">
+                        <svg width="70" height="70" viewBox="0 0 70 70" fill="#ccc">
+                            <rect x="8" y="17" width="54" height="36" rx="4"/>
+                            <circle cx="22" cy="50" r="7"/>
+                            <circle cx="48" cy="50" r="7"/>
+                        </svg>
+                    </div>
+                    <div class="added-item-details">
+                        <div class="added-item-name">Air Max 270</div>
+                        <div class="added-item-category">Men's Shoes</div>
+                        <div class="added-item-options">Black/White | Size: 10</div>
+                        <div class="added-item-price">$150.00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="notification-actions">
+                <a href="/cart" class="view-bag-btn">View Bag (1)</a>
+                <a href="/checkout" class="checkout-btn">Checkout</a>
+            </div>
+            <div class="notification-footer">
+                Free shipping on orders over $50
+            </div>
+        </div>
+    </header>
+
+    <!-- Corner Mini Cart (Alternative Style) -->
+    <div class="mini-cart-corner">
+        <div class="mini-header">
+            <div class="notification-title">
+                <span class="success-icon">✓</span>
+                Added to Bag
+            </div>
+        </div>
+        <div class="mini-content">
+            <div class="mini-item">
+                <div class="mini-item-image">
+                    <svg width="50" height="50" viewBox="0 0 50 50" fill="#ccc">
+                        <rect x="5" y="12" width="40" height="26" rx="3"/>
+                        <circle cx="15" cy="35" r="5"/>
+                        <circle cx="35" cy="35" r="5"/>
+                    </svg>
+                </div>
+                <div class="mini-item-details">
+                    <div class="mini-item-name">Air Max 270</div>
+                    <div class="mini-item-options">Black/White | Size: 10</div>
+                </div>
+                <div class="mini-item-price">$150.00</div>
+            </div>
+        </div>
+        <div class="mini-actions">
+            <a href="/cart" class="mini-view-bag">View Bag</a>
+            <a href="/checkout" class="mini-checkout">Checkout</a>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-bar-fill"></div>
+        </div>
+    </div>
+
+    <!-- Demo Content -->
+    <main class="demo-content">
+        <h2 class="demo-title">Cart Notification Mockup</h2>
+        <p class="demo-description">
+            This page demonstrates two styles of cart notifications:
+        </p>
+        <ol class="demo-description">
+            <li><strong>Dropdown Style (Top)</strong> - Appears directly below the cart icon in the header. Includes full product details, CTAs, and free shipping message.</li>
+            <li><strong>Corner Toast Style (Right)</strong> - Appears in the top-right corner with a countdown progress bar that auto-dismisses after 4 seconds.</li>
+        </ol>
+        <p class="demo-description">
+            Key features:
+        </p>
+        <ul class="demo-description" style="list-style: disc; margin-left: 20px;">
+            <li>Success checkmark indicator</li>
+            <li>Product thumbnail, name, category, and options</li>
+            <li>Price display</li>
+            <li>"View Bag" and "Checkout" CTAs</li>
+            <li>Close button for manual dismissal</li>
+            <li>Auto-dismiss with progress indicator (corner style)</li>
+            <li>Slide-in animation</li>
+        </ul>
+    </main>
+</body>
+</html>

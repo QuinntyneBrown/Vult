@@ -1,10 +1,4 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-export * from './home';
-export * from './login';
-export * from './product-detail';
-export * from './products';
-export * from './cart';
 export * from './checkout';
-export * from './order-confirmation';
