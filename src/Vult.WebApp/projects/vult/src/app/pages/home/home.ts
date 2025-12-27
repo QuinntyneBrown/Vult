@@ -4,10 +4,10 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  HeroSectionComponent,
-  ProductCardComponent,
+  HeroSection,
+  ProductCard,
   ProductCardData,
-  TypographyDisplayComponent,
+  TypographyDisplay,
 } from 'vult-components';
 
 export interface Testimonial {
@@ -22,9 +22,9 @@ export interface Testimonial {
   selector: 'app-home',
   standalone: true,
   imports: [
-    HeroSectionComponent,
-    ProductCardComponent,
-    TypographyDisplayComponent,
+    HeroSection,
+    ProductCard,
+    TypographyDisplay,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',

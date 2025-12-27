@@ -2,7 +2,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'lib-result-counter',
+  selector: 'v-result-counter',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -77,7 +77,7 @@ import { CommonModule } from '@angular/common';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResultCounterComponent {
+export class ResultCounter {
   @Input() count = 0;
   @Input() singularLabel = 'Result';
   @Input() pluralLabel = 'Results';

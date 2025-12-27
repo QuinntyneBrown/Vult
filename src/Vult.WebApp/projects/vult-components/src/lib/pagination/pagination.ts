@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 export type PaginationVariant = 'numbered' | 'load-more';
 
 @Component({
-  selector: 'lib-pagination',
+  selector: 'v-pagination',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -211,7 +211,7 @@ export type PaginationVariant = 'numbered' | 'load-more';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaginationComponent {
+export class Pagination {
   @Input() variant: PaginationVariant = 'numbered';
   @Input() totalPages = 1;
   @Input() maxVisiblePages = 7;

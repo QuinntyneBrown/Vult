@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { SecondaryButtonComponent } from './secondary-button.component';
+import { SecondaryButton } from './secondary-button';
 
-const meta: Meta<SecondaryButtonComponent> = {
+const meta: Meta<SecondaryButton> = {
   title: 'Components/SecondaryButton',
-  component: SecondaryButtonComponent,
+  component: SecondaryButton,
   tags: ['autodocs'],
   argTypes: {
     variant: {
@@ -22,7 +22,7 @@ const meta: Meta<SecondaryButtonComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<SecondaryButtonComponent>;
+type Story = StoryObj<SecondaryButton>;
 
 export const Outlined: Story = {
   args: {
@@ -32,7 +32,7 @@ export const Outlined: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-secondary-button [variant]="variant" [size]="size" [theme]="theme">Learn More</lib-secondary-button>`,
+    template: `<v-secondary-button [variant]="variant" [size]="size" [theme]="theme">Learn More</v-secondary-button>`,
   }),
 };
 
@@ -44,7 +44,7 @@ export const Text: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-secondary-button [variant]="variant" [size]="size" [theme]="theme">View All</lib-secondary-button>`,
+    template: `<v-secondary-button [variant]="variant" [size]="size" [theme]="theme">View All</v-secondary-button>`,
   }),
 };
 
@@ -56,7 +56,7 @@ export const Ghost: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-secondary-button [variant]="variant" [size]="size" [theme]="theme">Cancel</lib-secondary-button>`,
+    template: `<v-secondary-button [variant]="variant" [size]="size" [theme]="theme">Cancel</v-secondary-button>`,
   }),
 };
 
@@ -68,7 +68,7 @@ export const LightTheme: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-secondary-button [variant]="variant" [size]="size" [theme]="theme">Learn More</lib-secondary-button>`,
+    template: `<v-secondary-button [variant]="variant" [size]="size" [theme]="theme">Learn More</v-secondary-button>`,
   }),
   parameters: {
     backgrounds: { default: 'dark' },
@@ -83,7 +83,7 @@ export const Disabled: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-secondary-button [variant]="variant" [size]="size" [disabled]="disabled">Disabled</lib-secondary-button>`,
+    template: `<v-secondary-button [variant]="variant" [size]="size" [disabled]="disabled">Disabled</v-secondary-button>`,
   }),
 };
 
@@ -91,9 +91,9 @@ export const AllVariants: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 16px; align-items: center;">
-        <lib-secondary-button variant="outlined" size="medium">Outlined</lib-secondary-button>
-        <lib-secondary-button variant="text" size="medium">Text</lib-secondary-button>
-        <lib-secondary-button variant="ghost" size="medium">Ghost</lib-secondary-button>
+        <v-secondary-button variant="outlined" size="medium">Outlined</v-secondary-button>
+        <v-secondary-button variant="text" size="medium">Text</v-secondary-button>
+        <v-secondary-button variant="ghost" size="medium">Ghost</v-secondary-button>
       </div>
     `,
   }),

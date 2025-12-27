@@ -3,82 +3,82 @@
  */
 
 // Badge
-export * from './lib/badge/badge.component';
+export * from './lib/badge/badge';
 
 // Breadcrumb Navigation
-export * from './lib/breadcrumb-navigation/breadcrumb-navigation.component';
+export * from './lib/breadcrumb-navigation/breadcrumb-navigation';
 
 // Carousel Slider
-export * from './lib/carousel-slider/carousel-slider.component';
+export * from './lib/carousel-slider/carousel-slider';
 
 // Checkbox Filter
-export * from './lib/checkbox-filter/checkbox-filter.component';
+export * from './lib/checkbox-filter/checkbox-filter';
 
 // Color Swatch Selector
-export * from './lib/color-swatch-selector/color-swatch-selector.component';
+export * from './lib/color-swatch-selector/color-swatch-selector';
 
 // Filter Sidebar
-export * from './lib/filter-sidebar/filter-sidebar.component';
+export * from './lib/filter-sidebar/filter-sidebar';
 
 // Footer
-export * from './lib/footer/footer.component';
+export * from './lib/footer/footer';
 
 // Hero Section
-export * from './lib/hero-section/hero-section.component';
+export * from './lib/hero-section/hero-section';
 
 // Icon Button
-export * from './lib/icon-button/icon-button.component';
+export * from './lib/icon-button/icon-button';
 
 // Mobile Filter Toggle
-export * from './lib/mobile-filter-toggle/mobile-filter-toggle.component';
+export * from './lib/mobile-filter-toggle/mobile-filter-toggle';
 
 // Navigation Bar
-export * from './lib/navigation-bar/navigation-bar.component';
+export * from './lib/navigation-bar/navigation-bar';
 
 // Page Header
-export * from './lib/page-header/page-header.component';
+export * from './lib/page-header/page-header';
 
 // Pagination
-export * from './lib/pagination/pagination.component';
+export * from './lib/pagination/pagination';
 
 // Primary Button
-export * from './lib/primary-button/primary-button.component';
+export * from './lib/primary-button/primary-button';
 
 // Product Card
-export * from './lib/product-card/product-card.component';
+export * from './lib/product-card/product-card';
 
 // Product Grid
-export * from './lib/product-grid/product-grid.component';
+export * from './lib/product-grid/product-grid';
 
 // Result Counter
-export * from './lib/result-counter/result-counter.component';
+export * from './lib/result-counter/result-counter';
 
 // Search Bar
-export * from './lib/search-bar/search-bar.component';
+export * from './lib/search-bar/search-bar';
 
 // Secondary Button
-export * from './lib/secondary-button/secondary-button.component';
+export * from './lib/secondary-button/secondary-button';
 
 // Size Selector
-export * from './lib/size-selector/size-selector.component';
+export * from './lib/size-selector/size-selector';
 
 // Sort Dropdown
-export * from './lib/sort-dropdown/sort-dropdown.component';
+export * from './lib/sort-dropdown/sort-dropdown';
 
 // Typography Display
-export * from './lib/typography-display/typography-display.component';
+export * from './lib/typography-display/typography-display';
 
 // Product Image Gallery
-export * from './lib/product-image-gallery/product-image-gallery.component';
+export * from './lib/product-image-gallery/product-image-gallery';
 
 // Product Info Section
-export * from './lib/product-info-section/product-info-section.component';
+export * from './lib/product-info-section/product-info-section';
 
 // Add to Bag Button
-export * from './lib/add-to-bag-button/add-to-bag-button.component';
+export * from './lib/add-to-bag-button/add-to-bag-button';
 
 // Favorites Button
-export * from './lib/favorites-button/favorites-button.component';
+export * from './lib/favorites-button/favorites-button';
 
 // Product Details Accordion
-export * from './lib/product-details-accordion/product-details-accordion.component';
+export * from './lib/product-details-accordion/product-details-accordion';

@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from '@storybook/angular';
-import { ProductInfoSectionComponent, ProductPrice } from './product-info-section.component';
+import { ProductInfoSection, ProductPrice } from './product-info-section';
 
-const meta: Meta<ProductInfoSectionComponent> = {
+const meta: Meta<ProductInfoSection> = {
   title: 'Components/ProductInfoSection',
-  component: ProductInfoSectionComponent,
+  component: ProductInfoSection,
   tags: ['autodocs'],
   argTypes: {
     title: { control: 'text' },
@@ -16,7 +16,7 @@ const meta: Meta<ProductInfoSectionComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<ProductInfoSectionComponent>;
+type Story = StoryObj<ProductInfoSection>;
 
 const regularPrice: ProductPrice = {
   current: 175,

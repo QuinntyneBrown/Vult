@@ -20,7 +20,7 @@ export type TypographyVariant =
 export type TypographyColor = 'primary' | 'secondary' | 'inverse' | 'sale' | 'error' | 'success';
 
 @Component({
-  selector: 'lib-typography',
+  selector: 'v-typography',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -211,7 +211,7 @@ export type TypographyColor = 'primary' | 'secondary' | 'inverse' | 'sale' | 'er
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TypographyDisplayComponent {
+export class TypographyDisplay {
   @Input() variant: TypographyVariant = 'body-1';
   @Input() color: TypographyColor = 'primary';
   @Input() align: 'left' | 'center' | 'right' = 'left';

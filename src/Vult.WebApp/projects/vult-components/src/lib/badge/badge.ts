@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 export type BadgeVariant = 'default' | 'new' | 'sale' | 'member' | 'sustainable' | 'bestseller';
 
 @Component({
-  selector: 'lib-badge',
+  selector: 'v-badge',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -62,7 +62,7 @@ export type BadgeVariant = 'default' | 'new' | 'sale' | 'member' | 'sustainable'
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BadgeComponent {
+export class Badge {
   @Input() variant: BadgeVariant = 'default';
   @Input() ariaLabel?: string;
 }

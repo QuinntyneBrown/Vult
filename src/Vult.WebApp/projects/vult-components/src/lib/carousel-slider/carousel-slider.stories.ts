@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { CarouselSliderComponent, CarouselSlide } from './carousel-slider.component';
+import { CarouselSlider, CarouselSlide } from './carousel-slider';
 
-const meta: Meta<CarouselSliderComponent> = {
+const meta: Meta<CarouselSlider> = {
   title: 'Components/CarouselSlider',
-  component: CarouselSliderComponent,
+  component: CarouselSlider,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<CarouselSliderComponent>;
+type Story = StoryObj<CarouselSlider>;
 
 const slides: CarouselSlide[] = [
   {

@@ -4,16 +4,16 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {
-  FooterComponent,
+  Footer,
   FooterColumn,
   FooterLink,
   SocialLink,
-  PageHeaderComponent
+  PageHeader
 } from 'vult-components';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FooterComponent, PageHeaderComponent],
+  imports: [RouterOutlet, Footer, PageHeader],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { ResultCounterComponent } from './result-counter.component';
+import { ResultCounter } from './result-counter';
 
-const meta: Meta<ResultCounterComponent> = {
+const meta: Meta<ResultCounter> = {
   title: 'Components/ResultCounter',
-  component: ResultCounterComponent,
+  component: ResultCounter,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<ResultCounterComponent>;
+type Story = StoryObj<ResultCounter>;
 
 export const Default: Story = {
   args: {

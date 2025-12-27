@@ -5,16 +5,16 @@ import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import {
-  PageHeaderComponent,
-  ProductGridComponent,
+  PageHeader,
+  ProductGrid,
   ProductCardData,
-  FilterSidebarComponent,
+  FilterSidebar,
   FilterSection,
-  SortDropdownComponent,
+  SortDropdown,
   SortOption,
-  MobileFilterToggleComponent,
-  PaginationComponent,
-  ResultCounterComponent
+  MobileFilterToggle,
+  Pagination,
+  ResultCounter
 } from 'vult-components';
 
 export type ProductsSortOption = 'featured' | 'newest' | 'price-asc' | 'price-desc';
@@ -32,13 +32,13 @@ export interface ProductsFilterState {
   imports: [
     CommonModule,
     RouterModule,
-    PageHeaderComponent,
-    ProductGridComponent,
-    FilterSidebarComponent,
-    SortDropdownComponent,
-    MobileFilterToggleComponent,
-    PaginationComponent,
-    ResultCounterComponent
+    PageHeader,
+    ProductGrid,
+    FilterSidebar,
+    SortDropdown,
+    MobileFilterToggle,
+    Pagination,
+    ResultCounter
   ],
   templateUrl: './products.html',
   styleUrls: ['./products.scss'],

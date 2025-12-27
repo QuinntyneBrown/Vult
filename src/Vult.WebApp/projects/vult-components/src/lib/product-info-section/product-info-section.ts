@@ -10,7 +10,7 @@ export interface ProductPrice {
 }
 
 @Component({
-  selector: 'lib-product-info-section',
+  selector: 'v-product-info-section',
   standalone: true,
   imports: [CommonModule, CurrencyPipe],
   template: `
@@ -148,7 +148,7 @@ export interface ProductPrice {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductInfoSectionComponent {
+export class ProductInfoSection {
   @Input() title = '';
   @Input() subtitle = '';
   @Input() price: ProductPrice = {

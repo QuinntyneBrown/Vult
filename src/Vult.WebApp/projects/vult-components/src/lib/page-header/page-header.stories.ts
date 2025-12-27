@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { PageHeaderComponent } from './page-header.component';
+import { PageHeader } from './page-header';
 
-const meta: Meta<PageHeaderComponent> = {
+const meta: Meta<PageHeader> = {
   title: 'Components/PageHeader',
-  component: PageHeaderComponent,
+  component: PageHeader,
   tags: ['autodocs'],
   argTypes: {
     alignment: {
@@ -14,7 +14,7 @@ const meta: Meta<PageHeaderComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<PageHeaderComponent>;
+type Story = StoryObj<PageHeader>;
 
 export const Default: Story = {
   args: {

@@ -8,7 +8,7 @@ export interface BreadcrumbItem {
 }
 
 @Component({
-  selector: 'lib-breadcrumb-navigation',
+  selector: 'v-breadcrumb-navigation',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -96,7 +96,7 @@ export interface BreadcrumbItem {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BreadcrumbNavigationComponent {
+export class BreadcrumbNavigation {
   @Input() items: BreadcrumbItem[] = [];
   @Output() itemClick = new EventEmitter<BreadcrumbItem>();
 

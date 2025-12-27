@@ -1,6 +1,6 @@
 <main class="home-page">
   <!-- Hero Section -->
-  <lib-hero-section
+  <v-hero-section
     [backgroundImage]="heroImage"
     imageAlt="Premium used Blue Jays New Era cap showcasing product quality"
     [title]="heroTitle"
@@ -10,22 +10,22 @@
     theme="dark"
     [overlayGradient]="heroOverlay"
     (primaryCtaClick)="onShopClick()"
-  ></lib-hero-section>
+  ></v-hero-section>
 
   <!-- Featured Products Section -->
   <section class="featured-products-section">
     <div class="section-header">
-      <lib-typography variant="title-3">Featured Products</lib-typography>
+      <v-typography variant="title-3">Featured Products</v-typography>
     </div>
     <div class="products-carousel">
       <div class="products-track">
         @for (product of featuredProducts(); track product.id) {
           <div class="product-item">
-            <lib-product-card
+            <v-product-card
               [product]="product"
               (cardClick)="onProductClick($event)"
               (favoriteToggle)="onFavoriteToggle($event)"
-            ></lib-product-card>
+            ></v-product-card>
           </div>
         }
       </div>
@@ -35,7 +35,7 @@
   <!-- Testimonials Section -->
   <section class="testimonials-section">
     <div class="section-header">
-      <lib-typography variant="title-3">Our customers love us</lib-typography>
+      <v-typography variant="title-3">Our customers love us</v-typography>
     </div>
     <div class="testimonials-carousel">
       <div class="testimonials-track">

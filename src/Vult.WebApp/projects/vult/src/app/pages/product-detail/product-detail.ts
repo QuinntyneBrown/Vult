@@ -5,18 +5,18 @@ import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@a
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import {
-  ProductImageGalleryComponent,
+  ProductImageGallery,
   ProductImage,
-  ProductInfoSectionComponent,
+  ProductInfoSection,
   ProductPrice,
-  ColorSwatchSelectorComponent,
+  ColorSwatchSelector,
   ColorOption,
-  SizeSelectorComponent,
+  SizeSelector,
   SizeOption,
-  AddToBagButtonComponent,
+  AddToBagButton,
   AddToBagButtonState,
-  FavoritesButtonComponent,
-  ProductDetailsAccordionComponent,
+  FavoritesButton,
+  ProductDetailsAccordion,
   AccordionSection
 } from 'vult-components';
 
@@ -39,13 +39,13 @@ export interface ProductDetailData {
   imports: [
     CommonModule,
     RouterModule,
-    ProductImageGalleryComponent,
-    ProductInfoSectionComponent,
-    ColorSwatchSelectorComponent,
-    SizeSelectorComponent,
-    AddToBagButtonComponent,
-    FavoritesButtonComponent,
-    ProductDetailsAccordionComponent
+    ProductImageGallery,
+    ProductInfoSection,
+    ColorSwatchSelector,
+    SizeSelector,
+    AddToBagButton,
+    FavoritesButton,
+    ProductDetailsAccordion
   ],
   templateUrl: './product-detail.html',
   styleUrls: ['./product-detail.scss'],

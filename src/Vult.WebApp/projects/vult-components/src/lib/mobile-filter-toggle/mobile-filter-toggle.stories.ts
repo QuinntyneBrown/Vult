@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { MobileFilterToggleComponent } from './mobile-filter-toggle.component';
+import { MobileFilterToggle } from './mobile-filter-toggle';
 
-const meta: Meta<MobileFilterToggleComponent> = {
+const meta: Meta<MobileFilterToggle> = {
   title: 'Components/MobileFilterToggle',
-  component: MobileFilterToggleComponent,
+  component: MobileFilterToggle,
   tags: ['autodocs'],
   parameters: {
     viewport: {
@@ -13,7 +13,7 @@ const meta: Meta<MobileFilterToggleComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<MobileFilterToggleComponent>;
+type Story = StoryObj<MobileFilterToggle>;
 
 export const Default: Story = {
   args: {

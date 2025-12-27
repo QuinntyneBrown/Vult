@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { FilterSidebarComponent, FilterSection } from './filter-sidebar.component';
+import { FilterSidebar, FilterSection } from './filter-sidebar';
 
-const meta: Meta<FilterSidebarComponent> = {
+const meta: Meta<FilterSidebar> = {
   title: 'Components/FilterSidebar',
-  component: FilterSidebarComponent,
+  component: FilterSidebar,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<FilterSidebarComponent>;
+type Story = StoryObj<FilterSidebar>;
 
 const filterSections: FilterSection[] = [
   {

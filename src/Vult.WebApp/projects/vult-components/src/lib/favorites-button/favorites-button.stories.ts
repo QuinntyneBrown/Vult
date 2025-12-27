@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from '@storybook/angular';
-import { FavoritesButtonComponent } from './favorites-button.component';
+import { FavoritesButton } from './favorites-button';
 
-const meta: Meta<FavoritesButtonComponent> = {
+const meta: Meta<FavoritesButton> = {
   title: 'Components/FavoritesButton',
-  component: FavoritesButtonComponent,
+  component: FavoritesButton,
   tags: ['autodocs'],
   argTypes: {
     isFavorited: { control: 'boolean' },
@@ -16,7 +16,7 @@ const meta: Meta<FavoritesButtonComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<FavoritesButtonComponent>;
+type Story = StoryObj<FavoritesButton>;
 
 export const IconOnly: Story = {
   args: {
@@ -71,15 +71,15 @@ export const IconOnlyAllStates: Story = {
     template: `
       <div style="display: flex; gap: 16px; align-items: center;">
         <div style="text-align: center;">
-          <lib-favorites-button [isFavorited]="false" variant="icon-only"></lib-favorites-button>
+          <v-favorites-button [isFavorited]="false" variant="icon-only"></v-favorites-button>
           <div style="font-size: 12px; color: #757575; margin-top: 8px;">Default</div>
         </div>
         <div style="text-align: center;">
-          <lib-favorites-button [isFavorited]="true" variant="icon-only"></lib-favorites-button>
+          <v-favorites-button [isFavorited]="true" variant="icon-only"></v-favorites-button>
           <div style="font-size: 12px; color: #757575; margin-top: 8px;">Favorited</div>
         </div>
         <div style="text-align: center;">
-          <lib-favorites-button [loading]="true" variant="icon-only"></lib-favorites-button>
+          <v-favorites-button [loading]="true" variant="icon-only"></v-favorites-button>
           <div style="font-size: 12px; color: #757575; margin-top: 8px;">Loading</div>
         </div>
       </div>
@@ -91,8 +91,8 @@ export const WithAddToBagButton: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 12px; max-width: 400px; align-items: stretch;">
-        <lib-add-to-bag-button style="flex: 1;"></lib-add-to-bag-button>
-        <lib-favorites-button [isFavorited]="false" variant="icon-only"></lib-favorites-button>
+        <v-add-to-bag-button style="flex: 1;"></v-add-to-bag-button>
+        <v-favorites-button [isFavorited]="false" variant="icon-only"></v-favorites-button>
       </div>
     `
   })

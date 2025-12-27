@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { ProductCardComponent, ProductCardData } from './product-card.component';
+import { ProductCard, ProductCardData } from './product-card';
 
-const meta: Meta<ProductCardComponent> = {
+const meta: Meta<ProductCard> = {
   title: 'Components/ProductCard',
-  component: ProductCardComponent,
+  component: ProductCard,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<ProductCardComponent>;
+type Story = StoryObj<ProductCard>;
 
 const defaultProduct: ProductCardData = {
   id: '1',

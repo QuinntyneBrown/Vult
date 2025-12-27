@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { BreadcrumbNavigationComponent, BreadcrumbItem } from './breadcrumb-navigation.component';
+import { BreadcrumbNavigation, BreadcrumbItem } from './breadcrumb-navigation';
 
-const meta: Meta<BreadcrumbNavigationComponent> = {
+const meta: Meta<BreadcrumbNavigation> = {
   title: 'Components/BreadcrumbNavigation',
-  component: BreadcrumbNavigationComponent,
+  component: BreadcrumbNavigation,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<BreadcrumbNavigationComponent>;
+type Story = StoryObj<BreadcrumbNavigation>;
 
 const defaultItems: BreadcrumbItem[] = [
   { label: 'Home', href: '/' },

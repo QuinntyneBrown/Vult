@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 export type PageHeaderAlignment = 'left' | 'center';
 
 @Component({
-  selector: 'lib-page-header',
+  selector: 'v-page-header',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -102,7 +102,7 @@ export type PageHeaderAlignment = 'left' | 'center';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PageHeaderComponent {
+export class PageHeader {
   @Input() title = '';
   @Input() subtitle = '';
   @Input() count?: number;

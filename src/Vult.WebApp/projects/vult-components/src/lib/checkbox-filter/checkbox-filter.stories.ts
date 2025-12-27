@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { CheckboxFilterComponent, CheckboxOption } from './checkbox-filter.component';
+import { CheckboxFilter, CheckboxOption } from './checkbox-filter';
 
-const meta: Meta<CheckboxFilterComponent> = {
+const meta: Meta<CheckboxFilter> = {
   title: 'Components/CheckboxFilter',
-  component: CheckboxFilterComponent,
+  component: CheckboxFilter,
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<CheckboxFilterComponent>;
+type Story = StoryObj<CheckboxFilter>;
 
 const brandOptions: CheckboxOption[] = [
   { id: 'adidas', label: 'Adidas', count: 234 },

@@ -9,7 +9,7 @@ export interface NavItem {
 }
 
 @Component({
-  selector: 'lib-navigation-bar',
+  selector: 'v-navigation-bar',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -275,7 +275,7 @@ export interface NavItem {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavigationBarComponent {
+export class NavigationBar {
   @Input() items: NavItem[] = [];
   @Input() logoHref = '/';
   @Input() activeItemId = '';

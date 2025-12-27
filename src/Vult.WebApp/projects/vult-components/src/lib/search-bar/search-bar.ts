@@ -12,7 +12,7 @@ export interface SearchSuggestion {
 }
 
 @Component({
-  selector: 'lib-search-bar',
+  selector: 'v-search-bar',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
@@ -345,7 +345,7 @@ export interface SearchSuggestion {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchBarComponent {
+export class SearchBar {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   @Input() placeholder = 'Search';

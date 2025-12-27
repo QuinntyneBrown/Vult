@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular';
-import { IconButtonComponent } from './icon-button.component';
+import { IconButton } from './icon-button';
 
-const meta: Meta<IconButtonComponent> = {
+const meta: Meta<IconButton> = {
   title: 'Components/IconButton',
-  component: IconButtonComponent,
+  component: IconButton,
   tags: ['autodocs'],
   argTypes: {
     size: {
@@ -18,7 +18,7 @@ const meta: Meta<IconButtonComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<IconButtonComponent>;
+type Story = StoryObj<IconButton>;
 
 const heartIcon = `
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -40,7 +40,7 @@ export const Default: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-icon-button [size]="size" [variant]="variant" [ariaLabel]="ariaLabel">${heartIcon}</lib-icon-button>`,
+    template: `<v-icon-button [size]="size" [variant]="variant" [ariaLabel]="ariaLabel">${heartIcon}</v-icon-button>`,
   }),
 };
 
@@ -52,7 +52,7 @@ export const Filled: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-icon-button [size]="size" [variant]="variant" [ariaLabel]="ariaLabel">${heartIcon}</lib-icon-button>`,
+    template: `<v-icon-button [size]="size" [variant]="variant" [ariaLabel]="ariaLabel">${heartIcon}</v-icon-button>`,
   }),
 };
 
@@ -64,7 +64,7 @@ export const Outlined: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-icon-button [size]="size" [variant]="variant" [ariaLabel]="ariaLabel">${closeIcon}</lib-icon-button>`,
+    template: `<v-icon-button [size]="size" [variant]="variant" [ariaLabel]="ariaLabel">${closeIcon}</v-icon-button>`,
   }),
 };
 
@@ -72,9 +72,9 @@ export const AllSizes: Story = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 16px; align-items: center;">
-        <lib-icon-button size="small" ariaLabel="Small">${heartIcon}</lib-icon-button>
-        <lib-icon-button size="medium" ariaLabel="Medium">${heartIcon}</lib-icon-button>
-        <lib-icon-button size="large" ariaLabel="Large">${heartIcon}</lib-icon-button>
+        <v-icon-button size="small" ariaLabel="Small">${heartIcon}</v-icon-button>
+        <v-icon-button size="medium" ariaLabel="Medium">${heartIcon}</v-icon-button>
+        <v-icon-button size="large" ariaLabel="Large">${heartIcon}</v-icon-button>
       </div>
     `,
   }),
@@ -89,7 +89,7 @@ export const Active: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-icon-button [size]="size" [variant]="variant" [active]="active" [ariaLabel]="ariaLabel">${heartIcon}</lib-icon-button>`,
+    template: `<v-icon-button [size]="size" [variant]="variant" [active]="active" [ariaLabel]="ariaLabel">${heartIcon}</v-icon-button>`,
   }),
 };
 
@@ -102,6 +102,6 @@ export const Disabled: Story = {
   },
   render: (args) => ({
     props: args,
-    template: `<lib-icon-button [size]="size" [variant]="variant" [disabled]="disabled" [ariaLabel]="ariaLabel">${heartIcon}</lib-icon-button>`,
+    template: `<v-icon-button [size]="size" [variant]="variant" [disabled]="disabled" [ariaLabel]="ariaLabel">${heartIcon}</v-icon-button>`,
   }),
 };

@@ -10,7 +10,7 @@ export interface AccordionSection {
 }
 
 @Component({
-  selector: 'lib-product-details-accordion',
+  selector: 'v-product-details-accordion',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -189,7 +189,7 @@ export interface AccordionSection {
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductDetailsAccordionComponent {
+export class ProductDetailsAccordion {
   @Input() sections: AccordionSection[] = [];
   @Input() mode: 'single' | 'multiple' = 'multiple';
   @Input() ariaLabel = 'Product information';
