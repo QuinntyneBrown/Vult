@@ -62,6 +62,7 @@ public static class ConfigureServices
             options.OperationFilter<SwaggerFileOperationFilter>();
         });
         services.AddHttpContextAccessor();
+        services.AddHttpClient();
 
         services.AddMediatR(config =>
         {
