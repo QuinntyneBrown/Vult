@@ -7,10 +7,11 @@ public class Customer
 {
     public Guid CustomerId { get; set; }
 
-    // Authentication
+    // Link to User for authentication
+    public Guid? UserId { get; set; }
+
+    // Contact
     public string Email { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
-    public string PasswordSalt { get; set; } = string.Empty;
 
     // Profile
     public string FirstName { get; set; } = string.Empty;
