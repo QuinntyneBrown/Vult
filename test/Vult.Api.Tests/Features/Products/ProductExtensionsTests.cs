@@ -19,6 +19,7 @@ public class ProductExtensionsTests
             EstimatedMSRP = 100.50m,
             EstimatedResaleValue = 75.25m,
             Description = "Test Description",
+            ShortDescription = "Test Short Description",
             Size = "M",
             BrandName = "Adidas",
             Gender = Gender.Mens,
@@ -42,6 +43,7 @@ public class ProductExtensionsTests
         Assert.That(dto.EstimatedMSRP, Is.EqualTo(product.EstimatedMSRP));
         Assert.That(dto.EstimatedResaleValue, Is.EqualTo(product.EstimatedResaleValue));
         Assert.That(dto.Description, Is.EqualTo(product.Description));
+        Assert.That(dto.ShortDescription, Is.EqualTo(product.ShortDescription));
         Assert.That(dto.Size, Is.EqualTo(product.Size));
         Assert.That(dto.BrandName, Is.EqualTo(product.BrandName));
         Assert.That(dto.Gender, Is.EqualTo(product.Gender));
@@ -69,6 +71,7 @@ public class ProductExtensionsTests
             EstimatedMSRP = 100.50m,
             EstimatedResaleValue = 75.25m,
             Description = "Test Description",
+            ShortDescription = "Test Short Description",
             Size = "M",
             BrandName = "Puma",
             Gender = Gender.Mens,
@@ -137,6 +140,7 @@ public class ProductExtensionsTests
             EstimatedMSRP = 100.50m,
             EstimatedResaleValue = 75.25m,
             Description = "Test Description",
+            ShortDescription = "Test Short Description",
             Size = "M",
             BrandName = "Reebok",
             Gender = Gender.Mens,
@@ -157,6 +161,7 @@ public class ProductExtensionsTests
         Assert.That(product.EstimatedMSRP, Is.EqualTo(dto.EstimatedMSRP));
         Assert.That(product.EstimatedResaleValue, Is.EqualTo(dto.EstimatedResaleValue));
         Assert.That(product.Description, Is.EqualTo(dto.Description));
+        Assert.That(product.ShortDescription, Is.EqualTo(dto.ShortDescription));
         Assert.That(product.Size, Is.EqualTo(dto.Size));
         Assert.That(product.BrandName, Is.EqualTo(dto.BrandName));
         Assert.That(product.Gender, Is.EqualTo(dto.Gender));
@@ -181,6 +186,7 @@ public class ProductExtensionsTests
             EstimatedMSRP = 50.00m,
             EstimatedResaleValue = 30.00m,
             Description = "Old Description",
+            ShortDescription = "Old Short Description",
             Size = "S",
             BrandName = "Old Brand",
             Gender = Gender.Womens,
@@ -201,6 +207,7 @@ public class ProductExtensionsTests
             EstimatedMSRP = 100.50m,
             EstimatedResaleValue = 75.25m,
             Description = "New Description",
+            ShortDescription = "New Short Description",
             Size = "M",
             BrandName = "New Balance",
             Gender = Gender.Mens,
@@ -223,6 +230,7 @@ public class ProductExtensionsTests
         Assert.That(product.EstimatedMSRP, Is.EqualTo(dto.EstimatedMSRP));
         Assert.That(product.EstimatedResaleValue, Is.EqualTo(dto.EstimatedResaleValue));
         Assert.That(product.Description, Is.EqualTo(dto.Description));
+        Assert.That(product.ShortDescription, Is.EqualTo(dto.ShortDescription));
         Assert.That(product.Size, Is.EqualTo(dto.Size));
         Assert.That(product.BrandName, Is.EqualTo(dto.BrandName));
         Assert.That(product.Gender, Is.EqualTo(dto.Gender));

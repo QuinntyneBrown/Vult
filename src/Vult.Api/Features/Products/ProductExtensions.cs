@@ -15,6 +15,7 @@ public static class ProductExtensions
             EstimatedMSRP = product.EstimatedMSRP,
             EstimatedResaleValue = product.EstimatedResaleValue,
             Description = product.Description,
+            ShortDescription = product.ShortDescription,
             Size = product.Size,
             BrandName = product.BrandName,
             Gender = product.Gender,
@@ -53,6 +54,7 @@ public static class ProductExtensions
             EstimatedMSRP = dto.EstimatedMSRP,
             EstimatedResaleValue = dto.EstimatedResaleValue,
             Description = dto.Description,
+            ShortDescription = dto.ShortDescription,
             Size = dto.Size,
             BrandName = dto.BrandName,
             Gender = dto.Gender,
@@ -74,6 +76,7 @@ public static class ProductExtensions
         product.EstimatedMSRP = dto.EstimatedMSRP;
         product.EstimatedResaleValue = dto.EstimatedResaleValue;
         product.Description = dto.Description;
+        product.ShortDescription = dto.ShortDescription;
         product.Size = dto.Size;
         product.BrandName = dto.BrandName;
         product.Gender = dto.Gender;

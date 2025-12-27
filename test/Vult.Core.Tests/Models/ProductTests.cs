@@ -364,4 +364,24 @@ public class ProductTests
         // Assert
         Assert.That(product.PromotionalMessage, Is.EqualTo(string.Empty));
     }
+
+    [Test]
+    public void Product_ShouldHaveShortDescriptionProperty()
+    {
+        // Arrange & Act
+        var product = new Product { ShortDescription = "Short product description" };
+
+        // Assert
+        Assert.That(product.ShortDescription, Is.EqualTo("Short product description"));
+    }
+
+    [Test]
+    public void Product_ShouldDefaultToEmptyStringForShortDescription()
+    {
+        // Arrange & Act
+        var product = new Product();
+
+        // Assert
+        Assert.That(product.ShortDescription, Is.EqualTo(string.Empty));
+    }
 }

@@ -49,6 +49,14 @@ namespace Vult.Infrastructure.Migrations
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
+                name: "ShortDescription",
+                table: "Products",
+                type: "nvarchar(500)",
+                maxLength: 500,
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<string>(
                 name: "Shipping",
                 table: "Products",
                 type: "nvarchar(1000)",
@@ -78,6 +86,10 @@ namespace Vult.Infrastructure.Migrations
 
             migrationBuilder.DropColumn(
                 name: "PromotionalMessage",
+                table: "Products");
+
+            migrationBuilder.DropColumn(
+                name: "ShortDescription",
                 table: "Products");
 
             migrationBuilder.DropColumn(

@@ -15,6 +15,8 @@ public class Product
 
     public string Description { get; set; } = string.Empty;
 
+    public string ShortDescription { get; set; } = string.Empty;
+
     public string Size { get; set; } = string.Empty;
 
     public string BrandName { get; set; } = string.Empty;

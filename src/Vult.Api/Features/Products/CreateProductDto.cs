@@ -10,6 +10,7 @@ public class CreateProductDto
     public decimal EstimatedMSRP { get; set; }
     public decimal EstimatedResaleValue { get; set; }
     public string Description { get; set; } = string.Empty;
+    public string ShortDescription { get; set; } = string.Empty;
     public string Size { get; set; } = string.Empty;
     public string BrandName { get; set; } = string.Empty;
     public Gender Gender { get; set; }
