@@ -82,3 +82,9 @@ export * from './lib/favorites-button/favorites-button';
 
 // Product Details Accordion
 export * from './lib/product-details-accordion/product-details-accordion';
+
+// Star Rating
+export * from './lib/star-rating/star-rating';
+
+// Testimonial Card
+export * from './lib/testimonial-card/testimonial-card';

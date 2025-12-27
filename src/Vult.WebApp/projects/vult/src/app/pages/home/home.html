@@ -44,33 +44,9 @@
         <div class="testimonials__track">
           @for (testimonial of testimonials; track testimonial.id) {
             <div class="testimonials__item">
-              <article class="testimonial-card">
-                <div class="testimonial-card__image">
-                  <img
-                    [src]="testimonial.photoUrl"
-                    [alt]="testimonial.customerName + ' - Vult customer'"
-                    loading="lazy"
-                  />
-                </div>
-                <div class="testimonial-card__content">
-                  <div class="testimonial-card__rating" role="img" [attr.aria-label]="testimonial.rating + ' out of 5 stars'">
-                    @for (filled of getStarArray(testimonial.rating); track $index) {
-                      <svg
-                        class="testimonial-card__star"
-                        [class.testimonial-card__star--filled]="filled"
-                        [class.testimonial-card__star--empty]="!filled"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        aria-hidden="true"
-                      >
-                        <path d="M8 0L9.79611 5.52786H15.6085L10.9062 8.94427L12.7023 14.4721L8 11.0557L3.29772 14.4721L5.09383 8.94427L0.391548 5.52786H6.20389L8 0Z" fill="currentColor"/>
-                      </svg>
-                    }
-                  </div>
-                  <p class="testimonial-card__text">{{ testimonial.text }}</p>
-                </div>
-              </article>
+              <v-testimonial-card
+                [testimonial]="testimonial"
+              ></v-testimonial-card>
             </div>
           }
         </div>

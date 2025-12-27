@@ -9,18 +9,12 @@ import {
   HeroSection,
   ProductCard,
   ProductCardData,
+  TestimonialCard,
+  TestimonialCardData,
   TypographyDisplay,
 } from 'vult-components';
 import { TestimonialService, ProductService } from '../../core/services';
 import { Testimonial as TestimonialModel, Product, ItemType } from '../../core/models';
-
-export interface Testimonial {
-  id: string;
-  customerName: string;
-  photoUrl: string;
-  rating: number;
-  text: string;
-}
 
 @Component({
   selector: 'app-home',
@@ -29,6 +23,7 @@ export interface Testimonial {
     CommonModule,
     HeroSection,
     ProductCard,
+    TestimonialCard,
     TypographyDisplay,
   ],
   templateUrl: './home.html',
@@ -52,7 +47,7 @@ export class Home {
     map(response => response.items.map(this.mapToTestimonial))
   );
 
-  private mapToTestimonial(model: TestimonialModel): Testimonial {
+  private mapToTestimonial(model: TestimonialModel): TestimonialCardData {
     return {
       id: model.testimonialId,
       customerName: model.customerName,
@@ -108,9 +103,5 @@ export class Home {
 
   onFavoriteToggle(event: { product: ProductCardData; isFavorite: boolean }): void {
     console.log('Favorite toggled:', event.product.name, event.isFavorite);
-  }
-
-  getStarArray(rating: number): boolean[] {
-    return Array.from({ length: 5 }, (_, i) => i < rating);
   }
 }
