@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vult - Checkout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #fff;
+            color: #111;
+            line-height: 1.5;
+        }
+
+        /* Checkout Header */
+        .checkout-header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .header-right a {
+            color: #111;
+            text-decoration: none;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #707070;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 48px;
+        }
+
+        /* Checkout Steps */
+        .checkout-steps h1 {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 32px;
+        }
+
+        /* Accordion Step */
+        .checkout-step {
+            border: 1px solid #e5e5e5;
+            margin-bottom: 16px;
+        }
+
+        .step-header {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: #f5f5f5;
+        }
+
+        .step-header.active {
+            background: #fff;
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #111;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .step-number.completed {
+            background: #128a09;
+        }
+
+        .step-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .step-summary {
+            font-size: 14px;
+            color: #707070;
+        }
+
+        .edit-link {
+            color: #111;
+            font-size: 14px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .step-content {
+            padding: 24px;
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        /* Form Styles */
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-row.full-width {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 16px 12px 8px;
+            border: 1px solid #e5e5e5;
+            font-size: 14px;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #111;
+        }
+
+        .form-group label {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            font-size: 14px;
+            color: #707070;
+            pointer-events: none;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus + label,
+        .form-group input:not(:placeholder-shown) + label,
+        .form-group.filled label {
+            top: 4px;
+            font-size: 10px;
+        }
+
+        .form-group.valid input {
+            border-color: #128a09;
+        }
+
+        .form-group.valid::after {
+            content: "✓";
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #128a09;
+        }
+
+        .form-group.error input {
+            border-color: #d43f21;
+        }
+
+        .error-message {
+            color: #d43f21;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* Shipping Options */
+        .shipping-options {
+            margin-top: 24px;
+        }
+
+        .shipping-option {
+            border: 1px solid #e5e5e5;
+            padding: 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .shipping-option.selected {
+            border-color: #111;
+            background: #f5f5f5;
+        }
+
+        .shipping-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .shipping-details {
+            flex: 1;
+        }
+
+        .shipping-name {
+            font-weight: 500;
+        }
+
+        .shipping-time {
+            font-size: 14px;
+            color: #707070;
+        }
+
+        .shipping-price {
+            font-weight: 500;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .payment-method {
+            flex: 1;
+            border: 1px solid #e5e5e5;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .payment-method.selected {
+            border-color: #111;
+            background: #f5f5f5;
+        }
+
+        .payment-method-icon {
+            height: 32px;
+            margin-bottom: 8px;
+        }
+
+        .card-icons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 25px;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+        }
+
+        .checkbox-group label {
+            font-size: 14px;
+        }
+
+        /* Continue Button */
+        .continue-btn {
+            width: 100%;
+            padding: 18px;
+            background: #111;
+            color: #fff;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 24px;
+        }
+
+        .continue-btn:hover {
+            background: #333;
+        }
+
+        .continue-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Order Summary */
+        .order-summary {
+            position: sticky;
+            top: 40px;
+            background: #f5f5f5;
+            padding: 24px;
+        }
+
+        .order-summary h2 {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-summary h2 span {
+            font-size: 14px;
+            font-weight: 400;
+            color: #707070;
+        }
+
+        .summary-items {
+            margin-bottom: 24px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .summary-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-item-image {
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .summary-item-details {
+            flex: 1;
+        }
+
+        .summary-item-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .summary-item-options {
+            font-size: 12px;
+            color: #707070;
+        }
+
+        .summary-item-price {
+            font-weight: 500;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 500;
+            padding-top: 16px;
+            border-top: 1px solid #ccc;
+            margin-top: 16px;
+        }
+
+        /* Review Step */
+        .review-section {
+            background: #f5f5f5;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .review-section-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .review-section-title {
+            font-weight: 500;
+        }
+
+        .review-section-content {
+            font-size: 14px;
+            color: #707070;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            padding: 18px;
+            background: #111;
+            color: #fff;
+            border: none;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 24px;
+        }
+
+        .terms {
+            font-size: 12px;
+            color: #707070;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .terms a {
+            color: #111;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: static;
+                order: -1;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .checkout-header {
+                padding: 16px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-methods {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="checkout-header">
+        <div class="logo">VULT</div>
+        <div class="header-right">
+            <a href="#">Need Help?</a>
+            <div class="secure-badge">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 1L2 3v5c0 3.5 2.5 6.5 6 7.5 3.5-1 6-4 6-7.5V3L8 1zm0 7.5V4l4 1.5v3c0 2-1.5 4-4 5V8.5z"/>
+                </svg>
+                Secure Checkout
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Checkout Steps -->
+        <section class="checkout-steps">
+            <h1>Checkout</h1>
+
+            <!-- Step 1: Delivery -->
+            <div class="checkout-step">
+                <div class="step-header active">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        <span class="step-name">Delivery</span>
+                    </div>
+                </div>
+                <div class="step-content active">
+                    <!-- Guest Checkout Option -->
+                    <div class="form-section">
+                        <p style="margin-bottom: 16px; font-size: 14px;">
+                            <a href="#" style="color: #111;">Sign in</a> for faster checkout or continue as guest
+                        </p>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="form-section">
+                        <div class="form-section-title">Contact Information</div>
+                        <div class="form-row full-width">
+                            <div class="form-group valid">
+                                <input type="email" id="email" placeholder=" " value="john.doe@email.com">
+                                <label for="email">Email Address*</label>
+                            </div>
+                        </div>
+                        <div class="form-row full-width">
+                            <div class="form-group">
+                                <input type="tel" id="phone" placeholder=" ">
+                                <label for="phone">Phone Number*</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Address -->
+                    <div class="form-section">
+                        <div class="form-section-title">Shipping Address</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="firstName" placeholder=" ">
+                                <label for="firstName">First Name*</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="lastName" placeholder=" ">
+                                <label for="lastName">Last Name*</label>
+                            </div>
+                        </div>
+                        <div class="form-row full-width">
+                            <div class="form-group">
+                                <input type="text" id="address1" placeholder=" ">
+                                <label for="address1">Address*</label>
+                            </div>
+                        </div>
+                        <div class="form-row full-width">
+                            <div class="form-group">
+                                <input type="text" id="address2" placeholder=" ">
+                                <label for="address2">Apartment, suite, etc. (optional)</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="city" placeholder=" ">
+                                <label for="city">City*</label>
+                            </div>
+                            <div class="form-group filled">
+                                <select id="state">
+                                    <option value="">Select State</option>
+                                    <option value="CA">California</option>
+                                    <option value="NY">New York</option>
+                                    <option value="TX">Texas</option>
+                                    <option value="FL">Florida</option>
+                                </select>
+                                <label for="state">State*</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="zip" placeholder=" ">
+                                <label for="zip">ZIP Code*</label>
+                            </div>
+                            <div class="form-group filled">
+                                <select id="country">
+                                    <option value="US" selected>United States</option>
+                                    <option value="CA">Canada</option>
+                                </select>
+                                <label for="country">Country*</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Options -->
+                    <div class="form-section shipping-options">
+                        <div class="form-section-title">Shipping Method</div>
+                        <div class="shipping-option selected">
+                            <input type="radio" name="shipping" checked>
+                            <div class="shipping-details">
+                                <div class="shipping-name">Standard Shipping</div>
+                                <div class="shipping-time">Arrives Dec 30 - Jan 3</div>
+                            </div>
+                            <div class="shipping-price">Free</div>
+                        </div>
+                        <div class="shipping-option">
+                            <input type="radio" name="shipping">
+                            <div class="shipping-details">
+                                <div class="shipping-name">Express Shipping</div>
+                                <div class="shipping-time">Arrives Dec 28 - Dec 30</div>
+                            </div>
+                            <div class="shipping-price">$15.00</div>
+                        </div>
+                        <div class="shipping-option">
+                            <input type="radio" name="shipping">
+                            <div class="shipping-details">
+                                <div class="shipping-name">Next Day Delivery</div>
+                                <div class="shipping-time">Arrives Dec 28</div>
+                            </div>
+                            <div class="shipping-price">$25.00</div>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="sameBilling" checked>
+                        <label for="sameBilling">Use this address for billing</label>
+                    </div>
+
+                    <button class="continue-btn">Save & Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Payment -->
+            <div class="checkout-step">
+                <div class="step-header">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        <span class="step-name">Payment</span>
+                    </div>
+                </div>
+                <div class="step-content">
+                    <!-- Payment Methods -->
+                    <div class="payment-methods">
+                        <div class="payment-method selected">
+                            <div class="payment-method-icon">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="#111">
+                                    <rect x="4" y="8" width="24" height="16" rx="2" stroke="#111" stroke-width="2" fill="none"/>
+                                    <line x1="4" y1="14" x2="28" y2="14" stroke="#111" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <div>Credit/Debit Card</div>
+                        </div>
+                        <div class="payment-method">
+                            <div class="payment-method-icon">
+                                <svg width="60" height="24" viewBox="0 0 60 24">
+                                    <text x="0" y="18" font-family="Arial" font-size="14" font-weight="bold" fill="#003087">Pay</text>
+                                    <text x="24" y="18" font-family="Arial" font-size="14" font-weight="bold" fill="#009cde">Pal</text>
+                                </svg>
+                            </div>
+                            <div>PayPal</div>
+                        </div>
+                        <div class="payment-method">
+                            <div class="payment-method-icon">
+                                <svg width="50" height="24" viewBox="0 0 50 24">
+                                    <text x="0" y="18" font-family="Arial" font-size="14" font-weight="bold" fill="#ffb3c7">Klarna</text>
+                                </svg>
+                            </div>
+                            <div>Buy Now, Pay Later</div>
+                        </div>
+                    </div>
+
+                    <!-- Card Form -->
+                    <div class="form-section">
+                        <div class="form-row full-width">
+                            <div class="form-group">
+                                <input type="text" id="cardNumber" placeholder=" ">
+                                <label for="cardNumber">Card Number*</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="expiry" placeholder=" ">
+                                <label for="expiry">Expiration (MM/YY)*</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="cvv" placeholder=" ">
+                                <label for="cvv">CVV*</label>
+                            </div>
+                        </div>
+                        <div class="form-row full-width">
+                            <div class="form-group">
+                                <input type="text" id="cardName" placeholder=" ">
+                                <label for="cardName">Cardholder Name*</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-icons">
+                        <div class="card-icon">VISA</div>
+                        <div class="card-icon">MC</div>
+                        <div class="card-icon">AMEX</div>
+                        <div class="card-icon">DISC</div>
+                    </div>
+
+                    <button class="continue-btn">Save & Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Review -->
+            <div class="checkout-step">
+                <div class="step-header">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        <span class="step-name">Review & Place Order</span>
+                    </div>
+                </div>
+                <div class="step-content">
+                    <div class="review-section">
+                        <div class="review-section-header">
+                            <span class="review-section-title">Shipping Address</span>
+                            <span class="edit-link">Edit</span>
+                        </div>
+                        <div class="review-section-content">
+                            John Doe<br>
+                            123 Main Street, Apt 4B<br>
+                            New York, NY 10001<br>
+                            United States
+                        </div>
+                    </div>
+
+                    <div class="review-section">
+                        <div class="review-section-header">
+                            <span class="review-section-title">Shipping Method</span>
+                            <span class="edit-link">Edit</span>
+                        </div>
+                        <div class="review-section-content">
+                            Standard Shipping (Free) - Arrives Dec 30 - Jan 3
+                        </div>
+                    </div>
+
+                    <div class="review-section">
+                        <div class="review-section-header">
+                            <span class="review-section-title">Payment Method</span>
+                            <span class="edit-link">Edit</span>
+                        </div>
+                        <div class="review-section-content">
+                            Visa ending in 4242
+                        </div>
+                    </div>
+
+                    <button class="place-order-btn">Place Order</button>
+
+                    <p class="terms">
+                        By placing this order, you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Summary -->
+        <aside class="order-summary">
+            <h2>
+                Your Order
+                <span>3 items</span>
+            </h2>
+
+            <div class="summary-items">
+                <div class="summary-item">
+                    <div class="summary-item-image">
+                        <svg width="60" height="60" viewBox="0 0 60 60" fill="#ccc">
+                            <rect x="8" y="15" width="44" height="30" rx="3"/>
+                            <circle cx="20" cy="42" r="6"/>
+                            <circle cx="40" cy="42" r="6"/>
+                        </svg>
+                    </div>
+                    <div class="summary-item-details">
+                        <div class="summary-item-name">Air Max 270</div>
+                        <div class="summary-item-options">Black/White | Size: 10 | Qty: 1</div>
+                    </div>
+                    <div class="summary-item-price">$150.00</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-image">
+                        <svg width="60" height="60" viewBox="0 0 60 60" fill="#ccc">
+                            <path d="M15 15h30v35H15z"/>
+                            <path d="M20 15c0-6 4-9 10-9s10 3 10 9"/>
+                        </svg>
+                    </div>
+                    <div class="summary-item-details">
+                        <div class="summary-item-name">Dri-FIT Running Jacket</div>
+                        <div class="summary-item-options">Navy Blue | Size: M | Qty: 1</div>
+                    </div>
+                    <div class="summary-item-price">$120.00</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-item-image">
+                        <svg width="60" height="60" viewBox="0 0 60 60" fill="#ccc">
+                            <ellipse cx="30" cy="35" rx="20" ry="12"/>
+                            <path d="M18 22c4-12 20-12 24 0"/>
+                        </svg>
+                    </div>
+                    <div class="summary-item-details">
+                        <div class="summary-item-name">Sportswear Club Fleece</div>
+                        <div class="summary-item-options">Heather Grey | Size: L | Qty: 3</div>
+                    </div>
+                    <div class="summary-item-price">$277.00</div>
+                </div>
+            </div>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>$547.00</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>Free</span>
+            </div>
+            <div class="summary-row">
+                <span>Estimated Tax</span>
+                <span>$48.73</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span>$595.73</span>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>
