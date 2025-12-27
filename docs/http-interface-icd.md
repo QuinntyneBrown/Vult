@@ -232,7 +232,7 @@ Vult.Api/
     "itemType": 0,
     "createdDate": "datetime",
     "updatedDate": "datetime",
-    "images": [
+    "productImages": [
         {
             "productImageId": "guid",
             "productId": "guid",
@@ -1140,7 +1140,7 @@ true
             "itemType": 0,
             "createdDate": "2025-12-26T12:00:00Z",
             "updatedDate": "2025-12-26T12:00:00Z",
-            "images": []
+            "productImages": []
         }
     ]
 }
@@ -1191,7 +1191,7 @@ true
             "itemType": 0,
             "createdDate": "2025-12-26T10:00:00Z",
             "updatedDate": "2025-12-26T10:00:00Z",
-            "images": []
+            "productImages": []
         }
     ],
     "totalCount": 150,
@@ -1227,7 +1227,7 @@ true
             "isFeatured": true,
             "createdDate": "2025-12-26T10:00:00Z",
             "updatedDate": "2025-12-26T10:00:00Z",
-            "images": []
+            "productImages": []
         }
     ],
     "totalCount": 8,
@@ -1260,7 +1260,7 @@ true
         "itemType": 0,
         "createdDate": "2025-12-26T10:00:00Z",
         "updatedDate": "2025-12-26T10:00:00Z",
-        "images": []
+        "productImages": []
     }
 }
 ```
@@ -1305,7 +1305,7 @@ true
         "itemType": 0,
         "createdDate": "2025-12-26T12:00:00Z",
         "updatedDate": "2025-12-26T12:00:00Z",
-        "images": []
+        "productImages": []
     },
     "success": true,
     "errors": []
