@@ -31,7 +31,8 @@
       "Bash(test:*)",
       "Bash(cat:*)",
       "Bash(dotnet ef database drop:*)",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "Bash(nul)"
     ],
     "deny": [],
     "ask": []
