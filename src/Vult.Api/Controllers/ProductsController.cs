@@ -108,6 +108,30 @@ public class ProductsController : ControllerBase
     }
 
     /// <summary>
+    /// Gets a paginated list of featured products
+    /// </summary>
+    /// <param name="pageNumber">Page number (default: 1)</param>
+    /// <param name="pageSize">Page size (default: 10, max: 100)</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Paginated list of featured products</returns>
+    [HttpGet("featured")]
+    [ProducesResponseType(typeof(GetFeaturedProductsQueryResult), StatusCodes.Status200OK)]
+    public async Task<ActionResult<GetFeaturedProductsQueryResult>> GetFeaturedProducts(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetFeaturedProductsQuery
+        {
+            PageNumber = pageNumber,
+            PageSize = Math.Min(pageSize, 100)
+        };
+
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Gets a single product by ID
     /// </summary>
     /// <param name="id">Product ID</param>

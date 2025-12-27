@@ -13,24 +13,26 @@
   ></v-hero-section>
 
   <!-- Featured Products Section -->
-  <section class="featured-products">
-    <div class="featured-products__header">
-      <v-typography variant="title-3">Featured Products</v-typography>
-    </div>
-    <div class="featured-products__carousel">
-      <div class="featured-products__track">
-        @for (product of featuredProducts; track product.id) {
-          <div class="featured-products__item">
-            <v-product-card
-              [product]="product"
-              (cardClick)="onProductClick($event)"
-              (favoriteToggle)="onFavoriteToggle($event)"
-            ></v-product-card>
-          </div>
-        }
+  <ng-container *ngIf="featuredProducts$ | async as featuredProducts">
+    <section class="featured-products">
+      <div class="featured-products__header">
+        <v-typography variant="title-3">Featured Products</v-typography>
       </div>
-    </div>
-  </section>
+      <div class="featured-products__carousel">
+        <div class="featured-products__track">
+          @for (product of featuredProducts; track product.id) {
+            <div class="featured-products__item">
+              <v-product-card
+                [product]="product"
+                (cardClick)="onProductClick($event)"
+                (favoriteToggle)="onFavoriteToggle($event)"
+              ></v-product-card>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  </ng-container>
 
   <!-- Testimonials Section -->
   <ng-container *ngIf="testimonials$ | async as testimonials">
