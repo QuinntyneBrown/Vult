@@ -45,6 +45,20 @@ export interface SortOption {
 
     .sort-dropdown {
       min-width: 200px;
+      background-color: white;
+    }
+
+    ::ng-deep .mat-mdc-select-panel {
+      background-color: white !important;
+    }
+
+    ::ng-deep .mat-mdc-option {
+      background-color: white !important;
+      color: #000 !important;
+    }
+
+    ::ng-deep .mat-mdc-option:hover {
+      background-color: #f5f5f5 !important;
     }
 
     @media (max-width: 768px) {
