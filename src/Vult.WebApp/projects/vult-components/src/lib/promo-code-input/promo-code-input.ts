@@ -6,8 +6,8 @@ import { FormsModule } from '@angular/forms';
   selector: 'v-promo-code-input',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './promo-code-input.component.html',
-  styleUrl: './promo-code-input.component.scss',
+  templateUrl: './promo-code-input.html',
+  styleUrl: './promo-code-input.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromoCodeInput {

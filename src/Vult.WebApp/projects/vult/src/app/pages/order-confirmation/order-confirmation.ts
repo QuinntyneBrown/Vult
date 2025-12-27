@@ -9,8 +9,8 @@ import { Router, ActivatedRoute } from '@angular/router';
   selector: 'app-order-confirmation',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './order-confirmation.component.html',
-  styleUrl: './order-confirmation.component.scss',
+  templateUrl: './order-confirmation.html',
+  styleUrl: './order-confirmation.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderConfirmation implements OnInit {

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PromoCodeInput } from '../promo-code-input/promo-code-input.component';
+import { PromoCodeInput } from '../promo-code-input/promo-code-input';
 
 export interface CartSummaryData {
   subtotal: number;
@@ -15,8 +15,8 @@ export interface CartSummaryData {
   selector: 'v-cart-summary',
   standalone: true,
   imports: [CommonModule, PromoCodeInput],
-  templateUrl: './cart-summary.component.html',
-  styleUrl: './cart-summary.component.scss',
+  templateUrl: './cart-summary.html',
+  styleUrl: './cart-summary.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartSummary {

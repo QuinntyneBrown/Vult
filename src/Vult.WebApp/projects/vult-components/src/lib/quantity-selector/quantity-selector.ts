@@ -6,8 +6,8 @@ import { FormsModule } from '@angular/forms';
   selector: 'v-quantity-selector',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './quantity-selector.component.html',
-  styleUrl: './quantity-selector.component.scss',
+  templateUrl: './quantity-selector.html',
+  styleUrl: './quantity-selector.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuantitySelector {

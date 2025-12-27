@@ -15,8 +15,8 @@ export type FormFieldType = 'text' | 'email' | 'tel' | 'password' | 'number';
       multi: true
     }
   ],
-  templateUrl: './form-field.component.html',
-  styleUrl: './form-field.component.scss',
+  templateUrl: './form-field.html',
+  styleUrl: './form-field.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormField implements ControlValueAccessor {

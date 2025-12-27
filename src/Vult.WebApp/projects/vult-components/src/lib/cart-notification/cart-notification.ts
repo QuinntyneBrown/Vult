@@ -14,8 +14,8 @@ export interface CartNotificationItem {
   selector: 'v-cart-notification',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './cart-notification.component.html',
-  styleUrl: './cart-notification.component.scss',
+  templateUrl: './cart-notification.html',
+  styleUrl: './cart-notification.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartNotification implements OnInit, OnDestroy {

@@ -20,8 +20,8 @@ import { CartService } from '../../core/services';
     CartItem,
     CartSummary
   ],
-  templateUrl: './cart.component.html',
-  styleUrl: './cart.component.scss',
+  templateUrl: './cart.html',
+  styleUrl: './cart.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Cart {

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { QuantitySelector } from '../quantity-selector/quantity-selector.component';
+import { QuantitySelector } from '../quantity-selector/quantity-selector';
 
 export interface CartItemData {
   cartItemId: string;
@@ -21,8 +21,8 @@ export interface CartItemData {
   selector: 'v-cart-item',
   standalone: true,
   imports: [CommonModule, QuantitySelector],
-  templateUrl: './cart-item.component.html',
-  styleUrl: './cart-item.component.scss',
+  templateUrl: './cart-item.html',
+  styleUrl: './cart-item.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartItem {

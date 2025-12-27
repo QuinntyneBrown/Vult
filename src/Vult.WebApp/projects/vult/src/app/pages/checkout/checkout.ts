@@ -16,8 +16,8 @@ import { DeliveryInfo, PaymentInfo, ShippingOption } from '../../core/models';
   selector: 'app-checkout',
   standalone: true,
   imports: [CommonModule, FormsModule, CheckoutStep, FormField],
-  templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.scss',
+  templateUrl: './checkout.html',
+  styleUrl: './checkout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Checkout {

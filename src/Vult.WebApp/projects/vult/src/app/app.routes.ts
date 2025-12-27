@@ -22,15 +22,15 @@ export const routes: Routes = [
   },
   {
     path: 'cart',
-    loadComponent: () => import('./pages/cart/cart.component').then(m => m.Cart)
+    loadComponent: () => import('./pages/cart/cart').then(m => m.Cart)
   },
   {
     path: 'checkout',
-    loadComponent: () => import('./pages/checkout/checkout.component').then(m => m.Checkout)
+    loadComponent: () => import('./pages/checkout/checkout').then(m => m.Checkout)
   },
   {
     path: 'order-confirmation/:orderId',
-    loadComponent: () => import('./pages/order-confirmation/order-confirmation.component').then(m => m.OrderConfirmation)
+    loadComponent: () => import('./pages/order-confirmation/order-confirmation').then(m => m.OrderConfirmation)
   },
   {
     path: '',

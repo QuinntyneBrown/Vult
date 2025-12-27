@@ -7,8 +7,8 @@ export type CheckoutStepStatus = 'pending' | 'active' | 'completed';
   selector: 'v-checkout-step',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './checkout-step.component.html',
-  styleUrl: './checkout-step.component.scss',
+  templateUrl: './checkout-step.html',
+  styleUrl: './checkout-step.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckoutStep {
