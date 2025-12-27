@@ -106,6 +106,7 @@ Vult.Api/
 | Method | Endpoint | Route | Auth | Description |
 |--------|----------|-------|------|-------------|
 | POST | UploadDigitalAsset | `/api/digitalassets` | Required | Upload new digital asset |
+| POST | UploadDigitalAssets | `/api/digitalassets/batch` | Required | Upload multiple digital assets |
 | GET | GetDigitalAssets | `/api/digitalassets` | Required | Get paginated list of digital assets |
 | GET | GetDigitalAssetById | `/api/digitalassets/{id}` | AllowAnonymous | Get digital asset metadata by ID |
 | GET | GetDigitalAssetByFilename | `/api/digitalassets/filename/{filename}` | AllowAnonymous | Get digital asset metadata by filename |
@@ -551,6 +552,20 @@ Vult.Api/
     "digitalAsset": DigitalAssetDto,
     "success": "bool",
     "errors": ["string array"]
+}
+```
+
+#### UploadDigitalAssetsCommandResult
+**Location**: `src/Vult.Api/Features/DigitalAssets/UploadDigitalAssetsCommand.cs`
+
+```json
+{
+    "digitalAssets": [DigitalAssetDto],
+    "success": "bool",
+    "errors": ["string array"],
+    "totalProcessed": "int",
+    "successfullyProcessed": "int",
+    "failed": "int"
 }
 ```
 
@@ -1686,6 +1701,80 @@ true
 
 ---
 
+#### POST /api/digitalassets/batch
+**Summary**: Upload multiple digital assets in a single request
+**Authentication**: Required
+**Authorization**: Create permission on DigitalAsset aggregate
+**Content-Type**: multipart/form-data
+
+**Request Body**:
+- `files` (IFormFileCollection): Multiple image files to upload
+
+**Constraints**:
+- Maximum total upload size: 100MB
+- Maximum file size per file: 10MB
+- Valid file extensions: .jpg, .jpeg, .png, .gif, .bmp, .webp
+- File signature validation: Content must match declared file type
+
+**Success Response** (201 Created):
+```json
+{
+    "digitalAssets": [
+        {
+            "digitalAssetId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "product-image-1.jpg",
+            "contentType": "image/jpeg",
+            "height": 800.0,
+            "width": 1200.0,
+            "createdDate": "2025-12-27T12:00:00Z"
+        },
+        {
+            "digitalAssetId": "4fb96g75-6828-5673-c4gd-3d074g77bgb7",
+            "name": "product-image-2.png",
+            "contentType": "image/png",
+            "height": 600.0,
+            "width": 800.0,
+            "createdDate": "2025-12-27T12:00:00Z"
+        }
+    ],
+    "success": true,
+    "errors": [],
+    "totalProcessed": 2,
+    "successfullyProcessed": 2,
+    "failed": 0
+}
+```
+
+**Partial Success Response** (201 Created):
+```json
+{
+    "digitalAssets": [
+        {
+            "digitalAssetId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "product-image-1.jpg",
+            "contentType": "image/jpeg",
+            "height": 800.0,
+            "width": 1200.0,
+            "createdDate": "2025-12-27T12:00:00Z"
+        }
+    ],
+    "success": true,
+    "errors": ["invalid-file.txt: Invalid file type. Allowed types: .jpg, .jpeg, .png, .gif, .bmp, .webp"],
+    "totalProcessed": 2,
+    "successfullyProcessed": 1,
+    "failed": 1
+}
+```
+
+**Error Response** (400 Bad Request):
+```json
+{
+    "errors": ["No files provided"]
+}
+```
+
+---
+
 #### GET /api/digitalassets
 **Summary**: Get paginated list of digital assets
 **Authentication**: Required
@@ -1992,12 +2081,12 @@ Standard HTTP 404 response.
 
 ## DOCUMENT METADATA
 
-**Document Version**: 1.3
+**Document Version**: 1.4
 **API Name**: Vult API
 **Framework**: ASP.NET Core
 **Last Updated**: 2025-12-27
 **Frameworks Supported**: .NET 10.0, .NET 8.0
-**Total Endpoints**: 34
+**Total Endpoints**: 35
 **Total Controllers**: 5
 **Authentication Method**: JWT Bearer Token
 **Database**: SQL Server
@@ -2053,6 +2142,15 @@ curl -X POST http://localhost:5000/api/products/photos \
 curl -X POST http://localhost:5000/api/digitalassets \
   -H "Authorization: Bearer <token>" \
   -F "file=@product-image.jpg"
+```
+
+#### Upload Multiple Digital Assets (Batch)
+```bash
+curl -X POST http://localhost:5000/api/digitalassets/batch \
+  -H "Authorization: Bearer <token>" \
+  -F "files=@product-image-1.jpg" \
+  -F "files=@product-image-2.png" \
+  -F "files=@product-image-3.gif"
 ```
 
 #### Get Digital Asset by Filename

@@ -52,6 +52,35 @@ public class DigitalAssetsController : ControllerBase
     }
 
     /// <summary>
+    /// Upload multiple digital assets in a single request
+    /// </summary>
+    /// <param name="files">Files to upload</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>List of created digital assets</returns>
+    [HttpPost("batch")]
+    [RequestSizeLimit(100_000_000)] // 100MB total limit for batch uploads
+    [ProducesResponseType(typeof(UploadDigitalAssetsCommandResult), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<UploadDigitalAssetsCommandResult>> UploadDigitalAssets(
+        [FromForm] IFormFileCollection files,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Uploading {Count} digital assets", files?.Count ?? 0);
+
+        var command = new UploadDigitalAssetsCommand { Files = files };
+        var result = await _mediator.Send(command, cancellationToken);
+
+        if (!result.Success)
+        {
+            return BadRequest(new { errors = result.Errors });
+        }
+
+        return CreatedAtAction(
+            nameof(GetDigitalAssets),
+            result);
+    }
+
+    /// <summary>
     /// Get paginated list of digital assets
     /// </summary>
     /// <param name="pageNumber">Page number (default: 1)</param>

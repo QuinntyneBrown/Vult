@@ -15,11 +15,12 @@
 1. [Overview](#1-overview)
 2. [Digital Asset Entity Requirements](#2-digital-asset-entity-requirements)
 3. [Upload Digital Asset Requirements](#3-upload-digital-asset-requirements)
-4. [Query Digital Asset by Filename Requirements](#4-query-digital-asset-by-filename-requirements)
-5. [Serve Digital Asset via HTTP Requirements](#5-serve-digital-asset-via-http-requirements)
-6. [Digital Asset Management Requirements](#6-digital-asset-management-requirements)
-7. [Security & Authorization Requirements](#7-security--authorization-requirements)
-8. [Implementation Layers](#8-implementation-layers)
+4. [Batch Upload Digital Assets Requirements](#4-batch-upload-digital-assets-requirements)
+5. [Query Digital Asset by Filename Requirements](#5-query-digital-asset-by-filename-requirements)
+6. [Serve Digital Asset via HTTP Requirements](#6-serve-digital-asset-via-http-requirements)
+7. [Digital Asset Management Requirements](#7-digital-asset-management-requirements)
+8. [Security & Authorization Requirements](#8-security--authorization-requirements)
+9. [Implementation Layers](#9-implementation-layers)
 
 ---
 
@@ -186,7 +187,105 @@ public class DigitalAssetConfiguration : IEntityTypeConfiguration<DigitalAsset>
 
 ---
 
-## 4. Query Digital Asset by Filename Requirements
+## 4. Batch Upload Digital Assets Requirements
+
+### REQ-DAM-011: Batch Upload Digital Assets
+
+**Requirement:** The system shall allow authorized users to upload multiple digital assets in a single HTTP request.
+
+**Acceptance Criteria:**
+- [ ] Accepts multipart/form-data with multiple file fields
+- [ ] Supports image file types: .jpg, .jpeg, .png, .gif, .bmp, .webp
+- [ ] Processes each file independently (partial success allowed)
+- [ ] Extracts and stores file content as byte array for each file
+- [ ] Determines and stores MIME content type for each file
+- [ ] Extracts image dimensions (height/width) for each file when applicable
+- [ ] Returns list of created DigitalAssetDto with IDs
+- [ ] Returns processing statistics (total, successful, failed)
+- [ ] Returns per-file errors for failed uploads
+- [ ] Validates individual file size (configurable max, e.g., 10MB per file)
+- [ ] Validates total request size (configurable max, e.g., 100MB total)
+- [ ] Authentication required
+
+**Authorization:**
+
+```csharp
+[AuthorizeResourceOperation(Operations.Create, AggregateNames.DigitalAsset)]
+```
+
+**Endpoint:**
+
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| POST | `/api/digitalassets/batch` | Required | Upload multiple digital assets |
+
+**Request:**
+- Content-Type: `multipart/form-data`
+- Body: Multiple file fields named `files`
+
+**Success Response (201 Created):**
+
+```json
+{
+    "digitalAssets": [
+        {
+            "digitalAssetId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "product-image-1.jpg",
+            "contentType": "image/jpeg",
+            "height": 800.0,
+            "width": 1200.0,
+            "createdDate": "2025-12-27T12:00:00Z"
+        },
+        {
+            "digitalAssetId": "4fb96g75-6828-5673-c4gd-3d074g77bgb7",
+            "name": "product-image-2.png",
+            "contentType": "image/png",
+            "height": 600.0,
+            "width": 800.0,
+            "createdDate": "2025-12-27T12:00:00Z"
+        }
+    ],
+    "success": true,
+    "errors": [],
+    "totalProcessed": 2,
+    "successfullyProcessed": 2,
+    "failed": 0
+}
+```
+
+**Partial Success Response (201 Created):**
+
+```json
+{
+    "digitalAssets": [
+        {
+            "digitalAssetId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "product-image-1.jpg",
+            "contentType": "image/jpeg",
+            "height": 800.0,
+            "width": 1200.0,
+            "createdDate": "2025-12-27T12:00:00Z"
+        }
+    ],
+    "success": true,
+    "errors": ["invalid-file.txt: Invalid file type. Allowed types: .jpg, .jpeg, .png, .gif, .bmp, .webp"],
+    "totalProcessed": 2,
+    "successfullyProcessed": 1,
+    "failed": 1
+}
+```
+
+**Error Response (400 Bad Request):**
+
+```json
+{
+    "errors": ["No files provided"]
+}
+```
+
+---
+
+## 5. Query Digital Asset by Filename Requirements
 
 ### REQ-DAM-004: Query by Filename
 
@@ -233,7 +332,7 @@ public class DigitalAssetConfiguration : IEntityTypeConfiguration<DigitalAsset>
 
 ---
 
-## 5. Serve Digital Asset via HTTP Requirements
+## 6. Serve Digital Asset via HTTP Requirements
 
 ### REQ-DAM-005: Serve File Content
 
@@ -300,7 +399,7 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 
 ---
 
-## 6. Digital Asset Management Requirements
+## 7. Digital Asset Management Requirements
 
 ### REQ-DAM-006: Get Digital Asset by ID
 
@@ -389,7 +488,7 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 
 ---
 
-## 7. Security & Authorization Requirements
+## 8. Security & Authorization Requirements
 
 ### REQ-DAM-009: Authorization Controls
 
@@ -407,6 +506,7 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 | Operation | Endpoint | Required Privilege |
 |-----------|----------|-------------------|
 | Upload | POST /api/digital-assets | Create + DigitalAsset |
+| Batch Upload | POST /api/digital-assets/batch | Create + DigitalAsset |
 | List | GET /api/digital-assets | Authenticated |
 | Get by ID | GET /api/digital-assets/{id} | AllowAnonymous |
 | Get by Filename | GET /api/digital-assets/filename/{filename} | AllowAnonymous |
@@ -439,9 +539,9 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 
 ---
 
-## 8. Implementation Layers
+## 9. Implementation Layers
 
-### 8.1 Vult.Core Layer
+### 9.1 Vult.Core Layer
 
 **Files to Create/Modify:**
 
@@ -453,7 +553,7 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 
 ---
 
-### 8.2 Vult.Infrastructure Layer
+### 9.2 Vult.Infrastructure Layer
 
 **Files to Create/Modify:**
 
@@ -464,7 +564,7 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 
 ---
 
-### 8.3 Vult.Api Layer
+### 9.3 Vult.Api Layer
 
 **Files to Create:**
 
@@ -472,8 +572,10 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 |------|-------------|
 | `Controllers/DigitalAssetsController.cs` | API endpoints |
 | `Features/DigitalAssets/DigitalAssetDto.cs` | DTO for responses |
-| `Features/DigitalAssets/UploadDigitalAssetCommand.cs` | Upload command |
-| `Features/DigitalAssets/UploadDigitalAssetCommandHandler.cs` | Upload handler |
+| `Features/DigitalAssets/UploadDigitalAssetCommand.cs` | Single upload command |
+| `Features/DigitalAssets/UploadDigitalAssetCommandHandler.cs` | Single upload handler |
+| `Features/DigitalAssets/UploadDigitalAssetsCommand.cs` | Batch upload command |
+| `Features/DigitalAssets/UploadDigitalAssetsCommandHandler.cs` | Batch upload handler |
 | `Features/DigitalAssets/GetDigitalAssetsQuery.cs` | List query |
 | `Features/DigitalAssets/GetDigitalAssetsQueryHandler.cs` | List handler |
 | `Features/DigitalAssets/GetDigitalAssetByIdQuery.cs` | Get by ID query |
@@ -486,9 +588,9 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 
 ---
 
-## 9. Unit Test Requirements
+## 10. Unit Test Requirements
 
-### 9.1 Entity Tests (Vult.Core.Tests)
+### 10.1 Entity Tests (Vult.Core.Tests)
 
 **Test Cases:**
 
@@ -503,15 +605,20 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 
 ---
 
-### 9.2 Handler Tests (Vult.Api.Tests)
+### 10.2 Handler Tests (Vult.Api.Tests)
 
 **Test Cases:**
 
 | Test | Description |
 |------|-------------|
-| `UploadDigitalAssetCommandHandler_ValidFile_CreatesAsset` | Upload success scenario |
-| `UploadDigitalAssetCommandHandler_NoFile_ReturnsError` | No file validation |
-| `UploadDigitalAssetCommandHandler_InvalidType_ReturnsError` | File type validation |
+| `UploadDigitalAssetCommandHandler_ValidFile_CreatesAsset` | Single upload success scenario |
+| `UploadDigitalAssetCommandHandler_NoFile_ReturnsError` | Single upload no file validation |
+| `UploadDigitalAssetCommandHandler_InvalidType_ReturnsError` | Single upload file type validation |
+| `UploadDigitalAssetsCommandHandler_ValidFiles_CreatesAssets` | Batch upload success scenario |
+| `UploadDigitalAssetsCommandHandler_NoFiles_ReturnsError` | Batch upload no files validation |
+| `UploadDigitalAssetsCommandHandler_MixedFiles_PartialSuccess` | Batch upload partial success |
+| `UploadDigitalAssetsCommandHandler_InvalidTypes_ReturnsErrors` | Batch upload file type validation |
+| `UploadDigitalAssetsCommandHandler_FileSizeExceeded_ReturnsError` | Batch upload size validation |
 | `GetDigitalAssetByIdQueryHandler_ExistingId_ReturnsAsset` | Get by ID success |
 | `GetDigitalAssetByIdQueryHandler_NonExistingId_ReturnsNull` | Get by ID not found |
 | `GetDigitalAssetByFilenameQueryHandler_ExistingFilename_ReturnsAsset` | Get by filename success |
@@ -524,11 +631,11 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 
 ## DOCUMENT METADATA
 
-**Document Version**: 1.0
+**Document Version**: 1.1
 **Feature Name**: Digital Asset Management
 **Last Updated**: 2025-12-27
-**Total Endpoints**: 6
-**Total Requirements**: 10
+**Total Endpoints**: 8
+**Total Requirements**: 11
 **Implementation Layers**: Vult.Core, Vult.Infrastructure, Vult.Api
 
 ---
@@ -540,6 +647,15 @@ public async Task<IActionResult> ServeDigitalAssetByFilename(string filename)
 curl -X POST http://localhost:5000/api/digital-assets \
   -H "Authorization: Bearer <token>" \
   -F "file=@product-image.jpg"
+```
+
+### Upload Multiple Digital Assets (Batch)
+```bash
+curl -X POST http://localhost:5000/api/digital-assets/batch \
+  -H "Authorization: Bearer <token>" \
+  -F "files=@product-image-1.jpg" \
+  -F "files=@product-image-2.png" \
+  -F "files=@product-image-3.gif"
 ```
 
 ### Get Digital Asset by Filename
