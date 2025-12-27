@@ -377,6 +377,8 @@ Vult.Api/
 - `Coat` = 9
 - `Bag` = 10
 - `Accessories` = 11
+- `Hat` = 12
+- `Book` = 13
 
 #### AccessRight
 **Location**: `src/Vult.Core/Model/UserAggregate/Enums/AccessRight.cs`

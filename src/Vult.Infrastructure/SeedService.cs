@@ -222,7 +222,7 @@ public class SeedService : ISeedService
                 BrandName = "New Era",
                 Size = "One Size",
                 Gender = Gender.Unisex,
-                ItemType = ItemType.Accessories,
+                ItemType = ItemType.Hat,
                 EstimatedMSRP = 55.00m,
                 EstimatedResaleValue = 45.00m,
                 IsFeatured = true,

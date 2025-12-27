@@ -16,5 +16,7 @@ public enum ItemType
     Hoodie,
     Coat,
     Bag,
-    Accessories
+    Accessories,
+    Hat,
+    Book
 }

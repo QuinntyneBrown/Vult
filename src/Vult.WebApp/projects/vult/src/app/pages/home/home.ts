@@ -71,6 +71,8 @@ export class Home {
       [ItemType.Coat]: 'Outerwear',
       [ItemType.Bag]: 'Bags',
       [ItemType.Accessories]: 'Accessories',
+      [ItemType.Hat]: 'Accessories',
+      [ItemType.Book]: 'Books',
     };
 
     const imageUrl = product.productImages && product.productImages.length > 0 && product.productImages[0].imageData

@@ -70,7 +70,9 @@ export enum ItemType {
   Hoodie = 8,
   Coat = 9,
   Bag = 10,
-  Accessories = 11
+  Accessories = 11,
+  Hat = 12,
+  Book = 13
 }
 
 export const GenderLabels: Record<Gender, string> = {
@@ -91,5 +93,7 @@ export const ItemTypeLabels: Record<ItemType, string> = {
   [ItemType.Hoodie]: 'Hoodie',
   [ItemType.Coat]: 'Coat',
   [ItemType.Bag]: 'Bag',
-  [ItemType.Accessories]: 'Accessories'
+  [ItemType.Accessories]: 'Accessories',
+  [ItemType.Hat]: 'Hat',
+  [ItemType.Book]: 'Book'
 };

@@ -224,4 +224,24 @@ public class ProductTests
         // Assert
         Assert.That(type, Is.EqualTo(ItemType.Accessories));
     }
+
+    [Test]
+    public void ItemType_ShouldHaveHatValue()
+    {
+        // Arrange & Act
+        var type = ItemType.Hat;
+
+        // Assert
+        Assert.That(type, Is.EqualTo(ItemType.Hat));
+    }
+
+    [Test]
+    public void ItemType_ShouldHaveBookValue()
+    {
+        // Arrange & Act
+        var type = ItemType.Book;
+
+        // Assert
+        Assert.That(type, Is.EqualTo(ItemType.Book));
+    }
 }
