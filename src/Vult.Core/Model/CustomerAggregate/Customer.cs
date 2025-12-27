@@ -23,10 +23,6 @@ public class Customer
     public bool IsEmailVerified { get; set; }
     public bool IsDeleted { get; set; }
 
-    // Preferences
-    public bool MarketingEmailOptIn { get; set; }
-    public bool SmsOptIn { get; set; }
-
     // Metadata
     public DateTime? LastLoginDate { get; set; }
     public DateTime CreatedDate { get; set; }
