@@ -19,23 +19,25 @@ Vult/
 │   ├── Vult.Core/              # Domain models, enums, interfaces, core business logic
 │   ├── Vult.Infrastructure/    # EF Core context, mappings, Azure AI integrations, persistence
 │   ├── Vult.Api/               # ASP.NET Core Web API, CQS handlers, controllers
-│   └── Vult.App/               # Angular web application (frontend)
+│   ├── Vult.Cli/               # CLI worker service for background processing
+│   └── Vult.WebApp/            # Angular 21 web application (frontend)
 └── test/
     ├── Vult.Core.Tests/        # NUnit tests for Core
     ├── Vult.Infrastructure.Tests/  # NUnit tests for Infrastructure
-    └── Vult.Api.Tests/         # NUnit tests for API
+    ├── Vult.Api.Tests/         # NUnit tests for API
+    └── Vult.Testing/           # Shared testing utilities and helpers
 ```
 
 ---
 
 ## Prerequisites
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (matching the `net10.0` target)
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (matching the `net8.0` target)
 - [Node.js 20+](https://nodejs.org/) and npm (for the Angular app)
 - [SQL Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (or compatible SQL Server instance)
 - (Optional, for AI features) Azure subscription with Computer Vision / Azure AI Vision
 - IDE of your choice:
-  - Visual Studio 2022 (17.12+)
+  - Visual Studio 2022 (17.8+)
   - Visual Studio Code with C# and Angular tooling
   - Rider
 
@@ -84,10 +86,10 @@ By default the API will listen on the ports configured in `launchSettings.json` 
 
 ### 3. Frontend – Angular App
 
-From the `src/Vult.App` directory:
+From the `src/Vult.WebApp` directory:
 
 ```bash
-cd ../Vult.App
+cd ../Vult.WebApp
 npm install
 npm start   # runs "ng serve"
 ```
@@ -108,13 +110,17 @@ This runs the NUnit test projects under `test/`.
 
 #### Angular Tests
 
-From `src/Vult.App`:
+From `src/Vult.WebApp`:
 
 ```bash
 npm test
 ```
 
-E2E tests (Playwright) will be added under a dedicated e2e setup as the frontend feature set matures.
+E2E tests are available using Playwright:
+
+```bash
+npm run e2e
+```
 
 ---
 
@@ -159,7 +165,15 @@ ASP.NET Core Web API providing:
 - DI configuration wiring Core and Infrastructure together.
 - OpenAPI/Swagger for discoverable API documentation.
 
-### Vult.App (Angular Web Application)
+### Vult.Cli (Worker Service)
+
+.NET Worker Service for background processing:
+
+- Long-running background tasks and scheduled jobs.
+- CLI commands for administrative operations.
+- References Vult.Api for shared logic and services.
+
+### Vult.WebApp (Angular Web Application)
 
 Angular 21 single-page application providing the user experience:
 
@@ -167,6 +181,8 @@ Angular 21 single-page application providing the user experience:
 - Catalog management (list, create, edit, delete items).
 - Photo upload with drag-and-drop and ingestion progress.
 - Image viewing (thumbnails, gallery, zoom/lightbox).
+- Built with standalone components and modern Angular features.
+- Uses Inter for base text and Montserrat for hero/display text.
 
 The app communicates with Vult.Api via HTTP, following DTO contracts defined in the API layer.
 
@@ -175,7 +191,8 @@ The app communicates with Vult.Api via HTTP, following DTO contracts defined in 
 ## Testing & Quality
 
 - **Backend**: NUnit test projects under `test/` cover domain models, services, data access, commands, queries, and controllers.
-- **Frontend**: Unit tests with Vitest, with planned Playwright e2e coverage for key user flows (auth, catalog CRUD, ingestion, image viewing).
+- **Frontend**: Unit tests with Jest, and Playwright e2e tests for key user flows (auth, catalog CRUD, ingestion, image viewing).
+- **Testing Utilities**: Shared testing helpers and utilities in `Vult.Testing` project.
 
 As the project evolves, CI will run both backend and frontend test suites and publish coverage reports.
 

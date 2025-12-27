@@ -28,7 +28,8 @@
       "Bash(cd:*)",
       "Bash(python:*)",
       "Bash(dir:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
