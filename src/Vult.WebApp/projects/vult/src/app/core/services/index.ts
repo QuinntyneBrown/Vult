@@ -8,3 +8,4 @@ export * from './signalr.service';
 export * from './testimonial.service';
 export * from './cart.service';
 export * from './checkout.service';
+export * from './stripe.service';
