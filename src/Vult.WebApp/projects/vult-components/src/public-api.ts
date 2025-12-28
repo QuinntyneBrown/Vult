@@ -56,6 +56,9 @@ export * from './lib/result-counter/result-counter';
 // Search Bar
 export * from './lib/search-bar/search-bar';
 
+// Search Overlay
+export * from './lib/search-overlay/search-overlay';
+
 // Secondary Button
 export * from './lib/secondary-button/secondary-button';
 
