@@ -2,6 +2,8 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Vult.Core;
+using Vult.Core.Model.ProductAggregate;
+using Vult.Core.Model.ProductAggregate.Enums;
 
 namespace Vult.Core.Tests.Models;
 

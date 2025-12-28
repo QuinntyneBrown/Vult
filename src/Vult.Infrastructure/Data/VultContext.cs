@@ -3,7 +3,9 @@
 
 using Microsoft.EntityFrameworkCore;
 using Vult.Core;
+using Vult.Core.Model.CustomerAggregate;
 using Vult.Core.Model.DigitalAssetAggregate;
+using Vult.Core.Model.OrderAggregate;
 using Vult.Core.Model.ProductAggregate;
 using Vult.Core.Model.TestimonialAggregate;
 using Vult.Core.Model.UserAggregate;
@@ -24,6 +26,10 @@ public class VultContext : DbContext, IVultContext
     public DbSet<Privilege> Privileges { get; set; } = null!;
     public DbSet<Testimonial> Testimonials { get; set; } = null!;
     public DbSet<DigitalAsset> DigitalAssets { get; set; } = null!;
+    public DbSet<Order> Orders { get; set; } = null!;
+    public DbSet<LineItem> LineItems { get; set; } = null!;
+    public DbSet<Customer> Customers { get; set; } = null!;
+    public DbSet<CustomerAddress> CustomerAddresses { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,5 +42,9 @@ public class VultContext : DbContext, IVultContext
         modelBuilder.ApplyConfiguration(new PrivilegeConfiguration());
         modelBuilder.ApplyConfiguration(new TestimonialConfiguration());
         modelBuilder.ApplyConfiguration(new DigitalAssetConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomerAddressConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderConfiguration());
+        modelBuilder.ApplyConfiguration(new LineItemConfiguration());
     }
 }

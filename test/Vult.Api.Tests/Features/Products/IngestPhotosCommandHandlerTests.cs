@@ -9,6 +9,8 @@ using NUnit.Framework;
 using Vult.Api.Features.Products;
 using Vult.Api.Hubs;
 using Vult.Core;
+using Vult.Core.Model.ProductAggregate;
+using Vult.Core.Services;
 
 namespace Vult.Api.Tests.Features.Products;
 
@@ -17,24 +19,24 @@ public class IngestPhotosCommandHandlerTests
 {
     private Mock<IProductIngestionService> _mockIngestionService = null!;
     private Mock<IHubContext<IngestionHub>> _mockHubContext = null!;
-    private Mock<ILogger<IngestPhotosCommandHandler>> _mockLogger = null!;
+    private Mock<ILogger<IngestProductPhotosCommandHandler>> _mockLogger = null!;
     private Mock<IHubClients> _mockClients = null!;
     private Mock<IClientProxy> _mockClientProxy = null!;
-    private IngestPhotosCommandHandler _handler = null!;
+    private IngestProductPhotosCommandHandler _handler = null!;
 
     [SetUp]
     public void Setup()
     {
         _mockIngestionService = new Mock<IProductIngestionService>();
         _mockHubContext = new Mock<IHubContext<IngestionHub>>();
-        _mockLogger = new Mock<ILogger<IngestPhotosCommandHandler>>();
+        _mockLogger = new Mock<ILogger<IngestProductPhotosCommandHandler>>();
         _mockClients = new Mock<IHubClients>();
         _mockClientProxy = new Mock<IClientProxy>();
 
         _mockHubContext.Setup(h => h.Clients).Returns(_mockClients.Object);
         _mockClients.Setup(c => c.All).Returns(_mockClientProxy.Object);
 
-        _handler = new IngestPhotosCommandHandler(
+        _handler = new IngestProductPhotosCommandHandler(
             _mockIngestionService.Object,
             _mockHubContext.Object,
             _mockLogger.Object);
@@ -44,7 +46,7 @@ public class IngestPhotosCommandHandlerTests
     public async Task HandleAsync_WithNoPhotos_ReturnsErrorResult()
     {
         // Arrange
-        var command = new IngestPhotosCommand { Photos = new List<IFormFile>() };
+        var command = new IngestProductPhotosCommand { Photos = new List<IFormFile>() };
 
         // Act
         var result = await _handler.Handle(command, default);
@@ -62,7 +64,7 @@ public class IngestPhotosCommandHandlerTests
         var mockFile1 = CreateMockFormFile("image1.jpg", "image/jpeg");
         var mockFile2 = CreateMockFormFile("image2.jpg", "image/jpeg");
 
-        var command = new IngestPhotosCommand
+        var command = new IngestProductPhotosCommand
         {
             Photos = new List<IFormFile> { mockFile1.Object, mockFile2.Object }
         };
@@ -105,7 +107,7 @@ public class IngestPhotosCommandHandlerTests
     {
         // Arrange
         var mockFile = CreateMockFormFile("image.jpg", "image/jpeg");
-        var command = new IngestPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
+        var command = new IngestProductPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
 
         var mockIngestionResult = new ProductIngestionResult
         {
@@ -137,7 +139,7 @@ public class IngestPhotosCommandHandlerTests
     {
         // Arrange
         var mockFile = CreateMockFormFile("image.jpg", "image/jpeg");
-        var command = new IngestPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
+        var command = new IngestProductPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
 
         var mockIngestionResult = new ProductIngestionResult
         {
@@ -169,7 +171,7 @@ public class IngestPhotosCommandHandlerTests
     {
         // Arrange
         var mockFile = CreateMockFormFile("image.jpg", "image/jpeg");
-        var command = new IngestPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
+        var command = new IngestProductPhotosCommand { Photos = new List<IFormFile> { mockFile.Object } };
 
         var mockIngestionResult = new ProductIngestionResult
         {

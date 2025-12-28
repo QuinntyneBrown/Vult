@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Vult.Core;
+using Vult.Core.Services;
 
 namespace Vult.Infrastructure.Tests.Services;
 

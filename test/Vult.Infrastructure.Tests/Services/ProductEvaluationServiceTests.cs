@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Vult.Core;
+using Vult.Core.Model.ProductAggregate;
+using Vult.Core.Model.ProductAggregate.Enums;
+using Vult.Core.Services;
 using Vult.Infrastructure.Data;
 
 namespace Vult.Infrastructure.Tests.Services;

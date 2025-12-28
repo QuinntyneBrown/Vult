@@ -34,42 +34,7 @@ export class App {
     {
       id: 'new',
       label: 'New & Featured',
-      href: '/new',
-      children: [
-        { id: 'new-releases', label: 'New Releases', href: '/new/releases' },
-        { id: 'best-sellers', label: 'Best Sellers', href: '/new/best-sellers' },
-        { id: 'member-exclusive', label: 'Member Exclusive', href: '/new/member' },
-      ],
-    },
-    {
-      id: 'men',
-      label: 'Men',
-      href: '/men',
-      children: [
-        { id: 'men-shoes', label: 'Shoes', href: '/men/shoes' },
-        { id: 'men-clothing', label: 'Clothing', href: '/men/clothing' },
-        { id: 'men-accessories', label: 'Accessories', href: '/men/accessories' },
-      ],
-    },
-    {
-      id: 'women',
-      label: 'Women',
-      href: '/women',
-      children: [
-        { id: 'women-shoes', label: 'Shoes', href: '/women/shoes' },
-        { id: 'women-clothing', label: 'Clothing', href: '/women/clothing' },
-        { id: 'women-accessories', label: 'Accessories', href: '/women/accessories' },
-      ],
-    },
-    {
-      id: 'kids',
-      label: 'Kids',
-      href: '/kids',
-    },
-    {
-      id: 'sale',
-      label: 'Sale',
-      href: '/sale',
+      href: '/cart'
     },
   ];
 
