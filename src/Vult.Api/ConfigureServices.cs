@@ -13,6 +13,7 @@ using Vult.Api.Configuration;
 using Vult.Core;
 using Vult.Core.Services;
 using Vult.Infrastructure.Data;
+using Vult.Infrastructure.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -97,6 +98,15 @@ public static class ConfigureServices
         services.AddSingleton<IImageAnalysisService, ImageAnalysisService>();
         services.AddScoped<IProductIngestionService, ProductIngestionService>();
         services.AddScoped<IProductEvaluationService, ProductEvaluationService>();
+
+        // Stripe payment services
+        services.Configure<StripeSettings>(options =>
+        {
+            options.SecretKey = configuration["Stripe:SecretKey"] ?? "";
+            options.PublishableKey = configuration["Stripe:PublishableKey"] ?? "";
+            options.WebhookSecret = configuration["Stripe:WebhookSecret"] ?? "";
+        });
+        services.AddScoped<IStripePaymentService, StripePaymentService>();
 
         // JWT configuration
         var jwtKey = configuration["Jwt:Key"] ?? "DefaultSecretKey12345678901234567890";
