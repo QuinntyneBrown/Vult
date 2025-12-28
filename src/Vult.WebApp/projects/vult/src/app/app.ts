@@ -43,7 +43,7 @@ export class App {
     {
       id: 'new',
       label: 'New & Featured',
-      href: '/cart'
+      href: '/products'
     },
   ];
 
