@@ -17,7 +17,10 @@ module.exports = {
   },
   collectCoverageFrom: [
     'projects/**/src/app/**/*.ts',
+    'projects/vult-components/src/lib/**/*.ts',
     '!projects/**/src/app/**/*.spec.ts',
+    '!projects/vult-components/src/lib/**/*.spec.ts',
+    '!projects/vult-components/src/lib/**/*.stories.ts',
     '!projects/**/src/app/**/index.ts',
     '!projects/**/src/e2e/**'
   ],
