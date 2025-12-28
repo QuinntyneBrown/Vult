@@ -1,6 +1,6 @@
 # Customer Management System - Use Case Diagrams
 
-**Version:** 1.0
+**Version:** 1.1
 **Date:** December 2024
 **Author:** Product Team
 
@@ -12,10 +12,8 @@
 
 | Actor | Description |
 |-------|-------------|
-| Visitor | Unauthenticated user browsing the site |
-| Customer | Authenticated user with an account |
+| Customer | Authenticated user with a profile |
 | System | Vult backend application |
-| Email Service | External email provider (Phase 2) |
 
 ---
 
@@ -26,30 +24,20 @@
 ```mermaid
 graph TB
     subgraph "Customer Management System"
-        UC1[Register Account]
-        UC2[Login]
-        UC3[Logout]
-        UC4[View Profile]
-        UC5[Update Profile]
-        UC6[Change Password]
-        UC7[Delete Account]
-        UC8[Manage Addresses]
-        UC9[View Order History]
+        UC1[View Profile]
+        UC2[Update Profile]
+        UC3[Delete Account]
+        UC4[Manage Addresses]
+        UC5[View Order History]
     end
 
-    Visitor((Visitor))
     Customer((Customer))
 
-    Visitor --> UC1
-    Visitor --> UC2
-
+    Customer --> UC1
+    Customer --> UC2
     Customer --> UC3
     Customer --> UC4
     Customer --> UC5
-    Customer --> UC6
-    Customer --> UC7
-    Customer --> UC8
-    Customer --> UC9
 ```
 
 ### 2.2 Address Management Use Cases
@@ -77,88 +65,7 @@ graph TB
 
 ## 3. Sequence Diagrams
 
-### 3.1 Customer Registration Flow
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant V as Visitor
-    participant F as Frontend
-    participant A as API
-    participant H as PasswordHasher
-    participant DB as Database
-
-    V->>F: Fill registration form
-    F->>F: Validate input (client-side)
-    F->>A: POST /api/customers/register
-
-    A->>A: Validate email format
-    A->>A: Validate password strength
-    A->>DB: Check email uniqueness
-
-    alt Email exists
-        DB-->>A: Email found
-        A-->>F: 400 Bad Request
-        F-->>V: "Email already registered"
-    else Email available
-        DB-->>A: Email available
-        A->>H: HashPassword(password)
-        H-->>A: {hash, salt}
-        A->>DB: Insert Customer
-        DB-->>A: Customer created
-        A-->>F: 201 Created (CustomerDto)
-        F-->>V: "Registration successful"
-    end
-```
-
-### 3.2 Customer Login Flow
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant V as Visitor
-    participant F as Frontend
-    participant A as API
-    participant H as PasswordHasher
-    participant T as TokenService
-    participant DB as Database
-
-    V->>F: Enter email and password
-    F->>A: POST /api/customers/login
-
-    A->>DB: Find customer by email
-
-    alt Customer not found
-        DB-->>A: Not found
-        A-->>F: 401 Unauthorized
-        F-->>V: "Invalid credentials"
-    else Customer found
-        DB-->>A: Customer record
-
-        alt Account deleted
-            A-->>F: 401 Unauthorized
-            F-->>V: "Account inactive"
-        else Account active
-            A->>H: VerifyPassword(password, hash, salt)
-
-            alt Password incorrect
-                H-->>A: false
-                A-->>F: 401 Unauthorized
-                F-->>V: "Invalid credentials"
-            else Password correct
-                H-->>A: true
-                A->>T: GenerateToken(customerId, email)
-                T-->>A: JWT token
-                A->>DB: Update LastLoginDate
-                A-->>F: 200 OK (token, customer)
-                F->>F: Store token
-                F-->>V: Redirect to dashboard
-            end
-        end
-    end
-```
-
-### 3.3 Profile Update Flow
+### 3.1 Profile Update Flow
 
 ```mermaid
 sequenceDiagram
@@ -190,7 +97,7 @@ sequenceDiagram
     end
 ```
 
-### 3.4 Address Management Flow
+### 3.2 Address Management Flow
 
 ```mermaid
 sequenceDiagram
@@ -228,7 +135,7 @@ sequenceDiagram
     F-->>C: "Default address updated"
 ```
 
-### 3.5 Order History Flow
+### 3.3 Order History Flow
 
 ```mermaid
 sequenceDiagram
@@ -263,78 +170,7 @@ sequenceDiagram
 
 ## 4. Detailed Use Cases
 
-### 4.1 UC-001: Register Account
-
-```mermaid
-flowchart TD
-    A[Start] --> B{Valid email format?}
-    B -->|No| C[Error: Invalid email]
-    B -->|Yes| D{Password meets requirements?}
-    D -->|No| E[Error: Weak password]
-    D -->|Yes| F{Email already registered?}
-    F -->|Yes| G[Error: Email exists]
-    F -->|No| H[Hash password with salt]
-    H --> I[Create Customer record]
-    I --> J[Return CustomerDto]
-    J --> K[End]
-
-    C --> K
-    E --> K
-    G --> K
-```
-
-**Use Case Specification:**
-
-| Field | Value |
-|-------|-------|
-| **Name** | Register Account |
-| **ID** | UC-001 |
-| **Actors** | Visitor |
-| **Preconditions** | - Visitor has valid email<br>- Email not already registered |
-| **Postconditions** | - Customer account created<br>- Customer can login |
-| **Basic Flow** | 1. Visitor provides email, password, name<br>2. System validates input<br>3. System checks email uniqueness<br>4. System hashes password<br>5. System creates customer<br>6. System returns success |
-| **Alternative Flows** | - Duplicate email: Return error<br>- Weak password: Return validation error |
-| **Business Rules** | - Email must be unique<br>- Password must meet policy |
-
----
-
-### 4.2 UC-002: Login
-
-```mermaid
-flowchart TD
-    A[Start] --> B[Find customer by email]
-    B --> C{Customer exists?}
-    C -->|No| D[Error: Invalid credentials]
-    C -->|Yes| E{Account active?}
-    E -->|No| F[Error: Account inactive]
-    E -->|Yes| G[Verify password]
-    G --> H{Password correct?}
-    H -->|No| D
-    H -->|Yes| I[Generate JWT token]
-    I --> J[Update LastLoginDate]
-    J --> K[Return token and profile]
-    K --> L[End]
-
-    D --> L
-    F --> L
-```
-
-**Use Case Specification:**
-
-| Field | Value |
-|-------|-------|
-| **Name** | Login |
-| **ID** | UC-002 |
-| **Actors** | Visitor |
-| **Preconditions** | - Customer account exists<br>- Account not deleted |
-| **Postconditions** | - Customer authenticated<br>- JWT token issued |
-| **Basic Flow** | 1. Visitor provides email and password<br>2. System finds customer by email<br>3. System verifies password<br>4. System generates JWT<br>5. System returns token |
-| **Alternative Flows** | - Customer not found: Generic error<br>- Wrong password: Generic error<br>- Deleted account: Inactive error |
-| **Business Rules** | - No email enumeration (same error for not found/wrong password)<br>- Update last login timestamp |
-
----
-
-### 4.3 UC-003: Manage Addresses
+### 4.1 UC-001: Manage Addresses
 
 ```mermaid
 flowchart TD
@@ -372,7 +208,7 @@ flowchart TD
 | Field | Value |
 |-------|-------|
 | **Name** | Manage Addresses |
-| **ID** | UC-003 |
+| **ID** | UC-001 |
 | **Actors** | Customer |
 | **Preconditions** | - Customer authenticated |
 | **Postconditions** | - Address changes persisted |
@@ -382,7 +218,7 @@ flowchart TD
 
 ---
 
-### 4.4 UC-004: View Order History
+### 4.2 UC-002: View Order History
 
 ```mermaid
 flowchart TD
@@ -402,7 +238,7 @@ flowchart TD
 | Field | Value |
 |-------|-------|
 | **Name** | View Order History |
-| **ID** | UC-004 |
+| **ID** | UC-002 |
 | **Actors** | Customer |
 | **Preconditions** | - Customer authenticated |
 | **Postconditions** | - Order list returned |
@@ -420,36 +256,14 @@ flowchart TD
 stateDiagram-v2
     [*] --> Unregistered: Visitor
 
-    Unregistered --> Registered: Complete Registration
-    Registered --> Active: First Login
-
-    Active --> Active: Login/Logout
+    Unregistered --> Active: User Account Created
     Active --> Active: Update Profile
     Active --> Deleted: Request Deletion
 
     Deleted --> [*]: Permanent (after retention)
 
-    note right of Registered: Account created\nNot yet logged in
     note right of Active: Normal operating state
-    note right of Deleted: Soft deleted\nCannot login
-```
-
-### 5.2 Authentication Session State
-
-```mermaid
-stateDiagram-v2
-    [*] --> Anonymous
-
-    Anonymous --> Authenticating: Submit Credentials
-    Authenticating --> Authenticated: Valid Credentials
-    Authenticating --> Anonymous: Invalid Credentials
-
-    Authenticated --> Authenticated: Token Refresh
-    Authenticated --> Anonymous: Logout
-    Authenticated --> Anonymous: Token Expired
-
-    note right of Anonymous: No valid session
-    note right of Authenticated: Valid JWT token
+    note right of Deleted: Soft deleted\nCannot access profile
 ```
 
 ---
@@ -460,7 +274,6 @@ stateDiagram-v2
 graph TB
     subgraph "Frontend (Angular)"
         FE[Vult WebApp]
-        AS[AuthService]
         CS[CustomerService]
     end
 
@@ -468,8 +281,6 @@ graph TB
         CC[CustomersController]
         MW[Auth Middleware]
         CH[Customer Handlers]
-        PH[PasswordHasher]
-        TS[TokenService]
     end
 
     subgraph "Data Layer"
@@ -477,15 +288,11 @@ graph TB
         CTX[VultContext]
     end
 
-    FE --> AS
     FE --> CS
-    AS -->|Login/Register| CC
     CS -->|Profile/Addresses| CC
 
     CC --> MW
     MW --> CH
-    CH --> PH
-    CH --> TS
     CH --> CTX
 
     CTX --> DB
@@ -500,27 +307,21 @@ graph TB
 ```mermaid
 flowchart LR
     subgraph "User Actions"
-        A1[Register]
-        A2[Login]
-        A3[Manage Profile]
-        A4[Manage Addresses]
-        A5[View Orders]
+        A1[Manage Profile]
+        A2[Manage Addresses]
+        A3[View Orders]
     end
 
     subgraph "API Layer"
-        B1[POST /register]
-        B2[POST /login]
-        B3[GET/PUT /me]
-        B4[CRUD /addresses]
-        B5[GET /orders]
+        B1[GET/PUT /me]
+        B2[CRUD /addresses]
+        B3[GET /orders]
     end
 
     subgraph "Domain Layer"
-        C1[RegisterHandler]
-        C2[LoginHandler]
-        C3[ProfileHandler]
-        C4[AddressHandler]
-        C5[OrderHistoryHandler]
+        C1[ProfileHandler]
+        C2[AddressHandler]
+        C3[OrderHistoryHandler]
     end
 
     subgraph "Data Store"
@@ -530,10 +331,8 @@ flowchart LR
     end
 
     A1 --> B1 --> C1 --> D1
-    A2 --> B2 --> C2 --> D1
-    A3 --> B3 --> C3 --> D1
-    A4 --> B4 --> C4 --> D2
-    A5 --> B5 --> C5 --> D3
+    A2 --> B2 --> C2 --> D2
+    A3 --> B3 --> C3 --> D3
 ```
 
 ---
@@ -542,23 +341,26 @@ flowchart LR
 
 ```mermaid
 erDiagram
+    User ||--o| Customer : has
     Customer ||--o{ CustomerAddress : has
     Customer ||--o{ Order : places
 
+    User {
+        guid UserId PK
+        string Email UK
+        bool IsEmailVerified
+        string Password
+        byte[] Salt
+    }
+
     Customer {
         guid CustomerId PK
-        string Email UK
-        string PasswordHash
-        string PasswordSalt
+        guid UserId FK "nullable"
         string FirstName
         string LastName
         string Phone
         date DateOfBirth
-        bool IsEmailVerified
         bool IsDeleted
-        bool MarketingEmailOptIn
-        bool SmsOptIn
-        datetime LastLoginDate
         datetime CreatedDate
         datetime UpdatedDate
     }
@@ -595,145 +397,33 @@ erDiagram
 
 ## 9. Customer Journey Diagram
 
-### 9.1 New Customer Journey
+### 9.1 Registered Customer Journey
 
 ```mermaid
 journey
-    title New Customer Journey
-    section Discovery
-      Visit website: 5: Visitor
-      Browse products: 5: Visitor
-      View product details: 4: Visitor
-    section Registration
-      Click "Create Account": 4: Visitor
-      Fill registration form: 3: Visitor
-      Submit registration: 4: Visitor
-      Receive confirmation: 5: Customer
-    section First Order
+    title Registered Customer Journey
+    section Profile Setup
       Login to account: 5: Customer
+      View profile: 5: Customer
+      Update profile info: 4: Customer
+    section Address Management
+      Add shipping address: 4: Customer
+      Set default address: 5: Customer
+    section Shopping
       Add product to order: 5: Customer
-      Add shipping address: 3: Customer
-      Complete checkout: 4: Customer
-    section Repeat Customer
-      Login (saved): 5: Customer
       Select saved address: 5: Customer
-      Quick checkout: 5: Customer
-```
-
-### 9.2 Checkout Integration Journey
-
-```mermaid
-journey
-    title Checkout with Customer Account
-    section Authentication
-      Login: 5: Customer
-      View saved addresses: 5: Customer
-    section Checkout
-      Select shipping address: 5: Customer
-      Review order: 5: Customer
-      Enter payment: 3: Customer
-      Confirm order: 4: Customer
+      Complete checkout: 4: Customer
     section Post-Purchase
-      View confirmation: 5: Customer
+      View order history: 5: Customer
       Check order status: 5: Customer
-      View in order history: 5: Customer
 ```
 
 ---
 
-## 10. Security Flow Diagrams
-
-### 10.1 Authentication Flow
-
-```mermaid
-flowchart TB
-    subgraph "Client"
-        C1[Browser]
-        C2[Token Storage]
-    end
-
-    subgraph "API Gateway"
-        G1[HTTPS Termination]
-        G2[Rate Limiting]
-    end
-
-    subgraph "Application"
-        A1[Auth Middleware]
-        A2[JWT Validation]
-        A3[Claims Extraction]
-    end
-
-    subgraph "Security Services"
-        S1[PasswordHasher]
-        S2[TokenService]
-    end
-
-    C1 -->|HTTPS| G1
-    G1 --> G2
-    G2 --> A1
-    A1 --> A2
-    A2 --> A3
-    A3 -->|CustomerId| C2
-
-    S1 -->|PBKDF2 + Salt| A1
-    S2 -->|HMAC-SHA256| A2
-
-    style G1 fill:#228B22,color:#fff
-    style S1 fill:#B22222,color:#fff
-    style S2 fill:#B22222,color:#fff
-```
-
-### 10.2 Password Security Flow
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant A as API
-    participant H as PasswordHasher
-    participant DB as Database
-
-    Note over U,DB: Registration - Store Password
-    U->>A: Register with password
-    A->>H: GenerateSalt()
-    H-->>A: Random salt
-    A->>H: Hash(password, salt, iterations=10000)
-    H-->>A: PBKDF2 hash
-    A->>DB: Store {hash, salt}
-
-    Note over U,DB: Login - Verify Password
-    U->>A: Login with password
-    A->>DB: Get {hash, salt} for email
-    DB-->>A: Stored credentials
-    A->>H: Hash(password, storedSalt, iterations)
-    H-->>A: Computed hash
-    A->>A: Compare hashes (constant-time)
-
-    alt Match
-        A-->>U: Authentication success
-    else No match
-        A-->>U: Authentication failed
-    end
-```
-
----
-
-## 11. Error Handling Scenarios
+## 10. Error Handling Scenarios
 
 ```mermaid
 flowchart TD
-    subgraph "Registration Errors"
-        RE1[Invalid Email Format] --> RE1A[400: Validation error]
-        RE2[Duplicate Email] --> RE2A[409: Email already exists]
-        RE3[Weak Password] --> RE3A[400: Password requirements]
-    end
-
-    subgraph "Authentication Errors"
-        AE1[Invalid Credentials] --> AE1A[401: Generic message]
-        AE2[Account Deleted] --> AE2A[401: Account inactive]
-        AE3[Token Expired] --> AE3A[401: Token expired]
-        AE4[Token Invalid] --> AE4A[401: Invalid token]
-    end
-
     subgraph "Address Errors"
         AD1[Max Addresses] --> AD1A[400: Limit reached]
         AD2[Delete Default] --> AD2A[400: Cannot delete default]
@@ -743,12 +433,13 @@ flowchart TD
     subgraph "Authorization Errors"
         AU1[Not Owner] --> AU1A[403: Forbidden]
         AU2[Missing Token] --> AU2A[401: Authentication required]
+        AU3[Token Expired] --> AU3A[401: Token expired]
     end
 ```
 
 ---
 
-## 12. Integration Points with Order System
+## 11. Integration Points with Order System
 
 ```mermaid
 flowchart LR
@@ -782,20 +473,16 @@ flowchart LR
 
 ---
 
-## 13. Summary of Use Cases
+## 12. Summary of Use Cases
 
 | ID | Use Case | Actor | Priority |
 |----|----------|-------|----------|
-| UC-001 | Register Account | Visitor | High |
-| UC-002 | Login | Visitor | High |
-| UC-003 | Logout | Customer | High |
-| UC-004 | View Profile | Customer | High |
-| UC-005 | Update Profile | Customer | High |
-| UC-006 | Change Password | Customer | Medium |
-| UC-007 | Delete Account | Customer | Low |
-| UC-008 | Add Address | Customer | High |
-| UC-009 | Update Address | Customer | Medium |
-| UC-010 | Delete Address | Customer | Medium |
-| UC-011 | Set Default Address | Customer | Medium |
-| UC-012 | View Order History | Customer | High |
-| UC-013 | View Order Details | Customer | High |
+| UC-001 | View Profile | Customer | High |
+| UC-002 | Update Profile | Customer | High |
+| UC-003 | Delete Account | Customer | Low |
+| UC-004 | Add Address | Customer | High |
+| UC-005 | Update Address | Customer | Medium |
+| UC-006 | Delete Address | Customer | Medium |
+| UC-007 | Set Default Address | Customer | Medium |
+| UC-008 | View Order History | Customer | High |
+| UC-009 | View Order Details | Customer | High |

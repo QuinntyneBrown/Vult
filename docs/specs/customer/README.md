@@ -2,7 +2,7 @@
 
 ## Overview
 
-This specification defines the backend implementation for a Customer Management system for the Vult e-commerce platform. The system provides customer registration, authentication, profile management, address management, and order history. This specification supports the [Order and Payment system](../orders/README.md) by providing customer identity and saved addresses.
+This specification defines the backend implementation for a Customer Management system for the Vult e-commerce platform. The system provides customer profile management, address management, and order history. Customer authentication is handled through the User aggregate, with Customer linking to User via a nullable UserId. This specification supports the [Order and Payment system](../orders/README.md) by providing customer identity and saved addresses.
 
 ## Documents
 
@@ -17,30 +17,26 @@ This specification defines the backend implementation for a Customer Management 
 ### Core Entities
 
 ```
-Customer (1) ──────── (*) CustomerAddress
-    │                        │
-    │                        └── Label, FullName, Address fields, IsDefault
-    │
-    └── (*) Order (via CustomerId FK, nullable for guest checkout)
+User (1) ──────── (0..1) Customer ──────── (*) CustomerAddress
+  │                        │                      │
+  │                        │                      └── Label, FullName, Address fields, IsDefault
+  │                        │
+  │                        └── (*) Order (via CustomerId FK, nullable for guest checkout)
+  │
+  └── Email, IsEmailVerified, Password (authentication)
 ```
 
 ### Customer Lifecycle
 
 ```
-┌──────────────┐   ┌────────────┐   ┌────────┐   ┌─────────┐
-│ Unregistered │ → │ Registered │ → │ Active │ → │ Deleted │
-└──────────────┘   └────────────┘   └────────┘   └─────────┘
+┌──────────────┐   ┌────────────┐   ┌─────────┐
+│ Unregistered │ → │   Active   │ → │ Deleted │
+└──────────────┘   └────────────┘   └─────────┘
                          │               │
-                    First Login     Soft Delete
+                   User Created     Soft Delete
 ```
 
 ### API Endpoints
-
-#### Authentication
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/customers/register` | Create new account | No |
-| POST | `/api/customers/login` | Authenticate & get JWT | No |
 
 #### Profile Management
 | Method | Endpoint | Description | Auth |
@@ -48,7 +44,6 @@ Customer (1) ──────── (*) CustomerAddress
 | GET | `/api/customers/me` | Get current profile | Yes |
 | PUT | `/api/customers/me` | Update profile | Yes |
 | DELETE | `/api/customers/me` | Delete account (soft) | Yes |
-| PUT | `/api/customers/me/password` | Change password | Yes |
 
 #### Address Management
 | Method | Endpoint | Description | Auth |
@@ -79,7 +74,7 @@ Customer (1) ──────── (*) CustomerAddress
 │                                                             │
 │  Registered Customer Checkout:                              │
 │  ├── Order.CustomerId = authenticated customer ID           │
-│  ├── Order.CustomerEmail = customer.Email                   │
+│  ├── Order.CustomerEmail = user.Email                       │
 │  └── Select from saved addresses (copied to order)          │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
@@ -89,33 +84,19 @@ Customer (1) ──────── (*) CustomerAddress
 
 | Decision | Rationale |
 |----------|-----------|
+| Customer links to User via UserId | Authentication handled by User aggregate |
 | Soft delete for accounts | Preserve order history, comply with retention policies |
 | Address copied to Order (not linked) | Order address immutable after placement |
 | Max 10 addresses per customer | Reasonable limit, prevents abuse |
 | First address auto-default | Better UX, always have a default |
-| Generic login error | Security: prevents email enumeration |
-| JWT-based auth | Stateless, scalable, existing infrastructure |
 
 ### Security Features
 
 | Feature | Implementation |
 |---------|----------------|
-| Password hashing | PBKDF2 with salt (existing IPasswordHasher) |
+| Password hashing | PBKDF2 with salt (via User aggregate) |
 | Authentication | JWT tokens (existing ITokenService) |
 | Authorization | Claims-based, CustomerId from token |
-| Password policy | Min 8 chars, upper + lower + number |
-| Rate limiting | 5 login attempts per minute (recommended) |
-
-### Password Requirements
-
-```
-Minimum: 8 characters
-Maximum: 128 characters
-Must contain:
-  - At least 1 uppercase letter
-  - At least 1 lowercase letter
-  - At least 1 number
-```
 
 ## Relationship to Other Specs
 
@@ -139,8 +120,6 @@ Must contain:
 
 - Social login (Google, Facebook, Apple)
 - Two-factor authentication (2FA)
-- Email verification flow
-- Password reset via email
 - Account merge (guest to registered)
 - Wishlist/favorites
 - Payment method storage (handled by Stripe)
@@ -158,3 +137,4 @@ Must contain:
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | December 2024 | Product Team | Initial specification |
+| 1.1 | December 2024 | Engineering Team | Refactored to use User for auth, simplified Customer entity |
