@@ -25,6 +25,9 @@ describe('Login (Admin)', () => {
       getRefreshToken: jest.fn(),
       refreshToken: jest.fn(),
       isAuthenticated: jest.fn().mockReturnValue(false),
+      getSavedCredentials: jest.fn().mockReturnValue(null),
+      saveCredentials: jest.fn(),
+      clearSavedCredentials: jest.fn(),
       currentUser$: of(null)
     } as unknown as jest.Mocked<AuthService>;
 
@@ -55,17 +58,17 @@ describe('Login (Admin)', () => {
     expect(usernameControl?.hasError('minlength')).toBeTruthy();
   });
 
-  it('should have validation for password minimum length', () => {
+  it('should require password', () => {
     const passwordControl = component.loginForm.get('password');
-    passwordControl?.setValue('12345');
-    expect(passwordControl?.hasError('minlength')).toBeTruthy();
+    passwordControl?.setValue('');
+    expect(passwordControl?.hasError('required')).toBeTruthy();
   });
 
   it('should navigate to products on successful login', fakeAsync(() => {
     const navigateSpy = jest.spyOn(router, 'navigate');
     authServiceSpy.login.mockReturnValue(of({ accessToken: 'test-token' }));
 
-    component.loginForm.setValue({ username: 'adminuser', password: 'password123' });
+    component.loginForm.setValue({ username: 'adminuser', password: 'password123', rememberMe: false });
     component.onSubmit();
     tick();
 
@@ -77,11 +80,11 @@ describe('Login (Admin)', () => {
       throwError(() => ({ error: { message: 'Access denied' } }))
     );
 
-    component.loginForm.setValue({ username: 'admin', password: 'wrongpass' });
+    component.loginForm.setValue({ username: 'admin', password: 'wrongpass', rememberMe: false });
     component.onSubmit();
     tick();
 
     fixture.detectChanges();
-    expect(component.errorMessage()).toBe('Access denied');
+    expect(component.errorMessage$.value).toBe('Access denied');
   }));
 });

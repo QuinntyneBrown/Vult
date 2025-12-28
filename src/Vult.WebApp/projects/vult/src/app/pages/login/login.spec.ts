@@ -9,7 +9,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { Login } from './login';
 import { AuthService } from '../../core/services';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 
 describe('Login', () => {
   let component: Login;
@@ -30,7 +30,7 @@ describe('Login', () => {
     await TestBed.configureTestingModule({
       imports: [Login, ReactiveFormsModule],
       providers: [
-        provideRouter([]),
+        provideRouter([{ path: 'catalog', component: Login }]),
         provideHttpClient(),
         provideHttpClientTesting(),
         provideAnimations(),
@@ -96,13 +96,18 @@ describe('Login', () => {
   }));
 
   it('should set isLoading during login', fakeAsync(() => {
-    authServiceSpy.login.mockReturnValue(of({ accessToken: 'test-token' }));
+    const loginSubject = new Subject<{ accessToken: string }>();
+    authServiceSpy.login.mockReturnValue(loginSubject.asObservable());
 
     component.loginForm.setValue({ username: 'testuser', password: 'password123' });
     component.onSubmit();
 
     expect(component.isLoading()).toBe(true);
+
+    loginSubject.next({ accessToken: 'test-token' });
+    loginSubject.complete();
     tick();
+
     expect(component.isLoading()).toBe(false);
   }));
 });

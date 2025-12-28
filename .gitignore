@@ -487,3 +487,6 @@ dist/
 
 # Storybook build output
 storybook-static/
+
+# Jest test coverage
+coverage/

@@ -7,6 +7,9 @@ module.exports = {
     '<rootDir>/projects/vult/src/e2e/',
     '<rootDir>/projects/vult-admin/src/e2e/'
   ],
+  modulePathIgnorePatterns: [
+    '<rootDir>/dist/'
+  ],
   moduleNameMapper: {
     '^@vult/(.*)$': '<rootDir>/projects/vult/src/app/$1',
     '^@vult-admin/(.*)$': '<rootDir>/projects/vult-admin/src/app/$1',

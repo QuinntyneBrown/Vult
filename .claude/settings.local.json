@@ -32,7 +32,10 @@
       "Bash(cat:*)",
       "Bash(dotnet ef database drop:*)",
       "Bash(npm start)",
-      "Bash(nul)"
+      "Bash(nul)",
+      "Bash(findstr:*)",
+      "Bash(npx jest:*)",
+      "Bash(npx ng build:*)"
     ],
     "deny": [],
     "ask": []

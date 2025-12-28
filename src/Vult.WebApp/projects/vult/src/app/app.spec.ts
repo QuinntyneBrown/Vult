@@ -23,9 +23,9 @@ describe('App', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render header', () => {
+  it('should render navigation bar', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('header')?.textContent).toContain('Vult');
+    expect(compiled.textContent).toContain('VULT');
   });
 
   it('should have router outlet', () => {
