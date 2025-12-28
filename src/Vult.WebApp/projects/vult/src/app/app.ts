@@ -9,12 +9,13 @@ import {
   FooterLink,
   SocialLink,
   NavigationBar,
-  NavItem
+  NavItem,
+  IconButton
 } from 'vult-components';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Footer, NavigationBar],
+  imports: [RouterOutlet, Footer, NavigationBar, IconButton],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -28,6 +29,14 @@ export class App {
 
   onCartClick() {
     this._router.navigateByUrl('/cart');
+  }
+
+  onSearchClick() {
+    this._router.navigateByUrl('/search');
+  }
+
+  onFavoritesClick() {
+    this._router.navigateByUrl('/favorites');
   }
 
   navItems: NavItem[] = [
