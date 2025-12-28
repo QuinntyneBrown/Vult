@@ -1,0 +1,165 @@
+@if (_isOpen()) {
+  <div
+    class="search-overlay"
+    [class.search-overlay--visible]="isVisible()"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Search"
+    (click)="onBackdropClick($event)"
+    (keydown)="onKeydown($event)"
+  >
+    <div class="search-overlay__container">
+      <div class="search-overlay__header">
+        <div class="search-overlay__input-wrapper">
+          <svg
+            class="search-overlay__search-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="M21 21l-4.35-4.35" stroke-linecap="round" />
+          </svg>
+          <input
+            #searchInput
+            type="text"
+            class="search-overlay__input"
+            [placeholder]="placeholder"
+            [value]="searchValue()"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            (input)="onInput($event)"
+            (keydown.enter)="onSubmit()"
+          />
+          @if (hasValue) {
+            <button
+              type="button"
+              class="search-overlay__clear-btn"
+              aria-label="Clear search"
+              (click)="clearSearch()"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+              </svg>
+            </button>
+          }
+        </div>
+        <button
+          type="button"
+          class="search-overlay__cancel-btn"
+          aria-label="Cancel search"
+          (click)="onClose()"
+        >
+          Cancel
+        </button>
+      </div>
+
+      <div class="search-overlay__content">
+        @if (hasRecentSearches) {
+          <div class="search-overlay__section">
+            <div class="search-overlay__section-header">
+              <h3 class="search-overlay__section-title">Recent Searches</h3>
+              <button
+                type="button"
+                class="search-overlay__clear-link"
+                (click)="onClearRecents($event)"
+              >
+                Clear
+              </button>
+            </div>
+            <ul class="search-overlay__suggestions">
+              @for (item of recentSearches; track item.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="search-overlay__suggestion-item"
+                    (click)="selectSuggestion(item)"
+                  >
+                    <svg
+                      class="search-overlay__suggestion-icon"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" stroke-linecap="round" />
+                    </svg>
+                    <span class="search-overlay__suggestion-text">{{ item.text }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+
+        @if (hasTrendingSearches) {
+          <div class="search-overlay__section">
+            <h3 class="search-overlay__section-title">Trending</h3>
+            <ul class="search-overlay__suggestions">
+              @for (item of trendingSearches; track item.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="search-overlay__suggestion-item"
+                    (click)="selectSuggestion(item)"
+                  >
+                    <svg
+                      class="search-overlay__suggestion-icon"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                    >
+                      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" stroke-linecap="round" stroke-linejoin="round" />
+                      <polyline points="17 6 23 6 23 12" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span class="search-overlay__suggestion-text">{{ item.text }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+
+        @if (hasProductSuggestions) {
+          <div class="search-overlay__section">
+            <h3 class="search-overlay__section-title">Popular Products</h3>
+            <ul class="search-overlay__products">
+              @for (item of productSuggestions; track item.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="search-overlay__product-item"
+                    (click)="selectSuggestion(item)"
+                  >
+                    @if (item.imageUrl) {
+                      <div class="search-overlay__product-image">
+                        <img [src]="item.imageUrl" [alt]="item.text" loading="lazy" />
+                      </div>
+                    }
+                    <div class="search-overlay__product-info">
+                      <span class="search-overlay__product-name">{{ item.text }}</span>
+                      @if (item.category) {
+                        <span class="search-overlay__product-category">{{ item.category }}</span>
+                      }
+                    </div>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

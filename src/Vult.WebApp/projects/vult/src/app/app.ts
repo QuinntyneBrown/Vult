@@ -1,7 +1,7 @@
 // Copyright (c) Quinntyne Brown. All Rights Reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import {
   Footer,
@@ -10,19 +10,64 @@ import {
   SocialLink,
   NavigationBar,
   NavItem,
-  IconButton
+  IconButton,
+  SearchOverlay,
+  SearchOverlaySuggestion
 } from 'vult-components';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Footer, NavigationBar, IconButton],
+  imports: [RouterOutlet, Footer, NavigationBar, IconButton, SearchOverlay],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
 
   _router = inject(Router);
-  
+
+  searchOverlayOpen = signal(false);
+
+  trendingSearches: SearchOverlaySuggestion[] = [
+    { id: '1', text: 'Running Shoes', type: 'trending' },
+    { id: '2', text: 'Basketball', type: 'trending' },
+    { id: '3', text: 'Training Gear', type: 'trending' },
+    { id: '4', text: 'New Arrivals', type: 'trending' },
+    { id: '5', text: 'Best Sellers', type: 'trending' },
+  ];
+
+  recentSearches: SearchOverlaySuggestion[] = [];
+
+  productSuggestions: SearchOverlaySuggestion[] = [
+    {
+      id: '1',
+      text: 'Air Max 90',
+      type: 'product',
+      category: "Men's Shoes",
+      imageUrl: 'https://placehold.co/200x200/f5f5f5/111111?text=Air+Max+90',
+    },
+    {
+      id: '2',
+      text: 'Pegasus 41',
+      type: 'product',
+      category: 'Running Shoes',
+      imageUrl: 'https://placehold.co/200x200/f5f5f5/111111?text=Pegasus+41',
+    },
+    {
+      id: '3',
+      text: 'Dunk Low',
+      type: 'product',
+      category: "Men's Shoes",
+      imageUrl: 'https://placehold.co/200x200/f5f5f5/111111?text=Dunk+Low',
+    },
+    {
+      id: '4',
+      text: 'Air Force 1',
+      type: 'product',
+      category: "Men's Shoes",
+      imageUrl: 'https://placehold.co/200x200/f5f5f5/111111?text=Air+Force+1',
+    },
+  ];
+
   onLogoClick() {
     this._router.navigateByUrl('/');
   }
@@ -32,7 +77,27 @@ export class App {
   }
 
   onSearchClick() {
-    this._router.navigateByUrl('/search');
+    this.searchOverlayOpen.set(true);
+  }
+
+  onSearchClose() {
+    this.searchOverlayOpen.set(false);
+  }
+
+  onSearch(query: string) {
+    this._router.navigateByUrl(`/search?q=${encodeURIComponent(query)}`);
+  }
+
+  onSuggestionSelect(suggestion: SearchOverlaySuggestion) {
+    if (suggestion.href) {
+      this._router.navigateByUrl(suggestion.href);
+    } else {
+      this._router.navigateByUrl(`/search?q=${encodeURIComponent(suggestion.text)}`);
+    }
+  }
+
+  onClearRecents() {
+    this.recentSearches = [];
   }
 
   onFavoritesClick() {
