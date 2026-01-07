@@ -22,6 +22,18 @@
     </v-icon-button>
   </div>
 </v-navigation-bar>
+
+<v-search-overlay
+  [isOpen]="searchOverlayOpen()"
+  [trendingSearches]="trendingSearches"
+  [recentSearches]="recentSearches"
+  [productSuggestions]="productSuggestions"
+  (close)="onSearchClose()"
+  (search)="onSearch($event)"
+  (suggestionSelect)="onSuggestionSelect($event)"
+  (clearRecents)="onClearRecents()"
+></v-search-overlay>
+
 <router-outlet></router-outlet>
 <v-footer
   [columns]="footerColumns"
