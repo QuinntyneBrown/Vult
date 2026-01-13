@@ -1,0 +1,194 @@
+version: '3.8'
+
+services:
+  # Infrastructure
+  redis:
+    image: redis:7-alpine
+    container_name: vult-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - vult-network
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: vult-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - vult-network
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  # Microservices
+  product-service:
+    build:
+      context: .
+      dockerfile: src/Services/ProductService/ProductService.Api/Dockerfile
+    container_name: vult-product-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=VultProductDb;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ConnectionStrings__Redis=redis:6379
+      - Jwt__Key=YourSuperSecretKeyThatIsAtLeast32CharactersLong!
+    ports:
+      - "5101:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - vult-network
+
+  identity-service:
+    build:
+      context: .
+      dockerfile: src/Services/IdentityService/IdentityService.Api/Dockerfile
+    container_name: vult-identity-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=VultIdentityDb;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ConnectionStrings__Redis=redis:6379
+      - Jwt__Key=YourSuperSecretKeyThatIsAtLeast32CharactersLong!
+    ports:
+      - "5102:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - vult-network
+
+  customer-service:
+    build:
+      context: .
+      dockerfile: src/Services/CustomerService/CustomerService.Api/Dockerfile
+    container_name: vult-customer-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=VultCustomerDb;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ConnectionStrings__Redis=redis:6379
+      - Jwt__Key=YourSuperSecretKeyThatIsAtLeast32CharactersLong!
+    ports:
+      - "5103:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - vult-network
+
+  order-service:
+    build:
+      context: .
+      dockerfile: src/Services/OrderService/OrderService.Api/Dockerfile
+    container_name: vult-order-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=VultOrderDb;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ConnectionStrings__Redis=redis:6379
+      - Jwt__Key=YourSuperSecretKeyThatIsAtLeast32CharactersLong!
+    ports:
+      - "5104:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - vult-network
+
+  testimonial-service:
+    build:
+      context: .
+      dockerfile: src/Services/TestimonialService/TestimonialService.Api/Dockerfile
+    container_name: vult-testimonial-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=VultTestimonialDb;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ConnectionStrings__Redis=redis:6379
+      - Jwt__Key=YourSuperSecretKeyThatIsAtLeast32CharactersLong!
+    ports:
+      - "5105:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - vult-network
+
+  digitalasset-service:
+    build:
+      context: .
+      dockerfile: src/Services/DigitalAssetService/DigitalAssetService.Api/Dockerfile
+    container_name: vult-digitalasset-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=VultDigitalAssetDb;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ConnectionStrings__Redis=redis:6379
+      - Jwt__Key=YourSuperSecretKeyThatIsAtLeast32CharactersLong!
+    ports:
+      - "5106:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - vult-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: src/Services/ApiGateway/ApiGateway.Api/Dockerfile
+    container_name: vult-api-gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - Jwt__Key=YourSuperSecretKeyThatIsAtLeast32CharactersLong!
+      - ReverseProxy__Clusters__product-cluster__Destinations__product-service__Address=http://product-service
+      - ReverseProxy__Clusters__identity-cluster__Destinations__identity-service__Address=http://identity-service
+      - ReverseProxy__Clusters__customer-cluster__Destinations__customer-service__Address=http://customer-service
+      - ReverseProxy__Clusters__order-cluster__Destinations__order-service__Address=http://order-service
+      - ReverseProxy__Clusters__testimonial-cluster__Destinations__testimonial-service__Address=http://testimonial-service
+      - ReverseProxy__Clusters__digitalasset-cluster__Destinations__digitalasset-service__Address=http://digitalasset-service
+    ports:
+      - "5000:80"
+    depends_on:
+      - product-service
+      - identity-service
+      - customer-service
+      - order-service
+      - testimonial-service
+      - digitalasset-service
+    networks:
+      - vult-network
+
+volumes:
+  redis-data:
+  sqlserver-data:
+
+networks:
+  vult-network:
+    driver: bridge
