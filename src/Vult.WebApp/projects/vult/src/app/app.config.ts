@@ -8,7 +8,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { routes } from './app.routes';
 import { authInterceptor, baseUrlInterceptor } from './core/interceptors';
-import { API_BASE_URL } from './core/config';
+import { API_BASE_URL, STRIPE_PUBLISHABLE_KEY } from './core/config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([baseUrlInterceptor, authInterceptor])),
     provideAnimations(),
-    { provide: API_BASE_URL, useValue: 'https://localhost:7266' }
+    { provide: API_BASE_URL, useValue: 'https://localhost:7266' },
+    { provide: STRIPE_PUBLISHABLE_KEY, useValue: 'pk_test_YOUR_PUBLISHABLE_KEY' }
   ]
 };
